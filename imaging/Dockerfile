@@ -22,10 +22,9 @@ ENV TERM=xterm-256color
 
 # Update container
 RUN apt-get -y update && \
-	apt-get -y install perl tcsh bash wget
+	apt-get -y install perl tcsh bash wget unzip
 
 # Download and Install Freesurfer
-ENV FREESURFER_HOME=/opt/freesurfer
 ENV FS=/opt/freesurfer
 
 # Copy license to container
@@ -36,6 +35,6 @@ RUN mkdir /input && mkdir /output && mkdir /group
 
 # Add enigma shape analysis
 ADD enigma_shape /root/enigma_shape
-RUN chmod +x -R /root/enigma_shape
+RUN chmod -R 777 /root/enigma_shape
 ENV ENIGMA_SHAPE_DIR=/root/enigma_shape/
-ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh"]
+ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh /group/groupfile.csv /input /output"]

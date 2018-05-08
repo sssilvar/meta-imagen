@@ -10,7 +10,7 @@
   #Example /usr/local/MATLAB/R2013a_client/bin/matlab 
 
   #----modify-this----  
-   MatlabPath=/usr/local/MATLAB/R2016b/bin/matlab
+   MatlabPath=/usr/local/MATLAB/R2013a_client/bin/matlab 
 
 
 
@@ -20,7 +20,7 @@
   #EXAMPLE /usr/local/freesurfer-5.3.0_64bit
 
 #----modify-this----  
-   FREESURFER_HOME=/usr/local/freesurfer/
+   FREESURFER_HOME=/usr/local/freesurfer-5.3.0_64bit
 
 
 #################################################################################

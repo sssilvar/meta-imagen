@@ -20,13 +20,13 @@ outDirectory=$3
 
 ## Path to FreeSurfer Binary
 #----modify-this----  
-# FS=/usr/local/freesurfer/
+FS=/home/common/applications/freesurfer/freesurfer/
 #FS=/usr/local/freesurfer-5.3.0_64bit/
 FS_binary=${FS}/bin/
 
 ## directory where you've downloaded and stored all the shape stuff, containing MedialDemonsShared folder
 #----modify-this----  
-runDirectory=${ENIGMA_SHAPE_DIR}
+runDirectory=/home/data/lschmaal/testshape/
 #runDirectory=/ifshome/bgutman/
 
 
@@ -34,9 +34,9 @@ runDirectory=${ENIGMA_SHAPE_DIR}
 ###################################################
 ## do not change setROIs, this will allow you to create them all in one go!
 
-setROIS="10 11 12 13 17 18 26 49 50 51 52 53 54 58"
+#setROIS="10 11 12 13 17 18 26 49 50 51 52 53 54 58"
 
-#setROIS="26 58" 
+setROIS="26 58" 
 #for testing only
 
 
