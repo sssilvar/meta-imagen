@@ -19,8 +19,6 @@ outDirectory=$3
 
 
 ## Path to FreeSurfer Binary
-#----modify-this----  
-FS=/home/common/applications/freesurfer/freesurfer/
 #FS=/usr/local/freesurfer-5.3.0_64bit/
 FS_binary=${FS}/bin/
 
