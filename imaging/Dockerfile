@@ -10,7 +10,7 @@
 #
 
 
-FROM ubuntu:16.04
+FROM freesurfer/freesurfer:6.0
 MAINTAINER Santiago Smith <sssilvar@unal.edu.co>
 
 # Set proxy (if necessary) --build-arg
@@ -25,18 +25,17 @@ RUN apt-get -y update && \
 	apt-get -y install perl tcsh bash wget
 
 # Download and Install Freesurfer
-ADD freesurfer /usr/local/freesurfer
-ENV FREESURFER_HOME=/usr/local/freesurfer
-ENV FS=/usr/local/freesurfer
+ENV FREESURFER_HOME=/opt/freesurfer
+ENV FS=/opt/freesurfer
 
 # Copy license to container
-COPY license /usr/local/freesurfer/license.txt
+COPY license /opt/freesurfer/.license
 
 # Create an input and an output folders
 RUN mkdir /input && mkdir /output && mkdir /group
 
 # Add enigma shape analysis
-ADD enigma_shape /usr/local/enigma_shape
-RUN chmod +x -R /usr/local/enigma_shape
-ENV ENIGMA_SHAPE_DIR=/usr/local/enigma_shape/
-ENTRYPOINT ["/usr/local/enigma_shape/shape_group_run.sh"]
+ADD enigma_shape /root/enigma_shape
+RUN chmod +x -R /root/enigma_shape
+ENV ENIGMA_SHAPE_DIR=/root/enigma_shape/
+ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh"]
