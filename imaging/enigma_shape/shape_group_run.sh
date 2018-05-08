@@ -22,7 +22,7 @@ outDirectory=$3
 #----modify-this----  
 # FS=/usr/local/freesurfer/
 #FS=/usr/local/freesurfer-5.3.0_64bit/
-FS_binary=${FS}bin/
+FS_binary=${FS}/bin/
 
 ## directory where you've downloaded and stored all the shape stuff, containing MedialDemonsShared folder
 #----modify-this----  
