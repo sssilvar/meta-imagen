@@ -37,4 +37,6 @@ RUN mkdir /input && mkdir /output && mkdir /group
 ADD enigma_shape /root/enigma_shape
 RUN chmod -R 777 /root/enigma_shape
 ENV ENIGMA_SHAPE_DIR=/root/enigma_shape/
-ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh /group/groupfile.csv /input /output"]
+
+#ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh /group/groupfile.csv /input /output"]
+RUN /root/enigma_shape/shape_group_run.sh /group/groupfile.csv /input /output
