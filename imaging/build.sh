@@ -28,7 +28,7 @@ DEL_IMG="docker rmi "$IMG_NAME
 eval $DEL_IMG
 
 echo "[  OK  ] Creating the new image: "$IMG_NAME
-CRE_IMG="docker build -t "$IMG_NAME" "$CURRENT_DIR
+CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
 echo "[  OK  ] Running container: "$CONTAINER_NAME
