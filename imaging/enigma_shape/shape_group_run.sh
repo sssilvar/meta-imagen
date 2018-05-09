@@ -6,9 +6,9 @@
 # download ENGIMA_SHAPE package
 # unzip
 
-groupfile=$1
-runFS=$2
-outDirectory=$3
+# groupfile=$1
+# runFS=$2
+# outDirectory=$3
 
 #echo $groupfile
 
@@ -24,7 +24,7 @@ FS_binary=${FS}/bin/
 
 ## directory where you've downloaded and stored all the shape stuff, containing MedialDemonsShared folder
 #----modify-this----  
-runDirectory=/home/data/lschmaal/testshape/
+# runDirectory=/home/data/lschmaal/testshape/
 #runDirectory=/ifshome/bgutman/
 
 

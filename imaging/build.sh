@@ -6,7 +6,14 @@
 # 	--build-arg proxy=$1\
 # 	$(pwd)
 
+# ==== FOLDERS ====
+FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD
+OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker
+GROUPFILE_FOLDER=/home/sssilvar/Documents/group
+
+
 # Set parameters up
+GROUPFILE=$GROUPFILE_FOLDER"/groupfile.csv"
 CONTAINER_NAME="enigma_shape"
 USER="sssilvar"
 PROXY=$1
@@ -32,6 +39,6 @@ CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
 echo "[  OK  ] Running container: "$CONTAINER_NAME
-cmd="docker run --name "$CONTAINER_NAME" -ti "$IMG_NAME
+cmd="docker run --name "$CONTAINER_NAME" -v "$GROUPFILE":/group -v "$FS_DATASET":/input -v "$OUTPUT_FOLDER"/output -rm -ti "$IMG_NAME
 echo $cmd
 eval $cmd

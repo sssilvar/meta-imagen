@@ -41,6 +41,6 @@ ENV groupfile=/group/groupfile.csv
 ENV runFS=/input
 ENV outDirectory=/output
 
-ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh"]
-#ENTRYPOINT ["/root/enigma_shape/run_analysis.sh"]
+# ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh"]
+ENTRYPOINT ["/root/enigma_shape/run_analysis.sh"]
 #RUN ./root/enigma_shape/shape_group_run.sh /group/groupfile.csv /input /output
