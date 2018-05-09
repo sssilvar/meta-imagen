@@ -2,9 +2,9 @@
 
 # This script builds the docker image with tag sssilvar/eshape:1.0
 # To set the proxy use this format: [http://user:pass@proxy_server.com:port/]
-docker build -t sssilvar/eshape_fs:1.0 \
-	--build-arg proxy=$1\
-	$(pwd)
+# docker build -t sssilvar/eshape_fs:1.0 \
+# 	--build-arg proxy=$1\
+# 	$(pwd)
 
 # Set parameters up
 CONTAINER_NAME="enigma_shape"
@@ -28,7 +28,7 @@ DEL_IMG="docker rmi "$IMG_NAME
 eval $DEL_IMG
 
 echo "[  OK  ] Creating the new image: "$IMG_NAME
-CRE_IMG="docker build -t "$IMG_NAME" ."
+CRE_IMG="docker build -t "$IMG_NAME" "$CURRENT_DIR
 eval $CRE_IMG
 
 echo "[  OK  ] Running container: "$CONTAINER_NAME
