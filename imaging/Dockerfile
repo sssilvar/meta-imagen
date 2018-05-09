@@ -21,8 +21,8 @@ ENV http_proxy=$proxy
 ENV TERM=xterm-256color
 
 # Update container
-# RUN apt-get -y update && \
-# 	apt-get -y install perl tcsh bash wget unzip
+RUN apt-get -y update && \
+	apt-get -y install perl tcsh bash wget unzip
 
 # Copy license to container
 COPY license /opt/freesurfer/.license
