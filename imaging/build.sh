@@ -7,9 +7,9 @@
 # 	$(pwd)
 
 # ==== FOLDERS ====
-FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD
-OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker
-GROUPFILE_FOLDER=/home/sssilvar/Documents/group
+FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD/
+OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker/
+GROUPFILE_FOLDER=/home/sssilvar/Documents/group/
 
 
 # Set parameters up
@@ -39,6 +39,6 @@ CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
 echo -e "\n\n[  OK  ] Running container: "$CONTAINER_NAME
-cmd="docker run --name "$CONTAINER_NAME" --rm -ti -v "$GROUPFILE_FOLDER":/group -v "$FS_DATASET":/input -v "$OUTPUT_FOLDER"/output "$IMG_NAME
+cmd="docker run --name "$CONTAINER_NAME" --rm -ti -v "$GROUPFILE_FOLDER":/group/ -v "$FS_DATASET":/input/ -v "$OUTPUT_FOLDER"/output/ "$IMG_NAME
 echo $cmd
 eval $cmd
