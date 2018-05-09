@@ -38,7 +38,7 @@ echo "[  OK  ] Creating the new image: "$IMG_NAME
 CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
-echo "[  OK  ] Running container: "$CONTAINER_NAME
-cmd="docker run --name "$CONTAINER_NAME" -v "$GROUPFILE":/group -v "$FS_DATASET":/input -v "$OUTPUT_FOLDER"/output -rm -ti "$IMG_NAME
+echo -e "\n\n[  OK  ] Running container: "$CONTAINER_NAME
+cmd="docker run --name "$CONTAINER_NAME" -v "$GROUPFILE_FOLDER":/group -v "$FS_DATASET":/input -v "$OUTPUT_FOLDER"/output --rm -ti "$IMG_NAME
 echo $cmd
 eval $cmd

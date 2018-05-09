@@ -21,8 +21,8 @@ ENV http_proxy=$proxy
 ENV TERM=xterm-256color
 
 # Update container
-RUN apt-get -y update && \
-	apt-get -y install perl tcsh bash wget unzip
+# RUN apt-get -y update && \
+# 	apt-get -y install perl tcsh bash wget unzip
 
 # Copy license to container
 COPY license /opt/freesurfer/.license
@@ -37,9 +37,6 @@ RUN chmod -R 777 /root/enigma_shape
 # Set Environment Variables
 ENV FS=/opt/freesurfer
 ENV runDirectory=/root/enigma_shape/
-ENV groupfile=/group/groupfile.csv
-ENV runFS=/input
-ENV outDirectory=/output
 
 # ENTRYPOINT ["/root/enigma_shape/shape_group_run.sh"]
 ENTRYPOINT ["/root/enigma_shape/run_analysis.sh"]

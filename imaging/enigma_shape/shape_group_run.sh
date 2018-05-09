@@ -6,9 +6,9 @@
 # download ENGIMA_SHAPE package
 # unzip
 
-# groupfile=$1
-# runFS=$2
-# outDirectory=$3
+groupfile=$1
+runFS=$2
+outDirectory=$3
 
 #echo $groupfile
 
