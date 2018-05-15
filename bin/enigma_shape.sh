@@ -31,3 +31,4 @@ SCRIPT=$CURRENT_DIR/../imaging/build.sh
 
 CMD="bash "$SCRIPT" "${FS_DATASET}" "${OUTPUT_FOLDER}" "${GROUPFILE_FOLDER}" "$1
 eval $CMD
+echo -e "\n\n\n"
