@@ -7,6 +7,7 @@
 # 	$(pwd)
 
 # ==== FOLDERS ====
+<<<<<<< HEAD
 FS_DATASET=$1
 OUTPUT_FOLDER=$2
 GROUPFILE_FOLDER=$3
@@ -44,6 +45,6 @@ CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
 echo -e "\n\n[  OK  ] Running container: "$CONTAINER_NAME
-cmd="docker run --name "$CONTAINER_NAME" --rm -ti -v "$GROUPFILE_FOLDER":/group -v "$FS_DATASET":/input -v "$OUTPUT_FOLDER"/output "$IMG_NAME
+cmd="docker run --name "$CONTAINER_NAME" --rm -ti -v "$GROUPFILE_FOLDER":/group/ -v "$FS_DATASET":/input/ -v "$OUTPUT_FOLDER":/output/ "$IMG_NAME
 echo $cmd
 eval $cmd
