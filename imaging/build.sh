@@ -7,9 +7,14 @@
 # 	$(pwd)
 
 # ==== FOLDERS ====
-FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD
-OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker
-GROUPFILE_FOLDER=/home/sssilvar/Documents/group
+FS_DATASET=$1
+OUTPUT_FOLDER=$2
+GROUPFILE_FOLDER=$3
+
+echo -e "\n\n[  OK  ] Starting ENIGMA Shape analysis"
+echo -e "\n\t FreeSurfer processed data in: "${FS_DATASET}
+echo -e "\n\t Folder that contains \"groupfile.csv\": "${FS_DATASET}
+echo -e "\n\t FreeSurfer processed data in: "${FS_DATASET}
 
 
 # Set parameters up

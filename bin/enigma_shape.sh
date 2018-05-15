@@ -13,8 +13,21 @@
 # 	-v <output_folder>:/output \
 # 	sssilvar/eshape_fs /group/groupfile.csv /input /output
 
-docker run -it \
-	-v /home/sssilvar/Documents/:/group \
-	-v /home/sssilvar/Documets/dataset/:/input \
-	-v /home/sssilvar/Documets/output:/output \
-	sssilvar/eshape_fs:1.0 /group/groupfile.csv /input /output
+# docker run -it \
+# 	-v /home/sssilvar/Documents/:/group \
+# 	-v /home/sssilvar/Documets/dataset/:/input \
+# 	-v /home/sssilvar/Documets/output:/output \
+# 	sssilvar/eshape_fs:1.0 /group/groupfile.csv /input /output
+
+
+# ==== FOLDERS ====
+FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD
+OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker
+GROUPFILE_FOLDER=/home/sssilvar/Documents/group
+
+# Get current dir
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT=$CURRENT_DIR/imaging/build.sh
+
+CMD="bash "$SCRIPT
+eval $CMD
