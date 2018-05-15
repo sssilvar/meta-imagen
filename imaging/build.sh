@@ -12,16 +12,16 @@ OUTPUT_FOLDER=$2
 GROUPFILE_FOLDER=$3
 
 echo -e "\n\n[  OK  ] Starting ENIGMA Shape analysis"
-echo -e "\n\t FreeSurfer processed data in: "${FS_DATASET}
-echo -e "\n\t Folder that contains \"groupfile.csv\": "${FS_DATASET}
-echo -e "\n\t FreeSurfer processed data in: "${FS_DATASET}
+echo -e "\n\t - FreeSurfer processed data in: "${FS_DATASET}
+echo -e "\n\t - Folder that contains \"groupfile.csv\": "${GROUPFILE}
+echo -e "\n\t - Results are going to be stored at: "${OUTPUT_FOLDER}
 
 
 # Set parameters up
 GROUPFILE=$GROUPFILE_FOLDER"/groupfile.csv"
 CONTAINER_NAME="enigma_shape"
 USER="sssilvar"
-PROXY=$1
+PROXY=$4
 
 IMG_NAME=$USER"/"$CONTAINER_NAME
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
