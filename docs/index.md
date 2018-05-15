@@ -7,4 +7,4 @@ This project is a dockerized version of the work performed by Lorenzi et al. to 
 
 
 ## References
-	Lorenzi et al. Susceptibility of brain atrophy to TRIB3 in Alzheimer's disease, evidence from functional prioritization in imaging genetics. PNAS, 2018.
+- Lorenzi et al. Susceptibility of brain atrophy to TRIB3 in Alzheimer's disease, evidence from functional prioritization in imaging genetics. PNAS, 2018.
