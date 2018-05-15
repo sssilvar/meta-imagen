@@ -15,3 +15,28 @@ As you may see, each folder corresponds to one subject's image processed. Inside
 
 ## 2. Execute the ENIGMA Shape pipeline
 _Before doing so, it is necessary to have Docker installed. See [get.docker.com](https://get.docker.com/) to get more information._
+_You also will need to fill CSV file called _groupfile.csv_ that contains the subject's IDs (_subj_ column) and the diagnosis (_dx_ column)._
+
+### 2.1 Setting up the software
+To set up the software, you have to set three directory paths in `bin/enigma_shape.sh`
+
+* `FS_DATASET`: Refers to the path of the FreeSurfer processed dataset
+* `OUTPUT_FOLDER`: Where the data after the ENIGMA Shape analysis will be stored
+* `GROUPFILE_FOLDER`: Where the _groupfile.csv_ file is stored
+
+### 2.2 Run it!
+Everything is ready to be run. To do so, you will just need to execute:
+
+	bin/enigma_shape.sh
+
+__IMPORTANT!__: If you need to connect through a proxy, you shall execute:
+
+	bin/enigma_shape.sh http://[user]:[password]@[proxy-server]:[port]/
+
+
+
+## FAQ
+### How can I change the regions that are being analysed?
+The regions included in the analysis can be changed inside `imaging/enigma_shape/shape_group_run.sh`. You just need to change the variable `setROIS` which by default is set as:
+
+	setROIS="10 11 12 13 17 18 26 49 50 51 52 53 54 58"
