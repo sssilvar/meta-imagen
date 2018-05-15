@@ -27,7 +27,7 @@ GROUPFILE_FOLDER=/home/sssilvar/Documents/group
 
 # Get current dir
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SCRIPT=$CURRENT_DIR/imaging/build.sh
+SCRIPT=$CURRENT_DIR/../imaging/build.sh
 
 CMD="bash "$SCRIPT" "${FS_DATASET}" "${OUTPUT_FOLDER}" "${GROUPFILE_FOLDER}" "$1
 eval $CMD
