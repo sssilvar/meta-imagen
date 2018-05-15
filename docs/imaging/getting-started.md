@@ -14,4 +14,4 @@ As you may see, each folder corresponds to one subject's image processed. Inside
 
 
 ## 2. Execute the ENIGMA Shape pipeline
-__Before doing so, it is necessary to have Docker installed. See [get.docker.com](https://get.docker.com/) to get more information.__
+_Before doing so, it is necessary to have Docker installed. See [get.docker.com](https://get.docker.com/) to get more information._
