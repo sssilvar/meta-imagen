@@ -7,7 +7,6 @@
 # 	$(pwd)
 
 # ==== FOLDERS ====
-<<<<<<< HEAD
 FS_DATASET=$1
 OUTPUT_FOLDER=$2
 GROUPFILE_FOLDER=$3
