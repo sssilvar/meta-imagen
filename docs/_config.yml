@@ -1,4 +1,4 @@
-theme: jekyll-theme-awesome
+theme: jekyll-theme-dinky
 gems:
   - jekyll-feed
   - jekyll-mentions
