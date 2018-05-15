@@ -14,7 +14,7 @@ PROXY=$4
 
 echo -e "\n\n[  OK  ] Starting ENIGMA Shape analysis"
 echo -e "\n\t - FreeSurfer processed data in: "${FS_DATASET}
-echo -e "\n\t - Folder that contains groupfile.csv: "${GROUPFILE}
+echo -e "\n\t - Folder that contains \"groupfile.csv\": "${GROUPFILE_FOLDER}
 echo -e "\n\t - Results are going to be stored at: "${OUTPUT_FOLDER}
 
 
