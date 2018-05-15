@@ -2,7 +2,7 @@
 
 ## Introduction
 This project is a dockerized version of the work performed by Lorenzi et al. to be implemented over any dataset. The main objective is to correlate genetic and structural information in neuroimages. That makes this works to be divided in two parts:
-* Structural analysis
+* [Structural analysis](/about)
 * Genetical analysis
 
 
