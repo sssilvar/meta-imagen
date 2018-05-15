@@ -15,7 +15,7 @@ As you may see, each folder corresponds to one subject's image processed. Inside
 
 ## 2. Execute the ENIGMA Shape pipeline
 _Before doing so, it is necessary to have Docker installed. See [get.docker.com](https://get.docker.com/) to get more information._
-_You also will need to fill CSV file called _groupfile.csv_ that contains the subject's IDs (_subj_ column) and the diagnosis (_dx_ column)._
+_You also will need to fill CSV file called _groupfile.csv_ that contains the subject's IDs (*subj* column) and the diagnosis (*dx* column)._
 
 ### 2.1 Setting up the software
 To set up the software, you have to set three directory paths in `bin/enigma_shape.sh`
