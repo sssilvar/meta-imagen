@@ -16,6 +16,7 @@ echo -e "\n\n[  OK  ] Starting ENIGMA Shape analysis"
 echo -e "\n\t - FreeSurfer processed data in: "${FS_DATASET}
 echo -e "\n\t - Folder that contains \"groupfile.csv\": "${GROUPFILE_FOLDER}
 echo -e "\n\t - Results are going to be stored at: "${OUTPUT_FOLDER}
+echo -e "\n\n\n"
 
 
 # Set parameters up
@@ -27,19 +28,19 @@ IMG_NAME=$USER"/"$CONTAINER_NAME
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
-echo "[  OK  ] Stoping container"
+echo -e "\n\n[  OK  ] Stoping container"
 STOP_CONT="docker stop "$CONTAINER_NAME
 eval $STOP_CONT
 
-echo "[  OK  ] Deleting container"
+echo -e "\n\n[  OK  ] Deleting container"
 DEL_CONT="docker rm "$CONTAINER_NAME
 eval $DEL_CONT
 
-echo "[  OK  ] Deleting image"
+echo -e "\n\n[  OK  ] Deleting image"
 DEL_IMG="docker rmi "$IMG_NAME
 eval $DEL_IMG
 
-echo "[  OK  ] Creating the new image: "$IMG_NAME
+echo -e "\n\n[  OK  ] Creating the new image: "$IMG_NAME
 CRE_IMG="docker build -t "$IMG_NAME" --build-arg proxy="$PROXY" "$CURRENT_DIR
 eval $CRE_IMG
 
