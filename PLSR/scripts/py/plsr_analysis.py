@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""
+__author__ = "Santiago Smith, Marco Lorenzi"
+__copyright__ = "Copyright 2018, INRIA"
+__description__ = """
 This code performs a statistical analysis over the files resultant from the ENIGMA Shape pipeline.
 It is necessary to have the followin files in order to have a good performance:
     - groupfile_LogJacs.csv
@@ -7,15 +9,13 @@ It is necessary to have the followin files in order to have a good performance:
 
 It is necessary to execute this code per each file as follows:
 
-    python3 plsr_analysis.py [path_to_the_X_csv_file] [path_to_the_Y_csv_file]
+    python3 plsr_analysis.py -x [path_to_the_X_csv_file] -y [path_to_the_Y_csv_file]
 """
-
-__author__ = "Santiago Smith, Marco Lorenzi"
-__copyright__ = "Copyright 2018, INRIA"
 
 
 import os
 import sys
+import argparse
 
 import numpy as np
 import pandas as pd
@@ -59,6 +59,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     # Calculate average and standard deviation feature-wise
     avgX, stdX, avgY, stdY = plsr.GetStatistics()
 
+    print("\nSaving data in: ", out_dir)
     # Save the results
     try:
         os.mkdir(out_dir)
@@ -76,6 +77,22 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
 if __name__ == '__main__':
     csv_file = '/user/ssilvari/home/Documents/temp/output/groupfile_thick.csv'
 
-    plsr_analysis(csv_file_x=csv_file, csv_file_y=csv_file)
+    # Deal with the arguments
+    parser = argparse.ArgumentParser(description=__description__)
+    parser.add_argument('-x', metavar='-x',
+                        help='Path to the csv_file that contains the data for X',
+                        default=csv_file)
+    parser.add_argument('-y', metavar='-y',
+                        help='Path to the csv_file that contains the data for X',
+                        default=csv_file)
+    args = parser.parse_args()
+
+    print("====== PLSR ANALYSIS ======")
+    print("\t X-Data located at: ", args.x)
+    print("\t Y-Data located at: ", args.y)
+
+    plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
+
+    print("[  OK  ] DONE")
 
 

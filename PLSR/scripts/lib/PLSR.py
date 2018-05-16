@@ -71,6 +71,7 @@ class PLSR:
 
         self._U = np.real(self._X.T.dot(U1))
         self._V = np.real(self._Y.T.dot(B))
+        print("done")
 
     def GetStatistics(self):
         """
