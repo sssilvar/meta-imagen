@@ -1,4 +1,3 @@
-# Meta-ImaGen Dockerized
+# MetaImaGen Analysis dockerized
 
-TODO:
- - Do not forget to change the ROIs in `shape_group_run.sh`
+Everything you need to know is here: [https://sssilvar.github.io/meta-imagen/](https://sssilvar.github.io/meta-imagen/)
