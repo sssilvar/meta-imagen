@@ -48,6 +48,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     Y = df_y.values
 
     # Start PLS Analysis
+    print("[  OK  ] Starting PLSR")
     plsr = PLSR(X, Y)
     plsr.Initialize()
 
@@ -90,6 +91,7 @@ if __name__ == '__main__':
     print("====== PLSR ANALYSIS ======")
     print("\t X-Data located at: ", args.x)
     print("\t Y-Data located at: ", args.y)
+    print("\n")
 
     plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
 
