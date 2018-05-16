@@ -6,4 +6,4 @@ eval $CMD
 
 echo -e "[  OK  ] End of the ENIGMA Shape analysis\n\n"
 eval "ls /output"
-eval "chmod 777 -R /output"
+eval "chmod 766 -R /output"

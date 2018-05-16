@@ -20,6 +20,7 @@ _Before doing so, it is necessary to have Docker installed. See [Docker's docume
 
 ### 2.1 Setting up the software
 To set up the software, you have to set three directory paths in `bin/enigma_shape.sh`
+_NOTE: Paths cannot contain spaces nor special characters_
 
 * `FS_DATASET`: Refers to the path of the FreeSurfer processed dataset
 * `OUTPUT_FOLDER`: Where the data after the ENIGMA Shape analysis will be stored

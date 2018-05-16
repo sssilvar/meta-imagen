@@ -6,9 +6,9 @@
 # map the /output folder where you wnat the results to be saved
 
 # ==== FOLDERS ====
-FS_DATASET=/home/sssilvar/Documents/dataset/FreeSurferSD
-OUTPUT_FOLDER=/home/sssilvar/Documents/output_docker
-GROUPFILE_FOLDER=/home/sssilvar/Documents/group
+FS_DATASET=/user/ssilvari/home/Documents/temp/input
+OUTPUT_FOLDER=/user/ssilvari/home/Documents/temp/output
+GROUPFILE_FOLDER=/user/ssilvari/home/Documents/temp/group
 
 # Get current dir
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

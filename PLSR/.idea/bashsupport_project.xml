@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BashSupportProjectSettings">
+    <option name="globalVariables">
+      <set>
+        <option value="FS_DATASET" />
+        <option value="GROUPFILE_FOLDER" />
+      </set>
+    </option>
+  </component>
+</project>
