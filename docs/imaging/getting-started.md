@@ -23,6 +23,9 @@ To set up the software, you have to set three directory paths in `bin/enigma_sha
 * `OUTPUT_FOLDER`: Where the data after the ENIGMA Shape analysis will be stored
 * `GROUPFILE_FOLDER`: Where the _groupfile.csv_ file is stored
 
+You will see something like this:
+![alt text](img/env.png "Variables necessary for the analysis")
+
 ### 2.2 Run it!
 Everything is ready to be run. To do so, you will just need to execute:
 
