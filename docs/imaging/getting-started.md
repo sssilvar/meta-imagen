@@ -12,6 +12,8 @@ As you may see, each folder corresponds to one subject's image processed. Inside
 
 ![alt text](img/recon-all-subject.png "Inside a subject's folder after recon-all")
 
+If your processed data does not follow this structure, the pipeline could not work.
+
 
 ## 2. Execute the ENIGMA Shape pipeline
 _Before doing so, it is necessary to have Docker installed. See [Docker's documentation](https://docs.docker.com/install/) to get more information. You also will need to fill the CSV file called **groupfile.csv** which contains the subject's IDs (*subj* column) and the diagnosis (*dx* column)._
