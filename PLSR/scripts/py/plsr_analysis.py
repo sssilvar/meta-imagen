@@ -12,7 +12,6 @@ It is necessary to execute this code per each file as follows:
     python3 plsr_analysis.py -x [path_to_the_X_csv_file] -y [path_to_the_Y_csv_file]
 """
 
-
 import os
 import sys
 import argparse
@@ -66,13 +65,40 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
         os.mkdir(out_dir)
     except IOError:
         pass
-    np.save(os.path.join(out_dir, 'avgX'), avgX)
-    np.save(os.path.join(out_dir, 'avgY'), avgY)
-    np.save(os.path.join(out_dir, 'stdX'), stdX)
-    np.save(os.path.join(out_dir, 'stdY'), stdY)
+    ext = '.npz'
+    out_file = os.path.join(out_dir, 'plsr_results' + ext)
 
-    np.save(os.path.join(out_dir, 'components'), comp)
-    np.save(os.path.join(out_dir, 'weights'), weights)
+    np.savez(
+        out_file,
+        avx=avgX, avy=avgY,
+        stx=stdX, sty=stdY,
+        comp=comp, w=weights
+    )
+
+    report = ("[  OK  ] REPORT: \n"
+              "\t Data dimensions (shape):\n"
+              "\t avgX: %s\n"
+              "\t stdX: %s\n\n"
+              "\t avgY: %s\n"
+              "\t stdY: %s\n\n"
+              "\t Components: %s\n"
+              "\t Weights: %s\n") % (avgX.shape, stdX.shape, avgY.shape, stdY.shape, np.shape(comp), np.shape(weights))
+    print(report)
+
+    # Check the data obtained:
+    t = np.load(out_file)
+
+    report = ("[  OK  ] REPORT (checking from files): \n"
+              "\t Data dimensions (shape):\n"
+              "\t avgX: %s\n"
+              "\t stdX: %s\n\n"
+              "\t avgY: %s\n"
+              "\t stdY: %s\n\n"
+              "\t Components: %s\n"
+              "\t Weights: %s\n") % \
+             (t['avx'].shape, t['stx'].shape, t['avy'].shape, t['sty'].shape,
+              np.shape(t['comp']), np.shape(t['w']))
+    print(report)
 
 
 if __name__ == '__main__':
@@ -96,5 +122,3 @@ if __name__ == '__main__':
     plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
 
     print("[  OK  ] DONE")
-
-

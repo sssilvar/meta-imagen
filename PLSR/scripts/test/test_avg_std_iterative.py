@@ -29,11 +29,9 @@ if __name__ == '__main__':
     wf = Welford()
     for i in range(n):
         data_batch = split[i]
-        print(" Iteration ", i + 1)
-        print("\t Batch size:", data_batch.shape)
-
         wf(data_batch)
-        print(wf)
+
+    print(wf)
 
 
 
