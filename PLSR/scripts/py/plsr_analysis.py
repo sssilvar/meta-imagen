@@ -16,6 +16,7 @@ import os
 import sys
 import argparse
 
+import requests
 import numpy as np
 import pandas as pd
 
@@ -110,7 +111,7 @@ if __name__ == '__main__':
                         help='Path to the csv_file that contains the data for X',
                         default=csv_file)
     parser.add_argument('-y', metavar='-y',
-                        help='Path to the csv_file that contains the data for X',
+                        help='Path to the csv_file that contains the data for Y',
                         default=csv_file)
     args = parser.parse_args()
 

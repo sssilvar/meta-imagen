@@ -1,7 +1,7 @@
 import os
 import sys
 
-import numpy as npshape
+import numpy as np
 
 
 # Set root folder

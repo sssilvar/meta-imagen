@@ -16,7 +16,7 @@ if __name__ == '__main__':
     realt_std = 0.8
 
     # Generate random data
-    data = np.random.normal(real_mean, realt_std, 30000)
+    data = np.random.normal(real_mean, realt_std, [30000, 30])
 
     print("Data shape: ", data.shape)
     print("Real Mean: ", data.mean())
@@ -26,12 +26,21 @@ if __name__ == '__main__':
     split = np.split(data, n)
 
     # Start the iterative calculation
-    wf = Welford()
+    avg = []
+    std = []
+    wf_arr = []
+
     for i in range(n):
         data_batch = split[i]
-        wf(data_batch)
+        wf = Welford()
+        for d in data_batch.T:
+            wf(d)
+        avg.append(wf.mean)
+        std.append(wf.std)
 
-    print(wf)
+    #     wf(data_batch)
+    #
+    # print(wf)
 
 
 
