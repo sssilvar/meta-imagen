@@ -1,4 +1,5 @@
 import numpy as np
+from .welford import Welford
 
 
 class PLSR:
@@ -104,3 +105,11 @@ class PLSR:
         stdY = np.array(stdY)
 
         return avgX, stdX, avgY, stdY
+
+    @property
+    def x(self):
+        return self._X
+
+    @property
+    def y(self):
+        return self._Y

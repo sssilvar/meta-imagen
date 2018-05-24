@@ -21,10 +21,11 @@ import numpy as np
 import pandas as pd
 
 # Set root folder
-root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+root = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root)
 
 from lib.PLSR import PLSR
+from lib import data
 
 
 def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
@@ -57,7 +58,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     comp = plsr.ReturnComponents()
     weights = plsr.GetWeights()
 
-    # Calculate average and standard deviation feature-wise
+    # Calculate average and standard deviation feature-wise (From the center)
     avgX, stdX, avgY, stdY = plsr.GetStatistics()
 
     print("\nSaving data in: ", out_dir)
@@ -76,7 +77,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
         comp=comp, w=weights
     )
 
-    report = ("[  OK  ] REPORT: \n"
+    report = ("[  OK  ] PLSR analysis report: \n"
               "\t Data dimensions (shape):\n"
               "\t avgX: %s\n"
               "\t stdX: %s\n\n"
@@ -86,20 +87,9 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
               "\t Weights: %s\n") % (avgX.shape, stdX.shape, avgY.shape, stdY.shape, np.shape(comp), np.shape(weights))
     print(report)
 
-    # Check the data obtained:
-    t = np.load(out_file)
-
-    report = ("[  OK  ] REPORT (checking from files): \n"
-              "\t Data dimensions (shape):\n"
-              "\t avgX: %s\n"
-              "\t stdX: %s\n\n"
-              "\t avgY: %s\n"
-              "\t stdY: %s\n\n"
-              "\t Components: %s\n"
-              "\t Weights: %s\n") % \
-             (t['avx'].shape, t['stx'].shape, t['avy'].shape, t['sty'].shape,
-              np.shape(t['comp']), np.shape(t['w']))
-    print(report)
+    # Update the data on the server:
+    print('\n\nUpdating results on the server...')
+    data.upload_stats_to_server(plsr)
 
 
 if __name__ == '__main__':
@@ -122,4 +112,4 @@ if __name__ == '__main__':
 
     plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
 
-    print("[  OK  ] DONE")
+    print("[  OK  ] DONE!")
