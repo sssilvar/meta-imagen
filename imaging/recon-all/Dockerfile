@@ -1,4 +1,4 @@
-# Create a base docker container that will execute the ENIGMA Shape analysis and
+# Create a base docker container that will execute the FreeSurfer recon-all pipeline and
 # put the results in the /output foder
 #
 # Example usage:
@@ -6,7 +6,7 @@
 #       -v </groupfile/directory>:/group \
 #       -v </input/directory>:/input \
 #       -v </output/directory>:/output \
-#       sssilvar/eshape_fs /group/groupfile.csv /input /output
+#       sssilvar/recon_all /group/groupfile.csv /input /output
 #
 
 
@@ -22,21 +22,16 @@ ENV TERM=xterm-256color
 
 # Update container
 RUN apt-get -y update && \
-	apt-get -y install perl tcsh bash wget unzip
+	apt-get -y install perl tcsh bash wget unzip python3
 
 # Copy license to container
-COPY license /opt/freesurfer/.license
+COPY ../license /opt/freesurfer/.license
 
 # Create an input and an output folders
-RUN mkdir /input && mkdir /output && mkdir /group
+RUN mkdir /input && mkdir /output && mkdir /group && mkdir /root/scripts
 
-# Add enigma shape analysis
-ADD enigma_shape /root/enigma_shape
-RUN chmod -R 777 /root/enigma_shape
-
-# Set Environment Variables
-ENV FS=/opt/freesurfer
-ENV runDirectory=/root/enigma_shape/
+# Add scripts to container
+ADD scripts /root/scripts
 
 # Run entrypoint
-ENTRYPOINT ["/root/enigma_shape/run_analysis.sh"]
+ENTRYPOINT ["/root/scripts/entrypoint.sh"]
