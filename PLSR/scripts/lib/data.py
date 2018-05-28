@@ -47,7 +47,7 @@ def is_allowed_to_update():
     print('[  INFO  ] Checking if this client is allowed to update')
     updated_ids = np.loadtxt(log_filename, dtype=str)
 
-    server_url = get_server_url() + 'centers/stats/'
+    server_url = get_server_url() + 'stats/'
     for id in updated_ids:
         stat_url = server_url + id
         counter = 10
@@ -60,7 +60,7 @@ def is_allowed_to_update():
                     res = r.json()
                     if res['found']:
                         print('[  WARNING  ] This client has already uploaded data to the API server. '
-                              'So, it is not allowed to post any results. Please contact support.')
+                              'So, it is not allowed to post any results. Please contact support. Transaction ID: ', id)
                         print('[  INFO  ] No data has been uploaded')
                         return False
                 else:
