@@ -5,7 +5,7 @@ from datetime import datetime
 import dateutil.parser
 import numpy as np
 import requests
-
+import pandas as pd
 from .welford import Welford
 
 log_filename = os.path.join(os.environ['HOME'], 'plsr.log')
@@ -45,10 +45,11 @@ def is_time_to_update(current_data, new_data):
 def is_allowed_to_update():
     """Check if there is not existing operations from this client"""
     print('[  INFO  ] Checking if this client is allowed to update')
-    updated_ids = np.loadtxt(log_filename, dtype=str)
+    df = pd.read_csv(log_filename, names=['id'])
 
     server_url = get_server_url() + 'stats/'
-    for id in updated_ids:
+    for id in df['id']:
+        print('[  INFO  ] Update with Id: ', id, ' found.')
         stat_url = server_url + id
         counter = 10
 
@@ -220,7 +221,7 @@ def upload_stats_to_server(plsr):
     y_data = plsr.y
 
     # Define the url of the API
-    stats_url = get_server_url() + 'centers/stats'
+    stats_url = get_server_url() + 'stats'
 
     # Get the current statistics (API data is not being considered)
     avx, stx, avy, sty = plsr.GetStatistics()
@@ -243,13 +244,14 @@ def upload_stats_to_server(plsr):
             api_data = res['msg']
             print('[  INFO  ] Last update id: ', api_data['_id'])
 
-            # Recalculate statistics
-            new_data = recalculate_statistics(api_data, x_data, y_data)
+            
 
             if is_allowed_to_update():
                 "Check if there is really new data to be updated"
+                # Recalculate statistics
+                new_data = recalculate_statistics(api_data, x_data, y_data)
+                
                 print('[  OK  ] Updating data into server: ' + stats_url)
-
                 new_data = cast_data(new_data)
                 # Post the results to the API
                 post_data(new_data, stats_url)
