@@ -104,7 +104,7 @@ def get_server_url():
     """
     try:
         url = os.environ['API_HOST']
-        print('[  OK  ] Server url loaded: ', url)
+        # print('[  OK  ] Server url loaded: ', url)
     except KeyError:
         url = 'http://localhost:3300/'
         print('[  WARNING  ] API_HOST environment variable was not found. default server url was set at: ', url)
@@ -136,6 +136,43 @@ def post_data(json_data, server_url):
                     logfile.write(res['id'] + '\n')
 
                 print('[  INFO  ] Update saved with id: ', res['id'])
+                print('[  OK  ] Transmission finished')
+                return True
+            elif res['success'] is False:
+                print('[  ERROR  ] Transmission to server was not successful')
+        elif r.status_code is not 200:
+            print('[  ERROR  ] There is an HTTP error - Status Code: ', r.status_code)
+
+        print('[  INFO  ] Trying to connect again')
+        counter = counter - 1
+        if counter is 0:
+            print('[  ERROR  ] Number of tries exceeded')
+            return False
+        time.sleep(2)
+    print('[  OK  ] Transmission finished')
+    return False
+
+
+def put_data(json_data, server_url):
+    """
+    Posts the data to the API server.
+    :param json_data: JSON serializable dict containing all the data
+    :param server_url: URL where data is being posted
+    :return: bool - Successful or failed transmission
+    """
+
+    # try 10 times
+    counter = 10
+
+    while counter > 0:
+        # Send the POST request
+        r = requests.put(server_url, json=json_data)
+
+        # Check the operation
+        if r.status_code is 200:
+            res = r.json()
+            if res['success'] is True:
+                print('\tData updated successfully')
                 print('[  OK  ] Transmission finished')
                 return True
             elif res['success'] is False:
@@ -215,13 +252,43 @@ def recalculate_statistics(old_data, x_data, y_data):
     return new_data
 
 
+def center_exists(id, centers_url):
+    "Checks if center id exists"
+    r = requests.get(centers_url)
+
+    if r.status_code is 200:
+        res = r.json()
+        if res == {}:
+            print('[  ERROR  ] Center ID was not found. Please, contact support.\n\tCenter id: ' + id)
+            return False
+        else:
+            return True
+
+
+def get_number_of_observations(x, y):
+    "Gets the number of observations and checks if X and Y are equal"
+    nx = np.shape(x)[0]
+    ny = np.shape(y)[0]
+    if nx == ny:
+        print('[  OK  ] Data consistent! :)\n\t Number of observations: ', nx)
+        return nx
+    else:
+        raise ValueError('[  ERROR  ] X and Y observations are not the same! Check the data')
+
+
 def upload_stats_to_server(plsr):
     # Get X and Y matrices
     x_data = plsr.x
     y_data = plsr.y
 
+    try:
+        center_id = os.environ['CLIENT_ID']
+    except KeyError:
+        raise KeyError('[  ERROR  ] ID environment variable was not found')
+
     # Define the url of the API
     stats_url = get_server_url() + 'stats'
+    center_url = get_server_url() + 'centers/' + center_id
 
     # Get the current statistics (API data is not being considered)
     avx, stx, avy, sty = plsr.GetStatistics()
@@ -231,45 +298,57 @@ def upload_stats_to_server(plsr):
         'currentAvgY': avy,
         'currentStdY': sty,
         'busy': False,
-        'updatedBy': 'c6442cb6-b839-4d39-b874-15dca769e75d'  # TODO: this has to come from the key
+        'updatedBy': center_id
     }
 
-    r = requests.get(stats_url)
-    if r.status_code is 200:
-        res = r.json()
-        if res['success'] and res['msg'] is not None:
-            "Connection successful and data has been initialized"
+    center_data = {
+        "avX": np.array(avx).tolist(),
+        "stX": np.array(stx).tolist(),
+        "avY": np.array(avy).tolist(),
+        "stY": np.array(sty).tolist(),
+        "comp": np.array(plsr.ReturnComponents()).tolist(),
+        "weights": np.array(plsr.GetWeights()).tolist(),
+        "numberOfSubjects": get_number_of_observations(x_data, y_data)
+    }
 
-            # Get data from JSON response
-            api_data = res['msg']
-            print('[  INFO  ] Last update id: ', api_data['_id'])
+    # Check if center exists
+    if center_exists(center_id, center_url):
+        r = requests.get(stats_url)
+        if r.status_code is 200:
+            res = r.json()
+            if res['success'] and res['msg'] is not None:
+                "Connection successful and data has been initialized"
 
-            
+                # Get data from JSON response
+                api_data = res['msg']
+                print('[  INFO  ] Last update id: ', api_data['_id'])
 
-            if is_allowed_to_update():
-                "Check if there is really new data to be updated"
-                # Recalculate statistics
-                new_data = recalculate_statistics(api_data, x_data, y_data)
-                
-                print('[  OK  ] Updating data into server: ' + stats_url)
-                new_data = cast_data(new_data)
-                # Post the results to the API
+                if is_allowed_to_update():
+                    "Check if there is really new data to be updated"
+                    # Recalculate statistics
+                    new_data = recalculate_statistics(api_data, x_data, y_data)
+
+                    print('[  OK  ] Updating data into server: ' + stats_url)
+                    new_data = cast_data(new_data)
+                    # Post the results to the API
+                    post_data(new_data, stats_url)
+                    put_data(center_data, center_url)
+
+            elif res['success'] and res['msg'] is None:
+                "Connection successful but, data has not been initialized (first time)"
+                print('[  WARINING  ] Database has not been initialized. \n\tInitializing...')
+
+                # Pre-process the data (serializable JSON)
+                new_data = cast_data(first_data)
+
+                # Initialize the number of iterations
+                new_data['currentK'] = x_data.shape[0]
+
+                # Post the data
                 post_data(new_data, stats_url)
+                put_data(center_data, center_url)
 
-        elif res['success'] and res['msg'] is None:
-            "Connection successful but, data has not been initialized (first time)"
-            print('[  WARINING  ] Database has not been initialized. \n\tInitializing...')
-
-            # Pre-process the data (serializable JSON)
-            new_data = cast_data(first_data)
-
-            # Initialize the number of iterations
-            new_data['currentK'] = x_data.shape[0]
-
-            # Post the data
-            post_data(new_data, stats_url)
-
-    elif r.status_code is not 200:
-        print('[  ERROR  ] Was not possible to connect to the server. '
-              'Check the server availability and/or the connection of your client.\n'
-              'Error code: {}'.format(r.status_code))
+        elif r.status_code is not 200:
+            print('[  ERROR  ] Was not possible to connect to the server. '
+                  'Check the server availability and/or the connection of your client.\n'
+                  'Error code: {}'.format(r.status_code))

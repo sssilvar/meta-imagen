@@ -37,7 +37,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     """
 
     # Get the work directory from the file path
-    workdir = os.path.dirname(csv_file)
+    workdir = os.path.dirname(csv_file_x)
     out_dir = os.path.join(workdir, 'plsr')
     print("[  OK  ] Working directory: ", workdir)
 

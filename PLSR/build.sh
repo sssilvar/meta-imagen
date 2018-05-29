@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #====FOLDER====
-DATA_FOLDER="/user/ssilvari/home/Documents/temp/"
+DATA_FOLDER="/user/ssilvari/home/Documents/temp/output"
 
 # Set parameters up
 CONTAINER_NAME="plsr"
@@ -28,6 +28,6 @@ CRE_IMG="docker build -t "${IMG_NAME}" --build-arg proxy="${PROXY}" "${CURRENT_D
 eval ${CRE_IMG}
 
 echo -e "\n\n[  OK  ] Running container: "${CONTAINER_NAME}
-CMD="docker run --name "${CONTAINER_NAME}" --rm -ti -v "${DATA_FOLDER}":/data/ "${IMG_NAME}
+CMD="docker run --name "${CONTAINER_NAME}" --rm -ti -v "${DATA_FOLDER}":/root/data/ "${IMG_NAME}
 echo ${CMD}
 eval ${CMD}
