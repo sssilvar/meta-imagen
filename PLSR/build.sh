@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #====FOLDER====
-DATA_FOLDER="/user/ssilvari/home/Documents/temp/output"
+DATA_FOLDER=$1
 
 # Set parameters up
 CONTAINER_NAME="plsr"

@@ -8,7 +8,7 @@ import requests
 import pandas as pd
 from .welford import Welford
 
-log_filename = os.path.join(os.environ['HOME'], 'plsr.log')
+log_filename = os.path.join(os.environ['DATA_FOLDER'], '.plsr')
 
 
 def is_time_to_update(current_data, new_data):
@@ -45,7 +45,12 @@ def is_time_to_update(current_data, new_data):
 def is_allowed_to_update():
     """Check if there is not existing operations from this client"""
     print('[  INFO  ] Checking if this client is allowed to update')
-    df = pd.read_csv(log_filename, names=['id'])
+
+    if os.path.isfile(log_filename):
+        df = pd.read_csv(log_filename, names=['id'])
+    else:
+        os.mknod(log_filename)
+        df = pd.read_csv(log_filename, names=['id'])
 
     server_url = get_server_url() + 'stats/'
     for id in df['id']:
