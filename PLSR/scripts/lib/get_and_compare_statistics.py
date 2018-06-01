@@ -17,7 +17,7 @@ def get_data(surl):
         except KeyError:
             return res
     else:
-        print('[  ERROR  ] Connection and/or request error. - Code ', r.status_code)
+        print('[  ERROR  ] Connection and/or request error. - bin ', r.status_code)
         return None
 
 

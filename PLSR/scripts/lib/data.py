@@ -146,7 +146,7 @@ def post_data(json_data, server_url):
             elif res['success'] is False:
                 print('[  ERROR  ] Transmission to server was not successful')
         elif r.status_code is not 200:
-            print('[  ERROR  ] There is an HTTP error - Status Code: ', r.status_code)
+            print('[  ERROR  ] There is an HTTP error - Status bin: ', r.status_code)
 
         print('[  INFO  ] Trying to connect again')
         counter = counter - 1
@@ -183,7 +183,7 @@ def put_data(json_data, server_url):
             elif res['success'] is False:
                 print('[  ERROR  ] Transmission to server was not successful')
         elif r.status_code is not 200:
-            print('[  ERROR  ] There is an HTTP error - Status Code: ', r.status_code)
+            print('[  ERROR  ] There is an HTTP error - Status bin: ', r.status_code)
 
         print('[  INFO  ] Trying to connect again')
         counter = counter - 1
