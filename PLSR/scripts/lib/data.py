@@ -213,48 +213,75 @@ def recalculate_statistics(old_data, x_data, y_data):
         'updatedBy': 'c6442cb6-b839-4d39-b874-15dca769e75d'  # TODO: this has to come from the key
     }
 
-    # Load the current data: mean, std and iteration
-    for i in range(len(old_data['currentAvgX'])):
-        "Start a for loop to recalculate the statistics element-wise (same length for all)"
-        # Create a Welford object for X and Y
-        wfx = Welford()
-        wfy = Welford()
+    # Check if old data exists
+    if old_data is None:
+        print('[  INFO  ] Looks like this is the first center in posting data!')
+        for col in x_data.T:
+            wfx = Welford()
+            wfy = Welford()
 
-        # Initialize Welford method
-        wfx.k = old_data['currentK']
-        wfx.M = old_data['currentAvgX'][i]
-        wfx.S = old_data['currentStdX'][i]
+            wfx(col)
+            wfy(col)
 
-        wfy.k = old_data['currentK']
-        wfy.M = old_data['currentAvgY'][i]
-        wfy.S = old_data['currentStdY'][i]
+            # Create the new data
+            new_data['currentAvgX'].append(wfx.mean)
+            new_data['currentStdX'].append(wfx.S)
 
-        # For debugging
-        # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
+            new_data['currentAvgY'].append(wfy.mean)
+            new_data['currentStdY'].append(wfy.S)
 
-        # Recalculate statistics
-        wfx(x_data[:, i])
-        wfy(y_data[:, i])
+            if wfx.k == wfy.k:
+                new_data['currentK'] = wfx.k
+            else:
+                new_data['currentK'] = None
+                print('[  ERROR  ] Number of observations for X and Y is not the same')
+                return None
 
-        # For debugging
-        # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
+        # Return new data
+        return new_data
+    else:
+        # Load the current data: mean, std and iteration
+        for i in range(len(old_data['currentAvgX'])):
+            "Start a for loop to recalculate the statistics element-wise (same length for all)"
+            # Create a Welford object for X and Y
+            wfx = Welford()
+            wfy = Welford()
 
-        # Create the new data
-        new_data['currentAvgX'].append(wfx.mean)
-        new_data['currentStdX'].append(wfx.std)
+            # Initialize Welford method
+            wfx.k = old_data['currentK']
+            wfx.M = old_data['currentAvgX'][i]
+            wfx.S = old_data['currentStdX'][i]
 
-        new_data['currentAvgY'].append(wfy.mean)
-        new_data['currentStdY'].append(wfy.std)
+            wfy.k = old_data['currentK']
+            wfy.M = old_data['currentAvgY'][i]
+            wfy.S = old_data['currentStdY'][i]
 
-        if wfx.k == wfy.k:
-            new_data['currentK'] = wfx.k
-        else:
-            new_data['currentK'] = 0
-            print('[  ERROR  ] Number of observations for X and Y is not the same')
-            return None
+            # For debugging
+            # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
 
-    # Return updated data
-    return new_data
+            # Recalculate statistics
+            wfx(x_data[:, i])
+            wfy(y_data[:, i])
+
+            # For debugging
+            # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
+
+            # Create the new data
+            new_data['currentAvgX'].append(wfx.mean)
+            new_data['currentStdX'].append(wfx.S)
+
+            new_data['currentAvgY'].append(wfy.mean)
+            new_data['currentStdY'].append(wfy.S)
+
+            if wfx.k == wfy.k:
+                new_data['currentK'] = wfx.k
+            else:
+                new_data['currentK'] = 0
+                print('[  ERROR  ] Number of observations for X and Y is not the same')
+                return None
+
+        # Return updated data
+        return new_data
 
 
 def center_exists(id, centers_url):
@@ -344,10 +371,8 @@ def upload_stats_to_server(plsr):
                 print('[  WARINING  ] Database has not been initialized. \n\tInitializing...')
 
                 # Pre-process the data (serializable JSON)
-                new_data = cast_data(first_data)
-
-                # Initialize the number of iterations
-                new_data['currentK'] = x_data.shape[0]
+                new_data = recalculate_statistics(old_data=None, x_data=x_data, y_data=y_data)
+                new_data = cast_data(new_data)
 
                 # Post the data
                 post_data(new_data, stats_url)

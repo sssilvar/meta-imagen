@@ -2,6 +2,7 @@
 
 #====FOLDER====
 DATA_FOLDER=$1
+ID=$2
 
 # Set parameters up
 CONTAINER_NAME="plsr"
@@ -24,7 +25,7 @@ DEL_IMG="docker rmi "${IMG_NAME}
 eval ${DEL_IMG}
 
 echo -e "\n\n[  OK  ] Creating the new image: "${IMG_NAME}
-CRE_IMG="docker build -t "${IMG_NAME}" --build-arg proxy="${PROXY}" "${CURRENT_DIR}
+CRE_IMG="docker build -t "${IMG_NAME}" --build-arg proxy="${PROXY}" --build-arg id="${ID}" "${CURRENT_DIR}
 eval ${CRE_IMG}
 
 echo -e "\n\n[  OK  ] Running container: "${CONTAINER_NAME}

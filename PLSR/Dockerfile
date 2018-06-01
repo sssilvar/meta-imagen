@@ -7,17 +7,15 @@ MAINTAINER Santiago Smith <sssilvar@unal.edu.co>
 ARG proxy
 ENV http_proxy=$proxy
 
+# Set ID
+ARG id
+ENV CLIENT_ID=$id
+
 # Prevent dpkg errors
 ENV TERM=xterm-256color
 
-# # Update container
-# RUN apt-get -y update && \
-# 	apt-get -y install python3 python3-numpy python3-pandas python3-requests
-
 # Set Server URL
 ENV API_HOST="http://ec2-34-217-80-61.us-west-2.compute.amazonaws.com:3300/"
-ENV CLIENT_ID="5b0c370074a6fd000f8a4c32"
-
 
 # Create data folder and set an ENV var
 RUN mkdir /root/data
