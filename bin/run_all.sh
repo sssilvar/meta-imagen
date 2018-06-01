@@ -29,7 +29,7 @@ ID="5b0d1750ef1a5c000f276e78"
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ## Run ENIGMA Shape Analysis
-#SCRIPT=${CURRENT_DIR}"/../imaging/build.sh"
+#SCRIPT=${CURRENT_DIR}"/../imaging/eshaoe/build.sh"
 #CMD="bash "${SCRIPT}" "${FS_DATASET}" "${OUTPUT_FOLDER}" "${GROUPFILE_FOLDER}" "$1
 #eval ${CMD}
 
