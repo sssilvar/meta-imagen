@@ -1,4 +1,6 @@
 import os, sys
+
+import numpy as np
 from os.path import join
 import pandas as pd
 
@@ -23,7 +25,11 @@ if __name__ == '__main__':
     # Load dataset: df
     df = pd.read_csv(csv_data)
 
-    for subject in [df['subj'][0]]:
+    # Parameters for features output
+    thick_data = []
+    index = []
+
+    for subject in df['subj'][:4]:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
@@ -67,9 +73,9 @@ if __name__ == '__main__':
 
                 # 14 - 15
                 join(bin_dir, 'ccbbm') + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + join(out_f, h + '_thick.raw') + ' 2e-4 ' + join(out_f, h + '_thick_2e-4.raw'),
-                join(bin_dir, 'ccbbm') + ' fastsampling ' + join(out_f, h + '.sphere.reg.m') + \
-                '[' + join(bin_dir, 'FreeSurfer_IC7_RH_sym.m') + ', ' + join(bin_dir, 'FreeSurfer_IC7.m') + '] ' + join(out_f, h + '.white.sampled.m') + ' -tmp_atts ' + \
-                join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + ']_thick_2e-4_sampled.raw')
+                join(bin_dir, 'ccbbm') + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + \
+                ' ' + join(bin_dir, 'FreeSurfer_IC7.m') + ' ' + join(out_f, h + '.white.sampled.m') + ' -tmp_atts ' + \
+                join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw')
 
             ]
 
@@ -83,9 +89,26 @@ if __name__ == '__main__':
             for cmd in commands:
                 print(cmd)
                 os.system(cmd)
-        #
-        # for key, val in pipeline_cmd.items():
-        #     for cmd in val:
-        #         command = str(cmd).replace('subject_id', '001')
-        #         print(command)
-        #         os.system(command)
+
+        # Concatenate hemisphere results
+        lh_tk = np.fromfile(join(out_f, 'lh' + '_thick_2e-4.raw'))
+        rh_tk = np.fromfile(join(out_f, 'rh' + '_thick_2e-4.raw'))
+        thick_data.append(np.append(lh_tk, rh_tk))
+        index.append(subject)
+
+        print('[  INFO  ] Number of vertex: LH - ', np.shape(lh_tk), ' \ RH - ', np.shape(rh_tk))
+
+    # Column names
+    cols = []
+    for i in range(len(thick_data[0])):
+        # For lh
+        if i <= len(lh_tk):
+            cols.append('lh_thick_2e-4_' + str(i))
+        else:
+            cols.append('rh_thick_2e-4_' + str(i - len(lh_tk)))
+
+    print('[  INFO  ] Number of vertex extracted: ', len(cols), 'Concatenated', len(lh_tk))
+    # Create DataFrame
+    thick_df = pd.DataFrame(index=index, columns=cols, data=thick_data)
+
+    print(thick_df.head())
