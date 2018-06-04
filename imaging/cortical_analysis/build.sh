@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #====FOLDER====
-MAIN_FOLDER="/disk/Data/center_simulation/center_2/"
+MAIN_FOLDER="/disk/Data/center_simulation/all_in_one/"
 
 
 #DATA_FOLDER=$1
-DATA_FOLDER=${MAIN_FOLDER}"/input"
+DATA_FOLDER=${MAIN_FOLDER}"/input/FreeSurferSD"
 GROUP_FOLDER=${MAIN_FOLDER}"/group"
 OUTPUT_FOLDER=${MAIN_FOLDER}"/output_cortical"
 

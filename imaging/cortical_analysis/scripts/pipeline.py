@@ -29,7 +29,7 @@ if __name__ == '__main__':
     thick_data = []
     index = []
 
-    for subject in df['subj'][:4]:
+    for subject in df['subj']:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
@@ -53,6 +53,12 @@ if __name__ == '__main__':
                 files_target.append(f + ext)
 
         for h in hemispheres:
+            if h is 'rh':
+                ic_file = join(bin_dir, 'FreeSurfer_IC7.m')
+            else:
+                ic_file = join(bin_dir, 'FreeSurfer_IC7_RH_sym.m')
+
+            # Create list of commands (pipeline)
             pipeline_cmd[h] = [
                 'mris_convert ' + join(sdir, 'surf', h + files_target[0]) + ' ' + join(out_f, h + files_target[1]),
                 'java -jar ' + join(bin_dir, 'ShapeTranslator.jar') + ' -input ' + join(out_f, h + files_target[1]) + ' -output ' + join(out_f, h + files_target[2]) + ' -obj',
@@ -71,11 +77,13 @@ if __name__ == '__main__':
                 'mris_convert -c ' + join(sdir, 'surf', h + '.thickness') + ' ' + join(sdir, 'surf', h + '.white') + ' ' + join(out_f, h + '_thick.asc'),
                 join(bin_dir, 'FSthick2raw') + ' ' + join(out_f, h + '_thick.asc') + ' ' + join(out_f, h + '_thick.raw'),
 
-                # 14 - 15
+                # 14
                 join(bin_dir, 'ccbbm') + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + join(out_f, h + '_thick.raw') + ' 2e-4 ' + join(out_f, h + '_thick_2e-4.raw'),
-                join(bin_dir, 'ccbbm') + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + \
-                ' ' + join(bin_dir, 'FreeSurfer_IC7.m') + ' ' + join(out_f, h + '.white.sampled.m') + ' -tmp_atts ' + \
-                join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw')
+
+                # 15
+                join(bin_dir, 'ccbbm') + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + ' ' + ic_file + ' ' + \
+                    join(out_f, h + '.white.m') + ' ' + join(out_f, h + '.white.sampled.m') + \
+                    ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw')
 
             ]
 
@@ -87,12 +95,12 @@ if __name__ == '__main__':
 
             # Execute pipeline
             for cmd in commands:
-                print(cmd)
+                print('\t[  CMD  ] ', cmd)
                 os.system(cmd)
 
         # Concatenate hemisphere results
-        lh_tk = np.fromfile(join(out_f, 'lh' + '_thick_2e-4.raw'))
-        rh_tk = np.fromfile(join(out_f, 'rh' + '_thick_2e-4.raw'))
+        lh_tk = np.fromfile(join(out_f, 'lh' + '_thick_2e-4_sampled.raw'))
+        rh_tk = np.fromfile(join(out_f, 'rh' + '_thick_2e-4_sampled.raw'))
         thick_data.append(np.append(lh_tk, rh_tk))
         index.append(subject)
 
@@ -111,4 +119,5 @@ if __name__ == '__main__':
     # Create DataFrame
     thick_df = pd.DataFrame(index=index, columns=cols, data=thick_data)
 
-    print(thick_df.head())
+    # print(thick_df.info())
+    thick_df.to_csv(join(out_folder, 'groupfile_thick_2e-4.csv'))
