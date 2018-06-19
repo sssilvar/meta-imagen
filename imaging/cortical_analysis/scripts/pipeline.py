@@ -14,6 +14,11 @@ if __name__ == '__main__':
     csv_data = '/group/groupfile.csv'
 
     bin_dir = join(root, 'bin')
+    
+    # Software variables
+    ccbbm = join(bin_dir, 'ccbbm')
+    raw_operations = join(bin_dir, 'raw_operations')
+    shape_translator = join(bin_dir, 'ShapeTranslator.jar')
 
     # Cast variables
     dsf = os.path.normpath(dataset_folder)
@@ -61,29 +66,33 @@ if __name__ == '__main__':
             # Create list of commands (pipeline)
             pipeline_cmd[h] = [
                 'mris_convert ' + join(sdir, 'surf', h + files_target[0]) + ' ' + join(out_f, h + files_target[1]),
-                'java -jar ' + join(bin_dir, 'ShapeTranslator.jar') + ' -input ' + join(out_f, h + files_target[1]) + ' -output ' + join(out_f, h + files_target[2]) + ' -obj',
-                join(bin_dir, 'ccbbm') + ' -obj2mesh ' + join(out_f, h + files_target[2]) + ' ' + join(out_f, h + files_target[3]),
-                join(bin_dir, 'ccbbm') + ' -enforce_manifold_topology ' + join(out_f, h + files_target[3]) + ' ' + join(out_f, h + files_target[4]),
-                join(bin_dir, 'ccbbm') + ' -close_boundaries ' + join(out_f, h + files_target[3]) + ' ' + join(out_f, h + files_target[4]),
+                'java -jar ' + shape_translator + ' -input ' + join(out_f, h + files_target[1]) + ' -output ' + join(out_f, h + files_target[2]) + ' -obj',
+                ccbbm + ' -obj2mesh ' + join(out_f, h + files_target[2]) + ' ' + join(out_f, h + files_target[3]),
+                ccbbm + ' -enforce_manifold_topology ' + join(out_f, h + files_target[3]) + ' ' + join(out_f, h + files_target[4]),
+                ccbbm + ' -close_boundaries ' + join(out_f, h + files_target[3]) + ' ' + join(out_f, h + files_target[4]),
 
                 'mris_convert ' + join(sdir, 'surf', h + files_target[6]) + ' ' + join(out_f, h + files_target[7]),
-                'java -jar ' + join(bin_dir, 'ShapeTranslator.jar') + ' -input ' + join(out_f, h + files_target[7]) + ' -output ' + join(out_f, h + files_target[8]) + ' -obj',
-                join(bin_dir, 'ccbbm') + ' -obj2mesh ' + join(out_f, h + files_target[8]) + ' ' + join(out_f, h + files_target[9]),
-                join(bin_dir, 'ccbbm') + ' -enforce_manifold_topology ' + join(out_f, h + files_target[9]) + ' ' + join(out_f, h + files_target[10]),
-                join(bin_dir, 'ccbbm') + ' -close_boundaries ' + join(out_f, h + files_target[10]) + ' ' + join(out_f, h + files_target[11]),
+                'java -jar ' + shape_translator + ' -input ' + join(out_f, h + files_target[7]) + ' -output ' + join(out_f, h + files_target[8]) + ' -obj',
+                ccbbm + ' -obj2mesh ' + join(out_f, h + files_target[8]) + ' ' + join(out_f, h + files_target[9]),
+                ccbbm + ' -enforce_manifold_topology ' + join(out_f, h + files_target[9]) + ' ' + join(out_f, h + files_target[10]),
+                ccbbm + ' -close_boundaries ' + join(out_f, h + files_target[10]) + ' ' + join(out_f, h + files_target[11]),
 
-                join(bin_dir, 'ccbbm') + ' -transform ' + join(out_f, h + files_target[11]) + ' ' + join(bin_dir, 'one_hundredth.txt') + ' ' + join(out_f, h + files_target[11]),
+                ccbbm + ' -transform ' + join(out_f, h + files_target[11]) + ' ' + join(bin_dir, 'one_hundredth.txt') + ' ' + join(out_f, h + files_target[11]),
 
                 'mris_convert -c ' + join(sdir, 'surf', h + '.thickness') + ' ' + join(sdir, 'surf', h + '.white') + ' ' + join(out_f, h + '_thick.asc'),
                 join(bin_dir, 'FSthick2raw') + ' ' + join(out_f, h + '_thick.asc') + ' ' + join(out_f, h + '_thick.raw'),
 
                 # 14
-                join(bin_dir, 'ccbbm') + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + join(out_f, h + '_thick.raw') + ' 2e-4 ' + join(out_f, h + '_thick_2e-4.raw'),
+                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + join(out_f, h + '_thick.raw') + ' 2e-4 ' + join(out_f, h + '_thick_2e-4.raw'),
 
                 # 15
-                join(bin_dir, 'ccbbm') + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + ' ' + ic_file + ' ' + \
+                ccbbm + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + ' ' + ic_file + ' ' + \
                     join(out_f, h + '.white.m') + ' ' + join(out_f, h + '.white.sampled.m') + \
-                    ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw')
+                    ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw'),
+                
+                # 16 - LogJacobians
+                ccbbm + ' -store_att_area ' + join(out_f, h + '.white.sampled.m') + ' ' + join(out_f, h + '.white.area.raw'),
+                # raw_operations + ' -divide -float ' + join(out_f, h + '.white.area.raw') TODO: Check it!
 
             ]
 

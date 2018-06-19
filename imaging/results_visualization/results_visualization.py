@@ -55,7 +55,7 @@ if __name__ == '__main__':
                 range = '0 0.05'
 
             # Save RAW file
-            np.array(stats_arr[i]).astype(int).tofile(stat_file + '.raw')
+            np.array(stats_arr[i]).tofile(stat_file + '.raw')
 
             # Convert RAW to mesh (*.m)
             cmd = ccbbm + ' -color_attribute ' + atlas_file + ' ' + stat_file + '.raw ' + stat_file + '.m ' + range
