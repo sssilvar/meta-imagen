@@ -4,12 +4,17 @@ import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind
 
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+
 
 if __name__ == '__main__':
-    output_folder = '/user/ssilvari/home/Documents/output/output_docker_un/shape_stats/test'
+    main_folder = '/user/ssilvari/home/Documents'
+    csv_features = main_folder + '/output/output_docker_un/groupfile_LogJacs.csv'
+
+    output_folder = main_folder + '/output/output_docker_un/shape_stats/test'
+    atlas_folder = main_folder + '/Docker/meta-imagen/imaging/eshape/enigma_shape/MedialDemonsShared/atlas'
     csv_groupfile = '/disk/Data/center_simulation/all_in_one/group/groupfile.csv'
-    csv_features = '/user/ssilvari/home/Documents/output/output_docker_un/groupfile_LogJacs.csv'
-    atlas_folder = '/user/ssilvari/home/Documents/Docker/meta-imagen/imaging/eshape/enigma_shape/MedialDemonsShared/atlas'
 
     # Software params
     ccbbm = '/user/ssilvari/home/Documents/Docker/meta-imagen/imaging/eshape/enigma_shape/MedialDemonsShared/bin/ccbbm'
@@ -52,13 +57,19 @@ if __name__ == '__main__':
             if i == 0:
                 range = '-10 10'
             elif i == 1:
-                range = '0 0.05'
+                range = '-1 0 -0.05 0'
 
             # Save RAW file
-            np.array(stats_arr[i]).tofile(stat_file + '.raw')
+            (-np.array(stats_arr[i])).tofile(stat_file + '.raw')
+
+            # arr = np.fromfile(stat_file + '.raw')
+            # plt.hist(arr)
+            # plt.show()
 
             # Convert RAW to mesh (*.m)
             cmd = ccbbm + ' -color_attribute ' + atlas_file + ' ' + stat_file + '.raw ' + stat_file + '.m ' + range
+            # cmd = ccbbm + ' -color_hot_cold ' + atlas_file + ' ' + \
+            #       stat_file + '.raw ' + stat_file + '.m ' + range + ' -full_range'
             print(cmd)
             os.system(cmd)
 

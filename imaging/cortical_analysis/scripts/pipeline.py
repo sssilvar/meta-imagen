@@ -6,14 +6,16 @@ import pandas as pd
 
 root = os.path.dirname(__file__)
 
-
 if __name__ == '__main__':
     # Set parameters
-    dataset_folder = '/input'
-    out_folder = '/output'
-    csv_data = '/group/groupfile.csv'
+    center_main_folder = '/disk/Data/center_simulation/center_2'
+    dataset_folder = center_main_folder + '/input'
+    out_folder = center_main_folder + '/output'
+    csv_data = center_main_folder + '/group/groupfile.csv'
 
+    # Set bin folder and add execution permission
     bin_dir = join(root, 'bin')
+    os.system('chmod -R +x ' + bin_dir)
     
     # Software variables
     ccbbm = join(bin_dir, 'ccbbm')
@@ -32,9 +34,13 @@ if __name__ == '__main__':
 
     # Parameters for features output
     thick_data = []
+    log_jac_data = []
+    log_jac_eq_data = []
     index = []
 
-    for subject in df['subj']:
+    shapes = []
+
+    for subject in df['subj'][:5]:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
@@ -59,9 +65,9 @@ if __name__ == '__main__':
 
         for h in hemispheres:
             if h is 'rh':
-                ic_file = join(bin_dir, 'FreeSurfer_IC7.m')
-            else:
                 ic_file = join(bin_dir, 'FreeSurfer_IC7_RH_sym.m')
+            else:
+                ic_file = join(bin_dir, 'FreeSurfer_IC7.m')
 
             # Create list of commands (pipeline)
             pipeline_cmd[h] = [
@@ -79,54 +85,165 @@ if __name__ == '__main__':
 
                 ccbbm + ' -transform ' + join(out_f, h + files_target[11]) + ' ' + join(bin_dir, 'one_hundredth.txt') + ' ' + join(out_f, h + files_target[11]),
 
-                'mris_convert -c ' + join(sdir, 'surf', h + '.thickness') + ' ' + join(sdir, 'surf', h + '.white') + ' ' + join(out_f, h + '_thick.asc'),
-                join(bin_dir, 'FSthick2raw') + ' ' + join(out_f, h + '_thick.asc') + ' ' + join(out_f, h + '_thick.raw'),
+                # 12
+                'mris_convert -c ' + \
+                join(sdir, 'surf', h + '.thickness') + ' ' + \
+                join(sdir, 'surf', h + '.white') + ' ' + \
+                join(out_f, h + '_thick.asc'),
+
+                # 13
+                join(bin_dir, 'FSthick2raw') + ' ' + \
+                join(out_f, h + '_thick.asc') + ' ' + \
+                join(out_f, h + '_thick.raw'),
 
                 # 14
-                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + join(out_f, h + '_thick.raw') + ' 2e-4 ' + join(out_f, h + '_thick_2e-4.raw'),
+                ccbbm + ' -gausssmooth_attribute3 256 ' + \
+                join(out_f, h + '.sphere.reg.m') + ' ' + \
+                join(out_f, h + '_thick.raw') + ' 2e-4 ' + \
+                join(out_f, h + '_thick_2e-4.raw'),
 
                 # 15
-                ccbbm + ' -fastsampling ' + join(out_f, h + '.sphere.reg.m') + ' ' + ic_file + ' ' + \
-                    join(out_f, h + '.white.m') + ' ' + join(out_f, h + '.white.sampled.m') + \
-                    ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw'),
+                ccbbm + ' -fastsampling ' + \
+                join(out_f, h + '.sphere.reg.m') + ' ' + \
+                ic_file + ' ' + \
+                join(out_f, h + '.white.m') + ' ' + \
+                join(out_f, h + '.white.sampled.m') + \
+                ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + \
+                ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw'),
                 
                 # 16 - LogJacobians
-                ccbbm + ' -store_att_area ' + join(out_f, h + '.white.sampled.m') + ' ' + join(out_f, h + '.white.area.raw'),
-                # raw_operations + ' -divide -float ' + join(out_f, h + '.white.area.raw') TODO: Check it!
+                ccbbm + ' -store_att_area ' + \
+                join(out_f, h + '.white.sampled.m') + ' ' + \
+                join(out_f, h + '.white.area.raw'),
 
+                # 17
+                raw_operations + ' -divide -float ' + \
+                join(out_f, h + '.white.area.raw') + ' ' + \
+                join(bin_dir,  h.upper() + '_mean_area.raw') + ' ' + \
+                join(out_f, h + '.jac.raw'),
+
+                # 18
+                raw_operations + ' -log -float ' + join(out_f, h + '.jac.raw') + ' ' + join(out_f, h + '_LogJac.raw'),
+
+                # 19
+                ccbbm + ' -laplacian_smooth_attribute ' + \
+                join(out_f, h + '.white.sampled.m') + ' ' + \
+                join(out_f, h + '_LogJac.raw') + ' ' + \
+                join(out_f, h + '_LogJac.raw') + ' 20',
+
+                # 20
+                ccbbm + ' -gausssmooth_attribute3 256 ' + \
+                join(out_f, h + '.sphere.reg.m') + ' ' + \
+                join(out_f, h + '_LogJac.raw') + ' 2e-4 ' + \
+                join(out_f, h + '_LogJac_2e-4.raw'),
+
+                # 21
+                ccbbm + ' -equalizearea ' + \
+                join(bin_dir,  h.upper() + '_200_mean.m') + ' ' + \
+                join(out_f, h + '.white.sampled.m') + ' ' + \
+                join(out_f, h + '.white.normed_area.m'),
+
+                # 22
+                ccbbm + ' -store_att_area ' + \
+                join(out_f, h + '.white.normed_area.m') + ' ' + \
+                join(out_f, h + '.white.normed_area.area.raw'),
+
+                # 23
+                raw_operations + ' -divide -float ' + \
+                join(out_f, h + '.white.normed_area.area.raw') + ' ' + \
+                join(bin_dir, h.upper() + '_mean_area_equalized.raw') + ' ' + \
+                join(out_f, h + '.jac_eq.raw'),
+
+                # 24
+                raw_operations + ' -log -float ' + \
+                join(out_f, h + '.jac_eq.raw') + ' ' + \
+                join(out_f, h + '_LogJac_eq.raw'),
+
+                # 25
+                ccbbm + ' -laplacian_smooth_attribute ' + \
+                join(out_f, h + '.white.sampled.m') + ' ' + \
+                join(out_f, h + '_LogJac_eq.raw') + ' ' + \
+                join(out_f, h + '_LogJac_eq.raw') + ' 20',
+
+                # 26
+                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + \
+                join(out_f, h + '_LogJac_eq.raw') + ' 2e-4 ' + \
+                join(out_f, h + '_LogJac_eq_2e-4.raw')
             ]
 
         for hemi, commands in pipeline_cmd.items():
             if hemi is 'lh':
-                print('\n[  INFO  ] Processing Left hemisphere:')
+                print('\n\n[  INFO  ] Processing Left hemisphere:')
             elif hemi is 'rh':
-                print('\n[  INFO  ] Processing Right hemisphere:')
+                print('\n\n[  INFO  ] Processing Right hemisphere:')
 
             # Execute pipeline
             for cmd in commands:
-                print('\t[  CMD  ] ', cmd)
-                os.system(cmd)
+                print('[  CMD  ] ', cmd)
+                # os.system(cmd)
 
         # Concatenate hemisphere results
+        # Thickness
         lh_tk = np.fromfile(join(out_f, 'lh' + '_thick_2e-4_sampled.raw'))
         rh_tk = np.fromfile(join(out_f, 'rh' + '_thick_2e-4_sampled.raw'))
         thick_data.append(np.append(lh_tk, rh_tk))
+
+        # # log Jacobians (orig)
+        lh_log_jac = np.fromfile(join(out_f, 'lh_LogJac_2e-4.raw'))
+        rh_log_jac = np.fromfile(join(out_f, 'rh_LogJac_2e-4.raw'))
+        log_jac_data.append(np.append(lh_log_jac, rh_log_jac))
+
+        # log Jacobians (normalized)
+        lh_log_eq_jac = np.fromfile(join(out_f, 'lh_LogJac_eq_2e-4.raw'))
+        rh_log_eq_jac = np.fromfile(join(out_f, 'rh_LogJac_eq_2e-4.raw'))
+        log_jac_eq_data.append(np.append(lh_log_eq_jac, rh_log_eq_jac))
+
+        shapes.append(np.shape(np.append(lh_log_eq_jac, rh_log_eq_jac)))
+        print(shapes)
+
         index.append(subject)
 
         print('[  INFO  ] Number of vertex: LH - ', np.shape(lh_tk), ' \ RH - ', np.shape(rh_tk))
 
-    # Column names
-    cols = []
-    for i in range(len(thick_data[0])):
-        # For lh
-        if i <= len(lh_tk):
-            cols.append('lh_thick_2e-4_' + str(i))
-        else:
-            cols.append('rh_thick_2e-4_' + str(i - len(lh_tk)))
+    # Print shapes
+    for shape in shapes:
+        print(shape)
 
-    print('[  INFO  ] Number of vertex extracted: ', len(cols), 'Concatenated', len(lh_tk))
-    # Create DataFrame
-    thick_df = pd.DataFrame(index=index, columns=cols, data=thick_data)
 
-    # print(thick_df.info())
-    thick_df.to_csv(join(out_folder, 'groupfile_thick_2e-4.csv'))
+    # # ===== SAVE CORTICAL RESULTS =====
+    # tk_cols = []
+    # lj_cols = []
+    # lj_eq_cols = []
+    #
+    # # Thickness data
+    # for i in range(len(thick_data[0])):
+    #     # For lh
+    #     if i <= len(lh_tk):
+    #         tk_cols.append('lh_thick_2e-4_' + str(i))
+    #     else:
+    #         tk_cols.append('rh_thick_2e-4_' + str(i - len(lh_tk)))
+    #
+    # for i in range(len(log_jac_data[0])):
+    #     # For lh
+    #     if i <= len(lh_log_jac):
+    #         lj_cols.append('lh_LogJac_2e-4_' + str(i))
+    #     else:
+    #         lj_cols.append('rh_LogJac_2e-4_' + str(i))
+    #
+    # for i in range(len(log_jac_eq_data[0])):
+    #     # For lh
+    #     if i <= len(lh_log_eq_jac):
+    #         lj_eq_cols.append('lh_LogJac_eq_2e-4_' + str(i))
+    #     else:
+    #         lj_eq_cols.append('rh_LogJac_eq_2e-4_' + str(i))
+    #
+    # print('[  INFO  ] Number of vertex extracted: ', len(tk_cols), 'Concatenated', len(lh_tk))
+    # # Create DataFrame
+    # thick_df = pd.DataFrame(index=index, columns=tk_cols, data=thick_data)
+    # # log_jac_df = pd.DataFrame(index=index, columns=lj_cols, data=log_jac_data)
+    # log_jac_eq_df = pd.DataFrame(index=index, columns=lj_eq_cols, data=log_jac_eq_data)
+    #
+    # # print(thick_df.info())
+    # thick_df.to_csv(join(out_folder, 'groupfile_thick_2e-4.csv'))
+    # thick_df.to_csv(join(out_folder, 'groupfile_LogJac_2e-4.csv'))
+    # thick_df.to_csv(join(out_folder, 'groupfile_LogJac_eq_2e-4.csv'))
