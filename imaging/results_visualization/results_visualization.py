@@ -23,6 +23,7 @@ if __name__ == '__main__':
     # Read results
     df = pd.read_csv(csv_features, index_col=0)
     df_gf = pd.read_csv(csv_groupfile)
+    print('\t\t- Data dimensions: ', np.shape(df.values))
 
     # Extract classes
     mcic_subjects = df_gf.loc[df_gf['dx'] == 'MCIc']['subj']

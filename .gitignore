@@ -1,3 +1,6 @@
 freesurfer/
 .idea/
+
+# Ignore tests
 test/
+test*

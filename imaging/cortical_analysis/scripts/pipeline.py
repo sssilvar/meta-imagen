@@ -8,7 +8,7 @@ root = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Set parameters
-    center_main_folder = '/disk/Data/center_simulation/center_2'
+    center_main_folder = ''
     dataset_folder = center_main_folder + '/input'
     out_folder = center_main_folder + '/output'
     csv_data = center_main_folder + '/group/groupfile.csv'
@@ -38,9 +38,7 @@ if __name__ == '__main__':
     log_jac_eq_data = []
     index = []
 
-    shapes = []
-
-    for subject in df['subj'][:5]:
+    for subject in df['subj']:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
@@ -110,7 +108,7 @@ if __name__ == '__main__':
                 join(out_f, h + '.white.sampled.m') + \
                 ' -tmp_atts ' + join(out_f, h + '_thick_2e-4.raw') + \
                 ' -tar_atts ' + join(out_f, h + '_thick_2e-4_sampled.raw'),
-                
+
                 # 16 - LogJacobians
                 ccbbm + ' -store_att_area ' + \
                 join(out_f, h + '.white.sampled.m') + ' ' + \
@@ -133,7 +131,7 @@ if __name__ == '__main__':
 
                 # 20
                 ccbbm + ' -gausssmooth_attribute3 256 ' + \
-                join(out_f, h + '.sphere.reg.m') + ' ' + \
+                join(out_f, h + '.white.sampled.m') + ' ' + \
                 join(out_f, h + '_LogJac.raw') + ' 2e-4 ' + \
                 join(out_f, h + '_LogJac_2e-4.raw'),
 
@@ -166,7 +164,7 @@ if __name__ == '__main__':
                 join(out_f, h + '_LogJac_eq.raw') + ' 20',
 
                 # 26
-                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.sphere.reg.m') + ' ' + \
+                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.white.sampled.m') + ' ' + \
                 join(out_f, h + '_LogJac_eq.raw') + ' 2e-4 ' + \
                 join(out_f, h + '_LogJac_eq_2e-4.raw')
             ]
@@ -198,52 +196,41 @@ if __name__ == '__main__':
         rh_log_eq_jac = np.fromfile(join(out_f, 'rh_LogJac_eq_2e-4.raw'))
         log_jac_eq_data.append(np.append(lh_log_eq_jac, rh_log_eq_jac))
 
-        shapes.append(np.shape(np.append(lh_log_eq_jac, rh_log_eq_jac)))
-        print(shapes)
-
         index.append(subject)
 
         print('[  INFO  ] Number of vertex: LH - ', np.shape(lh_tk), ' \ RH - ', np.shape(rh_tk))
 
-    # Print shapes
-    for shape in shapes:
-        print(shape)
+    # ===== SAVE CORTICAL RESULTS =====
+    column_names = []
 
+    # Thickness data
+    for i in range(len(thick_data[0])):
+        # For lh
+        if i < len(lh_tk):
+            column_names.append('lh_tk_' + str(i))
+        else:
+            column_names.append('rh_tk_2e-4_' + str(i - len(lh_tk)))
 
-    # # ===== SAVE CORTICAL RESULTS =====
-    # tk_cols = []
-    # lj_cols = []
-    # lj_eq_cols = []
-    #
-    # # Thickness data
-    # for i in range(len(thick_data[0])):
-    #     # For lh
-    #     if i <= len(lh_tk):
-    #         tk_cols.append('lh_thick_2e-4_' + str(i))
-    #     else:
-    #         tk_cols.append('rh_thick_2e-4_' + str(i - len(lh_tk)))
-    #
-    # for i in range(len(log_jac_data[0])):
-    #     # For lh
-    #     if i <= len(lh_log_jac):
-    #         lj_cols.append('lh_LogJac_2e-4_' + str(i))
-    #     else:
-    #         lj_cols.append('rh_LogJac_2e-4_' + str(i))
-    #
-    # for i in range(len(log_jac_eq_data[0])):
-    #     # For lh
-    #     if i <= len(lh_log_eq_jac):
-    #         lj_eq_cols.append('lh_LogJac_eq_2e-4_' + str(i))
-    #     else:
-    #         lj_eq_cols.append('rh_LogJac_eq_2e-4_' + str(i))
-    #
-    # print('[  INFO  ] Number of vertex extracted: ', len(tk_cols), 'Concatenated', len(lh_tk))
-    # # Create DataFrame
-    # thick_df = pd.DataFrame(index=index, columns=tk_cols, data=thick_data)
-    # # log_jac_df = pd.DataFrame(index=index, columns=lj_cols, data=log_jac_data)
-    # log_jac_eq_df = pd.DataFrame(index=index, columns=lj_eq_cols, data=log_jac_eq_data)
-    #
-    # # print(thick_df.info())
-    # thick_df.to_csv(join(out_folder, 'groupfile_thick_2e-4.csv'))
-    # thick_df.to_csv(join(out_folder, 'groupfile_LogJac_2e-4.csv'))
-    # thick_df.to_csv(join(out_folder, 'groupfile_LogJac_eq_2e-4.csv'))
+    for i in range(len(log_jac_data[0])):
+        # For lh
+        if i < len(lh_log_jac):
+            column_names.append('lh_LJ_' + str(i))
+        else:
+            column_names.append('rh_LJ_' + str(i))
+
+    for i in range(len(log_jac_eq_data[0])):
+        # For lh
+        if i < len(lh_log_eq_jac):
+            column_names.append('lh_LJ_eq_' + str(i))
+        else:
+            column_names.append('rh_LJ_eq_' + str(i))
+
+    # Create DataFrame
+    print('\n\n[  INFO  ] Data dimensionality')
+    print('\t\t- Thickness: ', np.shape(thick_data))
+    print('\t\t- Log. Jacobians: ', np.shape(log_jac_data))
+    print('\t\t- Log jacobians Normalized: ', np.shape(log_jac_eq_data))
+
+    whole_data = np.hstack((thick_data, log_jac_data, log_jac_eq_data))
+    thick_df = pd.DataFrame(index=index, columns=column_names, data=whole_data)
+    thick_df.to_csv(join(out_folder, 'groupfile_features_2e-4.csv'))
