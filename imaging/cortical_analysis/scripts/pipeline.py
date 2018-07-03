@@ -180,7 +180,7 @@ if __name__ == '__main__':
             # Execute pipeline
             for i, cmd in enumerate(commands):
                 print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
-                # os.system(cmd)
+                os.system(cmd)
 
         # Concatenate hemisphere results
         # Thickness
