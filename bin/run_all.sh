@@ -20,7 +20,7 @@ GROUPFILE_FOLDER=${MAIN_FOLDER}"/group"
 #ID="5b0d174aef1a5c000f276e75"
 #ID="5b0d174cef1a5c000f276e76"
 #ID="5b0d174eef1a5c000f276e77"
-ID="5b0d1750ef1a5c000f276e78"
+# ID="5b0d1750ef1a5c000f276e78"
 
 # All the data
 #ID="5b100d89b0395f0011263592"
@@ -34,5 +34,16 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #eval ${CMD}
 
 # Run PLSR Analysis
-CMD="bash "${CURRENT_DIR}"/../PLSR/build.sh "${OUTPUT_FOLDER}" "${ID}
-eval ${CMD}
+# CMD="bash "${CURRENT_DIR}"/../PLSR/build.sh "${OUTPUT_FOLDER}" "${ID}
+# eval ${CMD}
+
+declare -a ids=(
+    "a" 
+    "b" 
+    "c")
+echo "Accessing element 3"${ids[2]}
+
+for id in ${ids[@]}
+do
+    echo -e ${id}
+done

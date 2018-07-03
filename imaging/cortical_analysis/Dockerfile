@@ -19,8 +19,7 @@ ADD scripts /root/scripts
 RUN chmod -R 777 /root/scripts
 
 # Install dependencies
-RUN apt-get -y update && apt-get -y install python3 python3-pip python3-pandas openjdk-7-jdk
-#RUN pip3 install -r /root/scripts/requirements.txt
+RUN apt-get -y update  && apt-get -y install python-dev python3 python-pandas python-tk openjdk-7-jdk
 
 # Copy license to container
 COPY license /opt/freesurfer/.license

@@ -44,9 +44,14 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     # Load the data
     df_x = pd.read_csv(csv_file_x, index_col=0)
     df_y = pd.read_csv(csv_file_y, index_col=0)
+    # df_x = pd.read_hdf(csv_file_x, key='features', index_col=0)
+    # df_y = pd.read_hdf(csv_file_y, key='features', index_col=0)
 
     X = df_x.values
     Y = df_y.values
+    print('[  INFO  ] Matrices info:')
+    print('\t\t- Shape of X: ', X.shape, ' | NaN found: ', np.count_nonzero(np.isnan(X)))
+    print('t\t- Shape of Y: ', Y.shape, ' | NaN found: ', np.count_nonzero(np.isnan(Y)))
 
     # Start PLS Analysis
     print("[  OK  ] Starting PLSR")
@@ -88,12 +93,12 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     print(report)
 
     # Update the data on the server:
-    print('\n\nUpdating results on the server...')
+    print('\n\n[  INFO  ] Updating results on the server...')
     data.upload_stats_to_server(plsr)
 
 
 if __name__ == '__main__':
-    csv_file = '/user/ssilvari/home/Documents/temp/output/groupfile_thick.csv'
+    csv_file = '/disk/Data/center_simulation/center_3/output/groupfile_features.h5'
 
     # Deal with the arguments
     parser = argparse.ArgumentParser(description=__description__)

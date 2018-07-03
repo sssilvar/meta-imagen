@@ -1,13 +1,16 @@
 #!/bin/bash
 
-#====FOLDER====
-MAIN_FOLDER="/disk/Data/center_simulation/all_in_one/"
+# ==== FOLDERS ====
+FS_DATASET=$1
+OUTPUT_FOLDER=$2
+GROUPFILE_FOLDER=$3
+PROXY=$4
 
-
-#DATA_FOLDER=$1
-DATA_FOLDER=${MAIN_FOLDER}"/input/FreeSurferSD"
-GROUP_FOLDER=${MAIN_FOLDER}"/group"
-OUTPUT_FOLDER=${MAIN_FOLDER}"/output_cortical"
+echo -e "\n\n[  OK  ] Starting Cortical Shape analysis"
+echo -e "\n\t - FreeSurfer processed data in: "${FS_DATASET}
+echo -e "\n\t - Folder that contains \"groupfile.csv\": "${GROUPFILE_FOLDER}
+echo -e "\n\t - Results are going to be stored at: "${OUTPUT_FOLDER}
+echo -e "\n\n\n"
 
 
 # Set parameters up
@@ -30,10 +33,10 @@ DEL_IMG="docker rmi "${IMG_NAME}
 eval ${DEL_IMG}
 
 echo -e "\n\n[  OK  ] Creating the new image: "${IMG_NAME}
-CRE_IMG="docker build -t "${IMG_NAME}" --build-arg proxy="${http_proxy}" "${CURRENT_DIR}
+CRE_IMG="docker build -t "${IMG_NAME}" --build-arg proxy="${PROXY}" "${CURRENT_DIR}
 eval ${CRE_IMG}
 
 echo -e "\n\n[  OK  ] Running container: "${CONTAINER_NAME}
-CMD="docker run --name "${CONTAINER_NAME}" --rm -ti -v "${DATA_FOLDER}":/input/ -v "${GROUP_FOLDER}":/group/ -v "${OUTPUT_FOLDER}":/output/ "${IMG_NAME}
+CMD="docker run --name "${CONTAINER_NAME}" --rm -ti -v "${FS_DATASET}":/input/ -v "${GROUPFILE_FOLDER}":/group/ -v "${OUTPUT_FOLDER}":/output/ "${IMG_NAME}
 echo ${CMD}
 eval ${CMD}

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 echo "[  OK  ] Starting cortical feature extraction"
-eval "python3 /root/scripts/pipeline.py"
+eval "python /root/scripts/pipeline.py"
+
+eval "chmod -R 766 /output"
 

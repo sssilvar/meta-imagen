@@ -1,10 +1,12 @@
+from __future__ import print_function
+
 import os, sys
 
 import numpy as np
 from os.path import join
 import pandas as pd
 
-root = os.path.dirname(__file__)
+root = os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == '__main__':
     # Set parameters
@@ -38,7 +40,7 @@ if __name__ == '__main__':
     log_jac_eq_data = []
     index = []
 
-    for subject in df['subj']:
+    for subject in df['subj'][:2]:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
@@ -46,7 +48,7 @@ if __name__ == '__main__':
         # Create a folder
         try:
             os.mkdir(out_f)
-        except FileExistsError:
+        except Exception as e:
             print('[  WARNING  ] Looks like folder %s already exists.' % out_f)
 
         # Define the pipeline (list of commands): pipeline_cmd
@@ -131,7 +133,7 @@ if __name__ == '__main__':
 
                 # 20
                 ccbbm + ' -gausssmooth_attribute3 256 ' + \
-                join(out_f, h + '.white.sampled.m') + ' ' + \
+                ic_file + ' ' + \
                 join(out_f, h + '_LogJac.raw') + ' 2e-4 ' + \
                 join(out_f, h + '_LogJac_2e-4.raw'),
 
@@ -164,7 +166,7 @@ if __name__ == '__main__':
                 join(out_f, h + '_LogJac_eq.raw') + ' 20',
 
                 # 26
-                ccbbm + ' -gausssmooth_attribute3 256 ' + join(out_f, h + '.white.sampled.m') + ' ' + \
+                ccbbm + ' -gausssmooth_attribute3 256 ' + ic_file + ' ' + \
                 join(out_f, h + '_LogJac_eq.raw') + ' 2e-4 ' + \
                 join(out_f, h + '_LogJac_eq_2e-4.raw')
             ]
@@ -176,8 +178,8 @@ if __name__ == '__main__':
                 print('\n\n[  INFO  ] Processing Right hemisphere:')
 
             # Execute pipeline
-            for cmd in commands:
-                print('[  CMD  ] ', cmd)
+            for i, cmd in enumerate(commands):
+                print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                 # os.system(cmd)
 
         # Concatenate hemisphere results
@@ -209,7 +211,7 @@ if __name__ == '__main__':
         if i < len(lh_tk):
             column_names.append('lh_tk_' + str(i))
         else:
-            column_names.append('rh_tk_2e-4_' + str(i - len(lh_tk)))
+            column_names.append('rh_tk_' + str(i - len(lh_tk)))
 
     for i in range(len(log_jac_data[0])):
         # For lh
@@ -227,10 +229,27 @@ if __name__ == '__main__':
 
     # Create DataFrame
     print('\n\n[  INFO  ] Data dimensionality')
-    print('\t\t- Thickness: ', np.shape(thick_data))
-    print('\t\t- Log. Jacobians: ', np.shape(log_jac_data))
-    print('\t\t- Log jacobians Normalized: ', np.shape(log_jac_eq_data))
+    print('\t\t- Thickness: ', np.shape(thick_data), ' | Mean: ', np.mean(thick_data))
+    print('\t\t- Log. Jacobians: ', np.shape(log_jac_data), ' | Mean: ', np.mean(log_jac_data))
+    print('\t\t- Log jacobians Normalized: ', np.shape(log_jac_eq_data), ' | Mean: ', np.max(log_jac_eq_data))
 
     whole_data = np.hstack((thick_data, log_jac_data, log_jac_eq_data))
-    thick_df = pd.DataFrame(index=index, columns=column_names, data=whole_data)
-    thick_df.to_csv(join(out_folder, 'groupfile_features_2e-4.csv'))
+    cortical_df = pd.DataFrame(index=index, columns=column_names, data=whole_data)
+    # cortical_df = pd.DataFrame(index=index, columns=column_names[:len(log_jac_eq_data[0])], data=log_jac_eq_data)
+
+    # Load ENIGMA SHAPE data
+    df_eshape = pd.read_csv(join(out_folder, 'groupfile_thick.csv'), index_col=0)
+    df_eshape = df_eshape.join(pd.read_csv(join(out_folder, 'groupfile_LogJacs.csv'), index_col=0))
+
+    # Join features in a single matrix
+    df_all = cortical_df.join(df_eshape)
+
+    # for col in df_all.columns:
+    #     number_of_nan = df_all[col].isnull().sum()
+
+    #     if number_of_nan > 0:
+    #         print('[  WARNING  ] Not a Number (NaN) found: ', number_of_nan)
+
+    # Save Data
+    # df_all.to_hdf(join(out_folder, 'groupfile_features.h5'), key='features', format='table', mode='w')
+    df_all.to_csv(join(out_folder, 'groupfile_features.csv'))

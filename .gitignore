@@ -4,3 +4,8 @@ freesurfer/
 # Ignore tests
 test/
 test*
+
+# Ignore file outputs
+statistics.npy
+data.npy
+welford.npy
