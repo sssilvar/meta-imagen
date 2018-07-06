@@ -4,3 +4,4 @@ pandas==0.22.0
 requests==2.18.4
 cython
 tables==3.4.4
+tqdm==4.23.4

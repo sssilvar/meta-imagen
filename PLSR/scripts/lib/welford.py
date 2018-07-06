@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 
 class Welford(object):
@@ -31,8 +31,8 @@ class Welford(object):
 
     def __init__(self, lst=None):
         self.k = 0
-        self.M = 0
-        self.S = 0
+        self.M = np.array([0])
+        self.S = np.array([0])
 
         self.__call__(lst)
 
@@ -61,13 +61,13 @@ class Welford(object):
 
     @property
     def meanfull(self):
-        return self.mean, self.std / math.sqrt(self.k)
+        return self.M, self.S / np.sqrt(self.k)
 
     @property
     def std(self):
         if self.k == 1:
             return 0
-        return math.sqrt(self.S / (self.k - 1))
+        return np.sqrt(self.S / (self.k - 1))
 
     def __repr__(self):
-        return "<Welford: {} +- {}>".format(self.mean, self.std)
+        return "<Welford: {} +- {}>".format(self.M, self.S)

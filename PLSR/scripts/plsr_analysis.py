@@ -51,7 +51,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     Y = df_y.values
     print('[  INFO  ] Matrices info:')
     print('\t\t- Shape of X: ', X.shape, ' | NaN found: ', np.count_nonzero(np.isnan(X)))
-    print('t\t- Shape of Y: ', Y.shape, ' | NaN found: ', np.count_nonzero(np.isnan(Y)))
+    print('\t\t- Shape of Y: ', Y.shape, ' | NaN found: ', np.count_nonzero(np.isnan(Y)))
 
     # Start PLS Analysis
     print("[  OK  ] Starting PLSR")
@@ -75,7 +75,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     ext = '.npz'
     out_file = os.path.join(out_dir, 'plsr_results' + ext)
 
-    np.savez(
+    np.savez_compressed(
         out_file,
         avx=avgX, avy=avgY,
         stx=stdX, sty=stdY,
@@ -98,7 +98,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
 
 
 if __name__ == '__main__':
-    csv_file = '/disk/Data/center_simulation/center_3/output/groupfile_features.h5'
+    csv_file = '/disk/Data/data_simulation/all_in_one/output/groupfile_features.csv'
 
     # Deal with the arguments
     parser = argparse.ArgumentParser(description=__description__)

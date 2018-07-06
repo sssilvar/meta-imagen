@@ -6,6 +6,6 @@ test/
 test*
 
 # Ignore file outputs
-statistics.npy
-data.npy
-welford.npy
+statistics.np*
+data.np*
+welford.np*

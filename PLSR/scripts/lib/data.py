@@ -1,5 +1,6 @@
 import os
 import time
+from tqdm import tqdm
 from datetime import datetime
 
 import requests
@@ -88,6 +89,7 @@ def is_allowed_to_update():
                     print('[  INFO  ] No data has been uploaded')
                     return False
                 else:
+                    print('[  INFO  ] This client is allowed to update! :)')
                     status = True
             else:
                 print('[  ERRROR  ] Cannot connect to the API server. Error code: ', r.status_code)
@@ -142,14 +144,16 @@ def post_data_to_api(json_data, server_url, mode='welford'):
     """
     print('[  INFO  ] Posting at:' + server_url)
     # Create file
-    data_file = 'data.npy'
-    np.save(data_file, json_data)
+    data_file = '{}.npz'.format(mode)
+    np.savez_compressed(data_file, **json_data)
+    print('[  INFO  ] File saved as %s | Size: %.1f MB' % (data_file, os.path.getsize(data_file) / (1024.0 **2)) )
 
     if mode is 'welford':
         metadata = {
-            'iteration': json_data['currentK'],
+            'iteration': int(json_data['currentK']),
             'updatedBy': get_client_id()
         }
+        print(metadata)
 
         files = {'dataFile': open(data_file, 'rb')}
 
@@ -252,6 +256,7 @@ def recalculate_statistics(old_data, x_data, y_data):
     :param y_data: Data obtained from the current PLSR analysis (Y)
     :return: None
     """
+    print('[  INFO  ] Recalculating statistics (Welford)')
     # initialize a new data dictionary
     new_data = {
         'currentAvgX': [],
@@ -259,75 +264,86 @@ def recalculate_statistics(old_data, x_data, y_data):
         'currentAvgY': [],
         'currentStdY': [],
         'busy': False,
-        'updatedBy': 'c6442cb6-b839-4d39-b874-15dca769e75d'  # TODO: this has to come from the key
+        'updatedBy': get_client_id()
     }
+
+    print('\t\t- X data shape: {}'.format(np.shape(x_data)))
+    print('\t\t- Y data shape: {}\n'.format(np.shape(y_data)))
 
     # Check if old data exists
     if old_data is None:
         print('[  INFO  ] Looks like this is the first center in posting data!')
-        for col in x_data.T:
-            wfx = Welford()
-            wfy = Welford()
+        wfx = Welford()
+        wfy = Welford()
 
-            wfx(col)
-            wfy(col)
+        wfx(x_data)
+        wfy(y_data)
 
-            # Create the new data
-            new_data['currentAvgX'].append(wfx.mean)
-            new_data['currentStdX'].append(wfx.S)
+        # Create the new data
+        new_data['currentAvgX'].append(wfx.mean)
+        new_data['currentStdX'].append(wfx.S)
 
-            new_data['currentAvgY'].append(wfy.mean)
-            new_data['currentStdY'].append(wfy.S)
+        new_data['currentAvgY'].append(wfy.mean)
+        new_data['currentStdY'].append(wfy.S)
 
-            if wfx.k == wfy.k:
-                new_data['currentK'] = wfx.k
-            else:
-                new_data['currentK'] = None
-                print('[  ERROR  ] Number of observations for X and Y is not the same')
-                return None
-
+        if wfx.k == wfy.k:
+            new_data['currentK'] = wfx.k
+        else:
+            new_data['currentK'] = None
+            print('[  ERROR  ] Number of observations for X and Y is not the same')
+            return None
+        
+        print('\t- New data info')
+        for key, val in new_data.items():
+            print('\t\t- %s - shape: %s' % (key, str(np.shape(val))))
+        
         # Return new data
         return new_data
     else:
-        # Load the current data: mean, std and iteration
-        for i in range(len(old_data['currentAvgX'])):
-            "Start a for loop to recalculate the statistics element-wise (same length for all)"
-            # Create a Welford object for X and Y
-            wfx = Welford()
-            wfy = Welford()
+        # Create a Welford object for X and Y
+        wfx = Welford()
+        wfy = Welford()
 
-            # Initialize Welford method
-            wfx.k = old_data['currentK']
-            wfx.M = old_data['currentAvgX'][i]
-            wfx.S = old_data['currentStdX'][i]
+        # Initialize Welford method
+        wfx.k = old_data['currentK']
+        wfx.M = old_data['currentAvgX']
+        wfx.S = old_data['currentStdX']
 
-            wfy.k = old_data['currentK']
-            wfy.M = old_data['currentAvgY'][i]
-            wfy.S = old_data['currentStdY'][i]
+        wfy.k = old_data['currentK']
+        wfy.M = old_data['currentAvgY']
+        wfy.S = old_data['currentStdY']
 
-            # For debugging
-            # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
+        # For debugging
+        # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
 
-            # Recalculate statistics
-            wfx(x_data[:, i])
-            wfy(y_data[:, i])
+        # Recalculate statistics
+        wfx(x_data)
+        wfy(y_data)
 
-            # For debugging
-            # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
+        # For debugging
+        # print('Current data: \n\tX: ', wfx, '\n\tY: ', wfy, '\n\tIteration: ', wfx.k, ' | ', wfy.k)
 
-            # Create the new data
-            new_data['currentAvgX'].append(wfx.mean)
-            new_data['currentStdX'].append(wfx.S)
+        # Create the new data
+        new_data['currentAvgX'] = wfx.mean
+        new_data['currentStdX'] = wfx.S
 
-            new_data['currentAvgY'].append(wfy.mean)
-            new_data['currentStdY'].append(wfy.S)
+        new_data['currentAvgY'] = wfy.mean
+        new_data['currentStdY'] = wfy.S
 
-            if wfx.k == wfy.k:
-                new_data['currentK'] = wfx.k
-            else:
-                new_data['currentK'] = 0
-                print('[  ERROR  ] Number of observations for X and Y is not the same')
-                return None
+        if wfx.k == wfy.k:
+            new_data['currentK'] = wfx.k
+        else:
+            new_data['currentK'] = 0
+            print('[  ERROR  ] Number of observations for X and Y is not the same')
+            return None
+        
+        
+        print('\t- Previous data info:')
+        for key, val in old_data.items():
+                print('\t\t- %s - shape: %s' % (key, str(np.shape(val))))
+        print('\n\t- New data info')
+        for key, val in new_data.items():
+            print('\t\t- %s - shape: %s' % (key, str(np.shape(val))))
 
         # Return updated data
         return new_data
@@ -387,13 +403,13 @@ def get_api_data(data='statistics'):
             md5 = get_md5(url + 'centers/' + id)[-1]
 
             url = url + 'centers/statistics/' + id
-            dl_data_file = 'statistics.npy'
+            dl_data_file = 'statistics.npz'
         elif data is 'welford':
             # Get md5
             md5 = get_md5(url + 'welford/info')
 
             url = url + 'welford/data'
-            dl_data_file = 'welford.npy'
+            dl_data_file = 'welford.npz'
         else:
             print('[  ERROR  ] Data request invalid')
 
@@ -410,7 +426,7 @@ def get_api_data(data='statistics'):
 
             if md5 == md5_checksum(dl_data_file):
                 print('[  INFO  ] Download successful')
-                return np.load(dl_data_file).item()
+                return np.load(dl_data_file)
         print('[  INFO  ] Waiting 20 seconds for retrying')
         time.sleep(20)
     raise IOError('API is not responding - check internet connection or contact support')
