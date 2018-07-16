@@ -1,30 +1,350 @@
+#!/usr/bin/env python3
+__author__ = "Santiago Smith, Marco Lorenzi"
+__copyright__ = "Copyright 2018, INRIA"
+__description__ = """
+This program correlates structural features with common data in a decentralized way
+by using ADMM as main method for optimising a Least Squares Linear regression.
+Two files are necessary for this process:
+    - groupfile_features.csv
+    - common_data.csv
+
+It is necessary to execute this code per each file as follows:
+
+    python3 admm.py -c [path_to_the_common_data_csv] -f [path_to_the_features_file]
+"""
+
 import os
+import time
+import json
+import shutil
+import argparse
+import logging
 
 import requests
+import hashlib
 
 import numpy as np
+from numpy import dot, eye
+from numpy.linalg import solve
 
-if __name__ == '__main__':
-    server_url = 'http://localhost:3300/centers/admm'
+import pandas as pd
 
-    # Generate and save data
-    test = 1e-4 * np.random.normal(1, 1, [200000, 20]).astype(np.float16)
-    np.save('test.npy', test)
+def md5_checksum(file_path):
+    with open(file_path, 'rb') as fh:
+        m = hashlib.md5()
+        while True:
+            data = fh.read(8192)
+            if not data:
+                break
+            m.update(data)
+        return m.hexdigest()
 
-    files = {'sampleFile': open('test.npy', 'rb')}
+def get_server_url():
+    """
+    Gets the API server URL (were the data is going to be shared). This works only if
+    API_HOST variable is set.
 
-    r = requests.post(server_url, files=files)
+    You can set this as:
+        $ export API_HOST=[api_url]
+    :return: str, API url
+    """
+    try:
+        url = os.environ['API_HOST'] + 'admm'
+        # logger.info(' Server url loaded: ', url)
+    except KeyError:
+        url = 'http://localhost:3300/admm/'
+        logger.warning(' API_HOST environment variable was not found. default server url was set at: {}'.format(url))
 
-    print(r.text)
+    return url
+
+def get_client_id():
+    try:
+        return os.environ['CLIENT_ID']
+    except KeyError:
+        raise EnvironmentError('CLIENT ID has not been defined')
+
+def get_md5(url):
+    r = requests.get(url=url)
 
     if r.status_code is 200:
-        r_json = r.json()
-        if r_json['success']:
-            print('Post successful!')
-            uploaded_npy = np.load('/user/ssilvari/home/node/uploads/' + r_json['file'] + '.npy')
-
-            print(np.mean((test - uploaded_npy) ** 2))
+        res = r.json()
+        if res['success']:
+            return res['md5']
         else:
-            print('API failed!')
+            logger.error(str(res['msg']))
     else:
-        print('Error code', r.status_code)
+        logger.error(str(r.status_code))
+
+def gather_data_from_api(url, download=True):
+    """
+        Gathers data from API's url.
+        Checks for ADMM id and current iteration.
+    """
+    # Emulation of a negative answer
+    neg_res = {
+        'id': None,
+        'iteration': -1,
+        'done': False,
+        'busy': True,
+        'rho': 0.01,
+        'success': False
+    }
+
+    try:
+        r = requests.get(url)
+
+        if r.status_code is 200:
+            res = r.json()
+            if res['success'] and not res['busy']:
+                cid, iteration, iter_done = res['id'], res['iteration'], res['admm']['iteration_finished']
+                logger.info(' ADMM process found with id: %s and iteration %d' % (cid, iteration))
+
+                # Download data from master (admm)
+                if iteration > 0 and download and iter_done:
+                    dl_data_file = os.path.join(get_data_folder(), 'admm', 'w_tilde_iter_%d.npz' % (iteration - 1))
+                    
+                    data_url = get_server_url() + '/data'
+                    r = requests.get(data_url, stream=True)
+
+                    if r.status_code == 200:
+                        logger.info(' Gathering data from: %s and saving as: %s' % (data_url, dl_data_file))
+                        with open(dl_data_file, 'wb') as f:
+                            r.raw.decode_content = True
+                            shutil.copyfileobj(r.raw, f)
+                    
+                return res
+                # return {'id': cid, 'iteration': iteration, 'done': done, 'rho': rho, 'success': True}
+            else:
+                return neg_res
+        else:
+            logger.error('It was not possible to connect to the server. Try later or contact support.')
+            return neg_res
+    except Exception as e:
+        logger.error('Exception occurred: %s' % str(e))
+        return neg_res
+
+def get_data_folder():
+    """
+        Gets current working directory
+    """
+    try:
+        return os.environ['DATA_FOLDER']
+    except KeyError:
+        return os.path.dirname(args.f)
+
+def get_current_status(api={'rho': 0.001}):
+    current_status_file = os.path.join(get_data_folder(), 'admm', 'current.json')
+    try:
+        with open(current_status_file) as f:
+            return json.load(f)
+    except FileNotFoundError:            
+        # Initialize current status
+        current = {
+            'iteration': 0,
+            'rho': api['rho'],
+            'done': False
+        }
+
+        # Save data
+        with open(current_status_file, 'w') as fp:
+            json.dump(current, fp, sort_keys=True, indent=4)
+        return current
+
+def update_current_status():
+    logger.info(' Updating status...')
+    current_status_file = os.path.join(get_data_folder(), 'admm', 'current.json')
+
+    current = get_current_status()
+    current['iteration'] += 1
+
+    # Save data
+    with open(current_status_file, 'w') as fp:
+        json.dump(current, fp, sort_keys=True, indent=4)
+
+def upload_data(W_i, alpha_i, id):
+
+    # Wait until master gets free
+    api = gather_data_from_api(get_server_url(), download=False)
+    logger.debug('Checking if Server is not busy at url {}.\n{}'.format(get_server_url(), api))
+    while api['busy']:
+        time.sleep(5)
+        logger.info('Looks like another center is posting right now.')
+        api = gather_data_from_api(get_server_url(), download=False)
+
+    # Start Uploading data
+    client_id = get_client_id()
+    url = get_server_url() + '/upload/' + client_id
+    admm_file = os.path.join(get_data_folder(), 'admm', 'admm.npz')
+    logger.debug('URL: ' + url)
+
+    # Save data
+    if os.path.exists(admm_file):
+        try:
+            os.remove(admm_file)
+        except OSError:
+            logger.error('%s could not be deleted' % admm_file)
+
+    np.savez_compressed(admm_file, **{'W_i': W_i, 'alpha_i': alpha_i, 'id': client_id})
+    md5 = md5_checksum(admm_file)
+
+    # Upload file
+    # Create metadata
+    metadata = {
+        'id': client_id,
+        'iteration': get_current_status()['iteration']
+        }
+
+    files = {'dataFile': open(admm_file, 'rb')}
+
+    # Send the POST request
+    r = requests.post(url, files=files, data=metadata)
+
+    # Check the operation
+    if r.status_code is 200:
+        res = r.json()
+        msg = res['msg']
+
+        if res['success'] is True and md5 == res['md5']:
+            logger.info('Data updated successfully')
+            logger.info(' Update saved in ADMM with id: {}'.format(res['id']))
+            logger.info(' Transmission finished')
+            
+            # Update current status
+            update_current_status()
+            return False
+        elif res['success'] is False:
+            logger.error(' Transmission to server was not successful:\n\t- Message: %s' % msg)
+            if 'not allowed' in msg:
+                return True
+            elif 'already posted' in msg:
+                return False
+    elif r.status_code is not 200:
+        logger.error(' There is an HTTP error - Status bin: {}'.format(r.status_code))
+        return False
+
+def admm_update(X_i, Y_i, W_tilde, W_i, alpha_i, rho=0.001):
+    """
+        Performs the calculation of ADMM corresponding to
+        the client (W_i and alpha_i)
+    """
+    # Get shapes
+    dx = X_i.shape[1]
+
+    # 1. Update W_i
+    term_1 = solve(dot(X_i.T, X_i) + rho * eye(dx), eye(dx))  # Shape: (dx x dx)
+    term_2 = dot(X_i.T, Y_i) - alpha_i + rho * W_tilde  # Shape: (dx x dy)
+    W_i = dot(term_1, term_2)
+
+    # 2. Update alpha_i
+    alpha_i = alpha_i + rho * (W_i - W_tilde)
+
+    return W_i, alpha_i
+
+def main():
+    """
+        Main ADDM function
+        (Scheduled task so it starts working after the rest of the centers finish)
+    """
+    # =============== ADMM PROGRAM =============== 
+    # 0.1 Gather data (if there is)
+    logger.debug('Gathering data from API...')
+    api = gather_data_from_api(get_server_url())
+    logger.debug(str(api))
+
+    # 0.2 Get current status:
+    logger.debug('Getting current status...')
+    current = get_current_status(api)
+
+    current_iter, api_iter = current['iteration'], api['iteration']
+
+    if api['done']:
+        return True
+
+    if current_iter is (api_iter + 0) and api['success'] and not api['busy']:
+        logger.info(' Starting ADMM...')
+        # 1.1 Load X (Common data) and Y (Structural data)
+        X = pd.read_csv(args.c, index_col=0).values
+        Y = pd.read_csv(args.f, index_col=0).values
+        logger.info(' Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
+
+        dx, dy = X.shape[1], Y.shape[1]
+        rho = current['rho']
+
+        # 1.2 Initialize alpha_i and W_i and W_tilde (if necessary)
+        if current['iteration'] == 0:
+            W_tilde = np.zeros([dx, dy])
+            W_i = np.zeros([dx, dy])
+            alpha_i = np.zeros([dx, dy])
+        else:
+            dl_data_file = os.path.join(get_data_folder(), 'admm', 'w_tilde_iter_%d.npz' % (current['iteration'] - 1))
+            W_tilde = np.load(dl_data_file)['W_tilde']
+
+            loc_data_file = os.path.join(get_data_folder(), 'admm', 'admm.npz')
+            loc_data = np.load(loc_data_file)
+            W_i = loc_data['W_i']
+            alpha_i = loc_data['alpha_i']
+            
+        
+        # 2. ADMM calculation
+        W_i, alpha_i = admm_update(X, Y, W_tilde, W_i, alpha_i, rho=rho)
+        logger.info(' ADMM Output: \n\t- W_i shape: %s\n\t- alpha_i shape: %s' %(str(W_i.shape), str(alpha_i.shape)))
+
+        # 3. Send data
+        status = upload_data(W_i, alpha_i, id=api['id'])
+
+        # 4. Wait for next iteration or finish iterating
+        return status
+
+    elif current['iteration'] == api['iteration'] + 1:
+        print('[  INFO ] Still waiting for master to recalculate...')
+        return False
+    elif current['iteration'] < api['iteration']:
+        print('[  ERROR ] Master iteration larger than center iteration. Does not make sense.')
+        return True
+
+if __name__ == '__main__':    
+    # Parse the parameters (defining default values)
+    feats_def = '/disk/Data/data_simulation/all_in_one/output/groupfile_features.csv'
+    common_def = '/disk/Data/data_simulation/all_in_one/output/common_data.csv'
+
+    # Deal with the arguments
+    parser = argparse.ArgumentParser(description=__description__)
+    parser.add_argument('-c', metavar='common_csv',
+                        help='Path to the csv file that contains the common data (age, educational level, etc.)',
+                        default=common_def)
+    parser.add_argument('-f', metavar='features_csv',
+                        help='Path to the csv file that contains the structural features.',
+                        default=feats_def)
+    args = parser.parse_args()
+
+    # Clear everything
+    cmd = 'rm ' + os.path.join(get_data_folder(), 'admm') + '/*'
+    os.system(cmd)
+
+    # ======= SetUp and start logger =======
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    try:
+        os.mkdir(os.path.join(get_data_folder(), 'admm'))
+    except FileExistsError:
+        logger.warning(' ADMM folder already exists')
+
+    log_file = os.path.join(get_data_folder(), 'admm', 'admm_center.log')
+    handler = logging.FileHandler(log_file)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    # ======= START ADMM (CLIENT) =======
+    done = False
+    while not done:
+        done = main()
+        if not done:
+            os.system('tail ' + log_file)
+            logger.info(' Waiting for API to update...')
+            time.sleep(8)
+    
+    print('DONE!')
+    logger.info('DONE!')
