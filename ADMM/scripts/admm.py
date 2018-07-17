@@ -29,6 +29,8 @@ from numpy.linalg import solve
 
 import pandas as pd
 
+from exceptions import FileNotFoundError
+
 def md5_checksum(file_path):
     with open(file_path, 'rb') as fh:
         m = hashlib.md5()
@@ -216,7 +218,7 @@ def upload_data(W_i, alpha_i, id):
             logger.error(' Transmission to server was not successful:\n\t- Message: %s' % msg)
             if 'not allowed' in msg:
                 return True
-            elif 'already posted' in msg:
+            elif 'already posted' in msg or 'busy' in msg:
                 return False
     elif r.status_code is not 200:
         logger.error(' There is an HTTP error - Status bin: {}'.format(r.status_code))
