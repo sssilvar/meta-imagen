@@ -29,8 +29,6 @@ from numpy.linalg import solve
 
 import pandas as pd
 
-from exceptions import FileNotFoundError
-
 def md5_checksum(file_path):
     with open(file_path, 'rb') as fh:
         m = hashlib.md5()
@@ -52,10 +50,10 @@ def get_server_url():
     """
     try:
         url = os.environ['API_HOST'] + 'admm'
-        # logger.info(' Server url loaded: ', url)
+        # logger.info('Server url loaded: ', url)
     except KeyError:
         url = 'http://localhost:3300/admm/'
-        logger.warning(' API_HOST environment variable was not found. default server url was set at: {}'.format(url))
+        logger.warning('API_HOST environment variable was not found. default server url was set at: {}'.format(url))
 
     return url
 
@@ -99,7 +97,7 @@ def gather_data_from_api(url, download=True):
             res = r.json()
             if res['success'] and not res['busy']:
                 cid, iteration, iter_done = res['id'], res['iteration'], res['admm']['iteration_finished']
-                logger.info(' ADMM process found with id: %s and iteration %d' % (cid, iteration))
+                logger.info('ADMM process found with id: %s and iteration %d' % (cid, iteration))
 
                 # Download data from master (admm)
                 if iteration > 0 and download and iter_done:
@@ -109,7 +107,7 @@ def gather_data_from_api(url, download=True):
                     r = requests.get(data_url, stream=True)
 
                     if r.status_code == 200:
-                        logger.info(' Gathering data from: %s and saving as: %s' % (data_url, dl_data_file))
+                        logger.info('Gathering data from: %s and saving as: %s' % (data_url, dl_data_file))
                         with open(dl_data_file, 'wb') as f:
                             r.raw.decode_content = True
                             shutil.copyfileobj(r.raw, f)
@@ -153,7 +151,7 @@ def get_current_status(api={'rho': 0.001}):
         return current
 
 def update_current_status():
-    logger.info(' Updating status...')
+    logger.info('Updating status...')
     current_status_file = os.path.join(get_data_folder(), 'admm', 'current.json')
 
     current = get_current_status()
@@ -188,12 +186,13 @@ def upload_data(W_i, alpha_i, id):
 
     np.savez_compressed(admm_file, **{'W_i': W_i, 'alpha_i': alpha_i, 'id': client_id})
     md5 = md5_checksum(admm_file)
+    current = get_current_status()
 
     # Upload file
     # Create metadata
     metadata = {
         'id': client_id,
-        'iteration': get_current_status()['iteration']
+        'iteration': current['iteration']
         }
 
     files = {'dataFile': open(admm_file, 'rb')}
@@ -205,24 +204,28 @@ def upload_data(W_i, alpha_i, id):
     if r.status_code is 200:
         res = r.json()
         msg = res['msg']
+        logger.debug('Current status: {} | Response from API: {}'.format(current, msg))
 
         if res['success'] is True and md5 == res['md5']:
             logger.info('Data updated successfully')
-            logger.info(' Update saved in ADMM with id: {}'.format(res['id']))
-            logger.info(' Transmission finished')
-            
+            logger.info('Update saved in ADMM with id: {}'.format(res['id']))
+            logger.info('Transmission finished')
             # Update current status
             update_current_status()
-            return False
+            return 'successful'
+
         elif res['success'] is False:
-            logger.error(' Transmission to server was not successful:\n\t- Message: %s' % msg)
+            logger.error('Transmission to server was not successful:\n\t- Message: %s' % msg)
             if 'not allowed' in msg:
-                return True
-            elif 'already posted' in msg or 'busy' in msg:
-                return False
+                return 'not allowed'
+
+            elif 'already posted' in msg or 'busy' in msg or 'not update' in msg:
+                print('Send request Failed!' + msg)
+                return 'try again'
+
     elif r.status_code is not 200:
-        logger.error(' There is an HTTP error - Status bin: {}'.format(r.status_code))
-        return False
+        logger.error('There is an HTTP error - Status bin: {}'.format(r.status_code))
+        return 'http error'
 
 def admm_update(X_i, Y_i, W_tilde, W_i, alpha_i, rho=0.001):
     """
@@ -242,6 +245,9 @@ def admm_update(X_i, Y_i, W_tilde, W_i, alpha_i, rho=0.001):
 
     return W_i, alpha_i
 
+def print_logger(log_file):
+    os.system('tail ' + log_file)
+
 def main():
     """
         Main ADDM function
@@ -254,20 +260,20 @@ def main():
     logger.debug(str(api))
 
     # 0.2 Get current status:
-    logger.debug('Getting current status...')
     current = get_current_status(api)
+    logger.debug('Current status: {}'.format(current))
 
     current_iter, api_iter = current['iteration'], api['iteration']
 
     if api['done']:
         return True
 
-    if current_iter is (api_iter + 0) and api['success'] and not api['busy']:
-        logger.info(' Starting ADMM...')
+    if current_iter == api_iter and api['success'] and not api['busy']:
+        logger.info('Starting ADMM...')
         # 1.1 Load X (Common data) and Y (Structural data)
         X = pd.read_csv(args.c, index_col=0).values
         Y = pd.read_csv(args.f, index_col=0).values
-        logger.info(' Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
+        logger.info('Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
 
         dx, dy = X.shape[1], Y.shape[1]
         rho = current['rho']
@@ -289,13 +295,20 @@ def main():
         
         # 2. ADMM calculation
         W_i, alpha_i = admm_update(X, Y, W_tilde, W_i, alpha_i, rho=rho)
-        logger.info(' ADMM Output: \n\t- W_i shape: %s\n\t- alpha_i shape: %s' %(str(W_i.shape), str(alpha_i.shape)))
+        logger.info('ADMM Output: \n\t- W_i shape: %s\n\t- alpha_i shape: %s' %(str(W_i.shape), str(alpha_i.shape)))
 
         # 3. Send data
-        status = upload_data(W_i, alpha_i, id=api['id'])
-
-        # 4. Wait for next iteration or finish iterating
-        return status
+        while True:
+            status = upload_data(W_i, alpha_i, id=api['id'])
+            if status is 'successful':
+                # 4. Wait for next iteration or finish iterating
+                return False
+            elif status is 'not allowed':
+                return True
+            else:
+                logger.info('Something went wrong. Trying again...')
+                print_logger(log_file)
+                time.sleep(20)
 
     elif current['iteration'] == api['iteration'] + 1:
         print('[  INFO ] Still waiting for master to recalculate...')
@@ -330,7 +343,7 @@ if __name__ == '__main__':
     try:
         os.mkdir(os.path.join(get_data_folder(), 'admm'))
     except FileExistsError:
-        logger.warning(' ADMM folder already exists')
+        logger.warning('ADMM folder already exists')
 
     log_file = os.path.join(get_data_folder(), 'admm', 'admm_center.log')
     handler = logging.FileHandler(log_file)
@@ -344,8 +357,8 @@ if __name__ == '__main__':
     while not done:
         done = main()
         if not done:
-            os.system('tail ' + log_file)
-            logger.info(' Waiting for API to update...')
+            print_logger(log_file)
+            logger.info('Waiting for API to update...')
             time.sleep(8)
     
     print('DONE!')

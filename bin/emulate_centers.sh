@@ -56,7 +56,11 @@ do
     # CMD="bash "${SCRIPT}" "${FS_DATASET}" "${OUTPUT_FOLDER}" "${GROUPFILE_FOLDER}" "$1
     # eval ${CMD}
 
-    # Run PLSR Analysis
-    CMD="bash "${CURRENT_DIR}"/../PLSR/build.sh "${OUTPUT_FOLDER}" "${ID}
-    eval ${CMD}
+    # # Run PLSR Analysis
+    # CMD="bash "${CURRENT_DIR}"/../PLSR/build.sh "${OUTPUT_FOLDER}" "${ID}
+    # eval ${CMD}
+
+    # # Run ADMM optimization
+    # CMD="bash "${CURRENT_DIR}"/../ADMM/build.sh "${OUTPUT_FOLDER}" "${ID}
+    # eval ${CMD}
 done
