@@ -236,8 +236,8 @@ def admm_update(X_i, Y_i, W_tilde, W_i, alpha_i, rho=0.001):
     dx = X_i.shape[1]
 
     # 1. Update W_i
-    term_1 = solve(dot(X_i.T, X_i) + rho * eye(dx), eye(dx))  # Shape: (dx x dx)
-    term_2 = dot(X_i.T, Y_i) - alpha_i + rho * W_tilde  # Shape: (dx x dy)
+    term_1 = solve(dot(X_i.T, X_i) + 0.5 * rho * eye(dx), eye(dx))  # Shape: (dx x dx)
+    term_2 = dot(X_i.T, Y_i) - 0.5 * alpha_i + 0.5 * rho * W_tilde  # Shape: (dx x dy)
     W_i = dot(term_1, term_2)
 
     # 2. Update alpha_i
