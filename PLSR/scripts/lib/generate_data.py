@@ -6,7 +6,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     n = 1200
-    n_features = 30000
+    n_features = 1000
     n_cdata = 20
     centers_folder = '/disk/Data/data_simulation'
     

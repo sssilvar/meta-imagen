@@ -103,7 +103,7 @@ def gather_data_from_api(url, download=True):
                 if iteration > 0 and download and iter_done:
                     dl_data_file = os.path.join(get_data_folder(), 'admm', 'w_tilde_iter_%d.npz' % (iteration - 1))
                     
-                    data_url = get_server_url() + '/data'
+                    data_url = get_server_url() + '/data/%d' % (iteration - 1)
                     r = requests.get(data_url, stream=True)
 
                     if r.status_code == 200:
@@ -173,8 +173,9 @@ def upload_data(W_i, alpha_i, id):
 
     # Start Uploading data
     client_id = get_client_id()
+    current = get_current_status()
     url = get_server_url() + '/upload/' + client_id
-    admm_file = os.path.join(get_data_folder(), 'admm', 'admm.npz')
+    admm_file = os.path.join(get_data_folder(), 'admm', 'admm_%s_iter_%d.npz' % (client_id, current['iteration']))
     logger.debug('URL: ' + url)
 
     # Save data
@@ -186,7 +187,6 @@ def upload_data(W_i, alpha_i, id):
 
     np.savez_compressed(admm_file, **{'W_i': W_i, 'alpha_i': alpha_i, 'id': client_id})
     md5 = md5_checksum(admm_file)
-    current = get_current_status()
 
     # Upload file
     # Create metadata
@@ -210,8 +210,6 @@ def upload_data(W_i, alpha_i, id):
             logger.info('Data updated successfully')
             logger.info('Update saved in ADMM with id: {}'.format(res['id']))
             logger.info('Transmission finished')
-            # Update current status
-            update_current_status()
             return 'successful'
 
         elif res['success'] is False:
@@ -269,7 +267,7 @@ def main():
         return True
 
     if current_iter == api_iter and api['success'] and not api['busy']:
-        logger.info('Starting ADMM...')
+        logger.info('Starting ADMM... (iteration %d)' % current_iter)
         # 1.1 Load X (Common data) and Y (Structural data)
         X = pd.read_csv(args.c, index_col=0).values
         Y = pd.read_csv(args.f, index_col=0).values
@@ -279,19 +277,27 @@ def main():
         rho = current['rho']
 
         # 1.2 Initialize alpha_i and W_i and W_tilde (if necessary)
-        if current['iteration'] == 0:
+        if current_iter == 0:
             W_tilde = np.zeros([dx, dy])
             W_i = np.zeros([dx, dy])
             alpha_i = np.zeros([dx, dy])
         else:
             dl_data_file = os.path.join(get_data_folder(), 'admm', 'w_tilde_iter_%d.npz' % (current['iteration'] - 1))
+            admm_file = os.path.join(get_data_folder(), 'admm', 'admm_%s_iter_%d.npz' % (get_client_id(), current['iteration'] - 1))
+            logger.debug('Loading W_tilde file: %s' % dl_data_file)
+            logger.debug('Loading ADMM data file: %s' % dl_data_file)
+            
             W_tilde = np.load(dl_data_file)['W_tilde']
-
-            loc_data_file = os.path.join(get_data_folder(), 'admm', 'admm.npz')
-            loc_data = np.load(loc_data_file)
+            loc_data = np.load(admm_file)
             W_i = loc_data['W_i']
             alpha_i = loc_data['alpha_i']
-            
+
+            logger.info(
+                'Alpha_i info:\n\t- Filename: %s\n\t- Mean: %f\n\t- Std: %f'
+                % (admm_file, np.mean(alpha_i), np.std(alpha_i)))
+            logger.info(
+                'W_tilde info:\n\t- Filenames: %s\n\t- Mean: %f\n\t- Std: %f'
+                % (dl_data_file, np.mean(W_tilde), np.std(W_tilde)))
         
         # 2. ADMM calculation
         W_i, alpha_i = admm_update(X, Y, W_tilde, W_i, alpha_i, rho=rho)
@@ -300,7 +306,11 @@ def main():
         # 3. Send data
         while True:
             status = upload_data(W_i, alpha_i, id=api['id'])
-            if status is 'successful':
+            api = gather_data_from_api(get_server_url(), download=False)
+
+            if status is 'successful' and get_client_id() in api['admm']['centers_done']:
+                # Update current status
+                update_current_status()
                 # 4. Wait for next iteration or finish iterating
                 return False
             elif status is 'not allowed':
