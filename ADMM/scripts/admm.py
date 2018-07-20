@@ -383,5 +383,6 @@ if __name__ == '__main__':
             logger.info('Waiting for API to update...')
             time.sleep(np.random.randint(60, 120))
     
+    print(__thanks__)
     print('DONE!')
     logger.info('DONE!')
