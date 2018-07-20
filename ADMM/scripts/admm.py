@@ -13,6 +13,18 @@ It is necessary to execute this code per each file as follows:
     python3 admm.py -c [path_to_the_common_data_csv] -f [path_to_the_features_file]
 """
 
+__thanks__ = """
+
+
+████████╗██╗  ██╗ █████╗ ███╗   ██╗██╗  ██╗    ██╗   ██╗ ██████╗ ██╗   ██╗██╗
+╚══██╔══╝██║  ██║██╔══██╗████╗  ██║██║ ██╔╝    ╚██╗ ██╔╝██╔═══██╗██║   ██║██║
+   ██║   ███████║███████║██╔██╗ ██║█████╔╝      ╚████╔╝ ██║   ██║██║   ██║██║
+   ██║   ██╔══██║██╔══██║██║╚██╗██║██╔═██╗       ╚██╔╝  ██║   ██║██║   ██║╚═╝
+   ██║   ██║  ██║██║  ██║██║ ╚████║██║  ██╗       ██║   ╚██████╔╝╚██████╔╝██╗
+   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚═╝
+                                                                             
+"""
+
 import os
 import time
 import json
@@ -369,7 +381,7 @@ if __name__ == '__main__':
         if not done:
             print_logger(log_file)
             logger.info('Waiting for API to update...')
-            time.sleep(8)
+            time.sleep(np.random.randint(60, 120))
     
     print('DONE!')
     logger.info('DONE!')
