@@ -1,4 +1,5 @@
 import os
+import argparse
 
 import numpy as np
 import pandas as pd
@@ -10,12 +11,33 @@ plt.style.use('ggplot')
 
 
 if __name__ == '__main__':
-    n = 1400
-    n_features = 10000
+    # Deal with the arguments
+    parser = argparse.ArgumentParser(description='Generate data for linear regression.')
+    parser.add_argument('-n', metavar='observations',
+                        help='Number of observations',
+                        type=int,
+                        default=1600)
+    parser.add_argument('-centers', metavar='centers',
+                        help='Number of centers',
+                        type=int,
+                        default=4)
+    parser.add_argument('-nof', metavar='features',
+                        help='Number of features',
+                        type=int,
+                        default=30000)
+    parser.add_argument('-nf', metavar='noise',
+                        help='Noise factor.',
+                        type=int,
+                        default=1)
+    args = parser.parse_args()
+    
+    # ==== START ====
+    n = args.n
+    n_features = 30000
     n_cdata = 20
     centers_folder = '/disk/Data/data_simulation'
     # Number of center: n_bunches
-    n_bunches = 7
+    n_bunches = args.centers
     
     # Fix seed for reproducibility
     np.random.seed(42)
@@ -30,7 +52,7 @@ if __name__ == '__main__':
 
     # Generate features data
     print('[  INFO  ] Generating feature data...')
-    feats_data = common_data.dot(W) + np.random.normal(0, 50, [n, n_features])
+    feats_data = common_data.dot(W) + args.nf * np.random.normal(0, 50, [n, n_features])
     feats_cols = ['feature %d' % i for i in range(n_features)]
 
     # Plot the results
