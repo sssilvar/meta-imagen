@@ -33,7 +33,7 @@ if __name__ == '__main__':
     
     # ==== START ====
     n = args.n
-    n_features = 30000
+    n_features = args.nof
     n_cdata = 20
     centers_folder = '/disk/Data/data_simulation'
     # Number of center: n_bunches
