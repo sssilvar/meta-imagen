@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2018.5.9)  9 MAY 2018 16:26
+This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2018.5.9)  26 JUL 2018 10:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1426,7 +1426,7 @@ LaTeX Info: Redefining \j on input line 1982.
 ** \Huge and \HUGE have been (re)-defined.
 ** mathastext has declared larger sizes for subscripts.
 ** To keep LaTeX defaults, use option `defaultmathsizes'.
-) (./main.aux (./01-introduction.aux))
+) (./main.aux (./01-introduction.aux) (./instalation-guide.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 151.
@@ -1540,32 +1540,64 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--13
 
  []
 
+.................................................
+. fontspec info: "defining-font"
+. 
+. Font family 'InriaSans-Regular.otf(1)' created for font
+. 'InriaSans-Regular.otf' with options [Ligatures=TeX,Path =
+. fonts/sans/,BoldFont = InriaSans-Bold.otf,ItalicFont =
+. InriaSans-Italic.otf,BoldItalicFont =
+. InriaSans-BoldItalic.otf,VerticalPosition=Superior].
+. 
+. This font family consists of the following NFSS series/shapes:
+. - 'normal' (m/n) with NFSS spec.:
+. <->"[fonts/sans/InriaSans-Regular]/OT:script=latn;language=DFLT;mapping=tex-t
+ext;+sups;"
+. - 'small caps'  (m/sc) with NFSS spec.: - 'bold' (bx/n) with NFSS spec.:
+. <->"[fonts/sans/InriaSans-Bold]/OT:script=latn;language=DFLT;mapping=tex-text
+;+sups;"
+. - 'bold small caps'  (bx/sc) with NFSS spec.: - 'italic' (m/it) with NFSS
+. spec.:
+. <->"[fonts/sans/InriaSans-Italic]/OT:script=latn;language=DFLT;mapping=tex-te
+xt;+sups;"
+. - 'italic small caps'  (m/itsc) with NFSS spec.: - 'bold italic' (bx/it)
+. with NFSS spec.:
+. <->"[fonts/sans/InriaSans-BoldItalic]/OT:script=latn;language=DFLT;mapping=te
+x-text;+sups;"
+. - 'bold italic small caps'  (bx/itsc) with NFSS spec.: 
+.................................................
 ) [1
 
 
 
-] [2
+]
+\openout2 = `instalation-guide.aux'.
+
+ (./instalation-guide.tex [2
+
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 273.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 273.
- (./main.aux (./01-introduction.aux))
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 273.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 273.
+Chapter 1.
+) [3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 274.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 274.
+ (./main.aux (./01-introduction.aux) (./instalation-guide.aux))
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 274.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 274.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 273.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 274.
  ) 
 Here is how much of TeX's memory you used:
- 46628 strings out of 493632
- 1031981 string characters out of 6147030
+ 46668 strings out of 493632
+ 1033890 string characters out of 6147030
  1151049 words of memory out of 5000000
- 49359 multiletter control sequences out of 15000+600000
- 10517 words of font info for 70 fonts, out of 8000000 for 9000
+ 49382 multiletter control sequences out of 15000+600000
+ 10581 words of font info for 78 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
  55i,11n,112p,10415b,561s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on main.pdf (8 pages).
+Output written on main.pdf (9 pages).

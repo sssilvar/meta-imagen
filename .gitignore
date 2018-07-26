@@ -9,3 +9,8 @@ test*
 statistics.np*
 data.np*
 welford.np*
+
+# Ignore LaTeX trash outputs
+*.log
+*.aux
+*.synctex.gz
