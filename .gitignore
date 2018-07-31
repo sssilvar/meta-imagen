@@ -6,9 +6,8 @@ test/
 test*
 
 # Ignore file outputs
-statistics.np*
-data.np*
-welford.np*
+*.np*
+__pycache__/
 
 # Ignore LaTeX trash outputs
 *.log

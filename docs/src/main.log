@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2018.5.9)  26 JUL 2018 10:52
+This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2018.5.9)  30 JUL 2018 13:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1254,7 +1254,31 @@ LaTeX Info: Redefining \LaTeXe on input line 219.
 \l__xetex_show_hyphens_final_box=\box79
 \g__xetex_show_hyphens_word_box=\box80
 )
-\g__fontspec_family_InriaSans-Regular.otf_int=\count196
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count196
+\lst@gtempboxa=\box81
+\lst@token=\toks52
+\lst@length=\count197
+\lst@currlwidth=\dimen282
+\lst@column=\count198
+\lst@pos=\count199
+\lst@lostspace=\dimen283
+\lst@width=\dimen284
+\lst@newlines=\count266
+\lst@lineno=\count267
+\lst@maxwidth=\dimen285
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+\c@lstnumber=\count268
+\lst@skipnumbers=\count269
+\lst@framebox=\box82
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2015/06/04 1.6 listings configuration
+))
+Package: listings 2015/06/04 1.6 (Carsten Heinz)
+\g__fontspec_family_InriaSans-Regular.otf_int=\count270
 .................................................
 . fontspec info: "defining-font"
 . 
@@ -1285,7 +1309,7 @@ x-text;"
 . 
 . InriaSerif-Regular.otf scale = 1.
 .................................................
-\g__fontspec_family_InriaSerif-Regular.otf_int=\count197
+\g__fontspec_family_InriaSerif-Regular.otf_int=\count271
 .................................................
 . fontspec info: "set-scale"
 . 
@@ -1333,7 +1357,7 @@ nguage=DFLT;mapping=tex-text;"
 .................................................
 \symDigits:m:n=\mathgroup9
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 143.
+(Font)              scaled to size 12.0pt on input line 144.
 .................................................
 . fontspec info: "set-scale"
 . 
@@ -1354,10 +1378,10 @@ Package: mathastext 2016/05/13 v1.3p Use the text font in math mode (JFB)
 \mst@exists@muskip=\muskip18
 \mst@forall@muskip=\muskip19
 \mst@prime@muskip=\muskip20
-\mst@do@nonletters=\toks52
-\mst@do@easynonletters=\toks53
-\mst@do@az=\toks54
-\mst@do@AZ=\toks55
+\mst@do@nonletters=\toks53
+\mst@do@easynonletters=\toks54
+\mst@do@az=\toks55
+\mst@do@AZ=\toks56
 \symmtoperatorfont=\mathgroup14
 \symmtletterfont=\mathgroup15
 LaTeX Font Info:    Overwriting math alphabet `\mathnormalbold' in version `nor
@@ -1426,89 +1450,93 @@ LaTeX Info: Redefining \j on input line 1982.
 ** \Huge and \HUGE have been (re)-defined.
 ** mathastext has declared larger sizes for subscripts.
 ** To keep LaTeX defaults, use option `defaultmathsizes'.
-) (./main.aux (./01-introduction.aux) (./instalation-guide.aux))
+)
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \codeword with sig. 'v' on line 150.
+.................................................
+ (./main.aux (./01-introduction.aux) (./instalation-guide.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 151.
-LaTeX Font Info:    Try loading font information for T3+cmr on input line 151.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 152.
+LaTeX Font Info:    Try loading font information for T3+cmr on input line 152.
 
 (/usr/share/texlive/texmf-dist/tex/latex/tipa/t3cmr.fd
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
-LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    ... okay on input line 152.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 
 ABD: EveryShipout initializing macros
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.13}).
 
-\AtBeginShipoutBox=\box81
-Package hyperref Info: Link coloring ON on input line 151.
+\AtBeginShipoutBox=\box83
+Package hyperref Info: Link coloring ON on input line 152.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count198
+\c@section@level=\count272
 )
-LaTeX Info: Redefining \ref on input line 151.
-LaTeX Info: Redefining \pageref on input line 151.
-LaTeX Info: Redefining \nameref on input line 151.
+LaTeX Info: Redefining \ref on input line 152.
+LaTeX Info: Redefining \pageref on input line 152.
+LaTeX Info: Redefining \nameref on input line 152.
 
 (./main.out) (./main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
+\c@lstlisting=\count273
 Package mathastext Info: current meaning of amsmath \resetMathstrut@ saved on i
-nput line 151.
+nput line 152.
 File: images/logo-isae-supaero.png Graphic file (type QTm)
  <use  "images/logo-isae-supaero.png" >
+LaTeX Font Info:    Try loading font information for U+msa on input line 183.
 
-LaTeX Font Warning: Font shape `EU1/InriaSans-Regular.otf(0)/m/sc' undefined
-(Font)              using `EU1/InriaSans-Regular.otf(0)/m/n' instead on input l
-ine 176.
-
-LaTeX Font Info:    Try loading font information for U+msa on input line 178.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 178.
+LaTeX Font Info:    Try loading font information for U+msb on input line 183.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 178.
+(Font)              scaled to size 10.0pt on input line 183.
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 178.
+(Font)              scaled to size 8.0pt on input line 183.
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/it' will be
-(Font)              scaled to size 12.0pt on input line 178.
+(Font)              scaled to size 12.0pt on input line 183.
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/it' will be
-(Font)              scaled to size 10.0pt on input line 178.
+(Font)              scaled to size 10.0pt on input line 183.
 LaTeX Font Info:    Font shape `EU1/InriaSerif-Regular.otf(0)/m/it' will be
-(Font)              scaled to size 8.0pt on input line 178.
+(Font)              scaled to size 8.0pt on input line 183.
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/se-ascii-print.def
 File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
@@ -1579,25 +1607,31 @@ x-text;+sups;"
 
 ]
 Chapter 1.
-) [3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 274.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 274.
+[3]
+LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 31.
+
+ (/usr/share/texlive/texmf-dist/tex/latex/euenc/eu1lmtt.fd
+File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+Underfull \hbox (badness 10000) in paragraph at lines 34--36
+
+ []
+
+) [4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 279.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 279.
  (./main.aux (./01-introduction.aux) (./instalation-guide.aux))
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 274.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 274.
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 274.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 279.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 279.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 279.
  ) 
 Here is how much of TeX's memory you used:
- 46668 strings out of 493632
- 1033890 string characters out of 6147030
- 1151049 words of memory out of 5000000
- 49382 multiletter control sequences out of 15000+600000
- 10581 words of font info for 78 fonts, out of 8000000 for 9000
+ 47895 strings out of 493632
+ 1052467 string characters out of 6147030
+ 1170146 words of memory out of 5000000
+ 50589 multiletter control sequences out of 15000+600000
+ 10613 words of font info for 82 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 55i,11n,112p,10415b,561s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,11n,112p,10415b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on main.pdf (9 pages).
+Output written on main.pdf (10 pages).

@@ -50,7 +50,7 @@ set decimal separator={,\!},
 colorlinks=true,
 linkcolor=black,
 citecolor=black,
-urlcolor=black}
+urlcolor=red}
 
 \renewcommand{\baselinestretch}{1.05}
 \usepackage{fancyhdr}
@@ -119,6 +119,7 @@ urlcolor=black}
 \usepackage{mathspec}
 \usepackage{xltxtra}
 \usepackage{fontspec}
+\usepackage{listings}
 
 \setmainfont[
 Path = fonts/sans/,
@@ -142,11 +143,11 @@ ItalicFont = InriaSerif-Italic.otf,
 BoldItalicFont  = InriaSerif-BoldItalic.otf]
 {InriaSerif-Regular.otf}
 
-% \setmainfont{Inria Sans}[Scale=MatchLowercase]
-% \setsansfont{Inria Sans}[Scale=MatchLowercase]
-% \setmathfont(Digits,Latin,Greek,Symbols)[Scale=MatchLowercase]{Inria Serif}
-% \setmathrm[Scale=MatchLowercase]{Inria Sans}
 \usepackage{mathastext}
+
+\NewDocumentCommand{\codeword}{v}{%
+\texttt{\textcolor{gray}{#1}}%
+}
 
 \begin{document}
 
@@ -173,7 +174,11 @@ BoldItalicFont  = InriaSerif-BoldItalic.otf]
 \begin{minipage}{0.4\textwidth}
   \begin{flushleft} \large
     \emph{Author(s) :}\\
-    Silva-Rincon \textsc{Santiago-Smith}\\
+    Marco Lorenzi \\
+    Boris Gutman \\
+    Andre Altman \\
+    Barbara Bardoni \\
+    Santiago S. Silva R.\\
   \end{flushleft}
 \end{minipage}%
 % \begin{minipage}{0.4\textwidth}

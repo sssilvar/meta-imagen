@@ -1,6 +1,52 @@
 \chapter{Installation guide}
 \section{Requirements}
 \subsection{Hardware requirements}
+These are the minimum hardware requirements
+\begin{itemize}
+	\item CPU: 4 cores @ 2 GHz
+	\item RAM: 8 GB
+	\item Storage: 4 GB
+\end{itemize}
 
-\subsection{Windows Installation}
-\subsubsection{Docker installation}
+\subsection{Software requirements}
+\subsubsection{Operating system}
+This software runs \textbf{ONLY} on Unix-based OS like\footnote[1]{\textit{\textbf{IMPORTANT: } Windows platforms are not still supported.}}:
+\begin{itemize}
+	\item Linux: Fedora, CentOS, Debian, Ubuntu, etc.
+	\item macOS: El Capitan 10.11 or higher.
+\end{itemize}
+
+More information can be found \href{https://success.docker.com/article/compatibility-matrix}{here}.
+
+\subsubsection{Other software}
+For running the MetaImaGen software your system needs to have:
+\begin{itemize}
+	\item Docker version 17 or higher (\href{https://docs.docker.com/install/#supported-platforms}{Installation instructions})
+	\item Docker Compose Version 3.0 or higher (\href{https://docs.docker.com/compose/install/}{Installation instructions})
+\end{itemize}
+
+\subsection{Getting Started with MetaImaGen}
+\begin{enumerate}
+	\item Clone the repository by executing: \\
+		\codeword{git clone https://github.com/sssilvar/meta-imagen.git}
+	\item Run the test program to check if everything is in order:\\
+		\codeword{bash meta-imagen/bin/test.sh}
+	\item Run the analysis of your images by executing:\\
+		\codeword{bash meta-imagen/bin/run_metaimagen.sh [data_folder_path][center_id]}\\
+		
+		Where \codeword{[data_folder_path]} is the folder containing all the subjects processed by \textbf{FreeSurfer} and a file called \textit{groupfile.csv} that contains the subjects to be processed (IDs) and the diagnostic group where they belong to. An example is shown in table~\ref{table:groupfile}
+\end{enumerate}
+
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{sid}} & \multicolumn{1}{c|}{\textbf{dx}} \\ \hline
+002\_S\_0954                       & MCIc                             \\ \hline
+002\_S\_1070                       & AD                               \\ \hline
+$\cdots$                           & $\cdots$                         \\ \hline
+\end{tabular}
+\caption{\textit{groupfile.csv} structure.}
+\label{table:groupfile}
+\end{table}

@@ -354,6 +354,11 @@ if __name__ == '__main__':
                         default=feats_def)
     args = parser.parse_args()
 
+    try:
+        os.mkdir(os.path.join(get_data_folder(), 'admm'))
+    except FileExistsError:
+        logger.warning('ADMM folder already exists')
+    
     # Clear everything
     cmd = 'rm ' + os.path.join(get_data_folder(), 'admm') + '/*'
     os.system(cmd)
@@ -361,12 +366,7 @@ if __name__ == '__main__':
     # ======= SetUp and start logger =======
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-
-    try:
-        os.mkdir(os.path.join(get_data_folder(), 'admm'))
-    except FileExistsError:
-        logger.warning('ADMM folder already exists')
-
+    
     log_file = os.path.join(get_data_folder(), 'admm', 'admm_center.log')
     handler = logging.FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
