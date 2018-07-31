@@ -9,7 +9,7 @@ ls ${DATA_FOLDER}
 
 # Run script
 echo -e "\n\n[  OK  ] Starting statistical analysis"
-CMD="python3 "${CURRENT_DIR}"/plsr_analysis.py \
+CMD="python3 "${CURRENT_DIR}"/center_data.py \
     -x '${DATA_FOLDER}'/groupfile_features.csv \
     -y '${DATA_FOLDER}'/groupfile_features.csv " #${DATA_FOLDER}"/log.log"
 eval ${CMD}
