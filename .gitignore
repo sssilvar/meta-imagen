@@ -1,9 +1,9 @@
 freesurfer/
 .idea/
+.vscode/
 
 # Ignore tests
 test/
-test*
 
 # Ignore file outputs
 *.np*
