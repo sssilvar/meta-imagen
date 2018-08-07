@@ -255,6 +255,30 @@ def admm_update(X_i, Y_i, W_tilde, W_i, alpha_i, rho=0.001):
 
     return W_i, alpha_i
 
+def download_last_w_tilde():
+    while True:
+        logger.info('Downloading last W_tilde update...')
+        url = get_server_url()
+
+        r = requests.get(url)
+        if r.status_code is 200:
+            res = r.json()
+
+            if res['success'] and res['admm'] is not None:
+                filename = os.path.join(get_data_folder(), 'admm', 'w_tilde_final.npz')
+
+                data_url = get_server_url() + '/data/%d' % (res['admm']['number_of_iterations'] - 1)
+                r = requests.get(data_url, stream=True)
+
+                if r.status_code == 200:
+                    with open(filename, 'wb') as f:
+                        r.raw.decode_content = True
+                        shutil.copyfileobj(r.raw, f)
+                    
+                    return np.load(filename)['W_tilde']
+
+
+
 def print_logger(log_file):
     os.system('tail ' + log_file)
 
@@ -276,6 +300,20 @@ def main():
     current_iter, api_iter = current['iteration'], api['iteration']
 
     if api['done']:
+        logger.info('ADMM is done. Correcting data...')
+        # Load features
+        Y = pd.read_csv(args.f, index_col=0)
+        X = pd.read_csv(args.c, index_col=0).values
+
+        # Load last iteration of W_tilde
+        W_tilde = download_last_w_tilde()
+
+        # Correct data
+        Y_new = Y.values - X.dot(W_tilde)
+
+        new_filename = os.path.join(get_data_folder(), os.path.basename(args.f).replace('centered.csv', 'admm.csv'))
+        pd.DataFrame(Y_new, columns=Y.columns, index=Y.index).to_csv(new_filename)
+
         return True
 
     if current_iter == api_iter and api['success'] and not api['busy']:
@@ -357,7 +395,7 @@ if __name__ == '__main__':
     try:
         os.mkdir(os.path.join(get_data_folder(), 'admm'))
     except FileExistsError:
-        logger.warning('ADMM folder already exists')
+        print('[  WARNING  ] ADMM folder already exists')
     
     # Clear everything
     cmd = 'rm ' + os.path.join(get_data_folder(), 'admm') + '/*'
@@ -381,7 +419,7 @@ if __name__ == '__main__':
         if not done:
             print_logger(log_file)
             logger.info('Waiting for API to update...')
-            time.sleep(np.random.randint(60, 120))
+            time.sleep(np.random.randint(10, 50))
     
     print(__thanks__)
     print('DONE!')

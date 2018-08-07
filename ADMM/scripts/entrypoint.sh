@@ -8,7 +8,7 @@ ls ${DATA_FOLDER}
 # Run script
 echo -e "\n\n[  OK  ] Starting ADMM analysis"
 CMD="python3 "${CURRENT_DIR}"/admm.py \
-    -f '${DATA_FOLDER}'/groupfile_features.csv \
+    -f '${DATA_FOLDER}'/groupfile_features_centered.csv \
     -c '${DATA_FOLDER}'/common_data.csv "
 eval ${CMD}
 

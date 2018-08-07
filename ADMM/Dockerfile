@@ -15,7 +15,8 @@ ENV CLIENT_ID=$id
 ENV TERM=xterm-256color
 
 # Set Server URL
-ENV API_HOST="http://ec2-35-167-100-77.us-west-2.compute.amazonaws.com:3300/"
+ARG server
+ENV API_HOST=$server
 
 # Create data folder and set an ENV var
 RUN mkdir /root/data

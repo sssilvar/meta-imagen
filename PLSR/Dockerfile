@@ -15,7 +15,8 @@ ENV CLIENT_ID=$id
 ENV TERM=xterm-256color
 
 # Set Server URL
-ENV API_HOST="http://138.96.193.84:3300/"
+ARG server
+ENV API_HOST=$server
 
 # Create data folder and set an ENV var
 RUN mkdir /root/data

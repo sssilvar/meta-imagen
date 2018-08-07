@@ -10,9 +10,9 @@ ls ${DATA_FOLDER}
 # Run script
 echo -e "\n\n[  OK  ] Starting statistical analysis"
 CMD="python3 "${CURRENT_DIR}"/plsr_analysis.py \
-    -x '${DATA_FOLDER}'/groupfile_features.csv \
-    -y '${DATA_FOLDER}'/groupfile_features.csv " #${DATA_FOLDER}"/log.log"
+    -x '${DATA_FOLDER}'/groupfile_features_admm.csv \
+    -y '${DATA_FOLDER}'/groupfile_features_admm.csv " #${DATA_FOLDER}"/log.log"
 eval ${CMD}
 
 # Give permissions
-# eval "chmod -R 766 "${DATA_FOLDER}
+eval "chmod -R 766 "${DATA_FOLDER}

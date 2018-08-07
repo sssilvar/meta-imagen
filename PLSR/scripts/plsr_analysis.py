@@ -25,7 +25,7 @@ root = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root)
 
 from lib.PLSR import PLSR
-from lib import data
+from lib import api
 
 
 def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
@@ -66,14 +66,15 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     # Calculate average and standard deviation feature-wise (From the center)
     avgX, stdX, avgY, stdY = plsr.GetStatistics()
 
-    print("\nSaving data in: ", out_dir)
+    print("\n[  INFO  ] Saving data in: ", out_dir)
     # Save the results
     try:
         os.mkdir(out_dir)
     except IOError:
         pass
-    ext = '.npz'
-    out_file = os.path.join(out_dir, 'plsr_results' + ext)
+    
+    cid = api.get_client_id()
+    out_file = os.path.join(out_dir, 'plsr_%s.npz' % cid)
 
     np.savez_compressed(
         out_file,
@@ -82,23 +83,22 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
         comp=comp, w=weights
     )
 
-    report = ("[  OK  ] PLSR analysis report: \n"
-              "\t Data dimensions (shape):\n"
-              "\t avgX: %s\n"
-              "\t stdX: %s\n\n"
-              "\t avgY: %s\n"
-              "\t stdY: %s\n\n"
-              "\t Components: %s\n"
-              "\t Weights: %s\n") % (avgX.shape, stdX.shape, avgY.shape, stdY.shape, np.shape(comp), np.shape(weights))
-    print(report)
+    # Upload file
+    print('[  INFO  ] Uploading data to: ' + api.get_server_url())
+    url = api.get_server_url() + 'upload'
+    metadata = {
+        'type': 'PLSR',
+        'id': api.get_client_id()
+    }
 
-    # Update the data on the server:
-    print('\n\n[  INFO  ] Updating results on the server...')
-    data.upload_stats_to_server(plsr)
+    api.upload_file(url, filename=out_file, metadata=metadata)
+    
+    # Rename to keep the same name in every case
+    os.rename(out_file, out_file.replace('_' + cid, ''))
 
 
 if __name__ == '__main__':
-    csv_file = '/disk/Data/data_simulation/all_in_one/output/groupfile_features.csv'
+    csv_file = '/disk/Data/data_simulation/center_1/output/groupfile_features.csv'
 
     # Deal with the arguments
     parser = argparse.ArgumentParser(description=__description__)
