@@ -11,6 +11,7 @@ if __name__ == '__main__':
         'std': df.std().values
     }
 
+    print('[  INFO  ] Calculating local WF...')
     wf = Welford()
 
     for i in range(1,8):
@@ -25,4 +26,14 @@ if __name__ == '__main__':
 
     for key, _ in stats.items():
         err = np.mean(np.abs(stats[key] - all_stats[key]))
+        print('%s: %f' % (key, err))
+
+    # ==== Compare with distributed results ====
+    print('\n\n[  INFO  ] Comparing with distributed version...')
+    distributed_wf = '/disk/Data/data_simulation/center_1/output/welford/welford_final.npz'
+    dist = dict(np.load(distributed_wf))
+    dist['std'] = np.sqrt(dist['var'] / (dist['k'] - 1))
+
+    for key, _ in stats.items():
+        err = np.mean(np.abs(stats[key] - dist[key]))
         print('%s: %f' % (key, err))

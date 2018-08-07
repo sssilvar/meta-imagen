@@ -113,7 +113,7 @@ def set_status(status: bool, id: str):
 def download_final_stats():
     success = False
     while not success:
-        logger.info('Downloading current Welford data...')
+        logger.info('Connecting to API...')
         url = get_server_url() + '/data'
         dl_data_file = os.path.join(output_folder, 'welford_final.npz')
         r = requests.get(url, stream=True)
@@ -123,7 +123,10 @@ def download_final_stats():
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
             logger.info('Data downloaded successfully')
-            success = True
+            
+            # Return final data
+            if os.path.exists(dl_data_file):
+                return np.load(dl_data_file)
         else:
             logger.info('Error downloading welford data - Error code {}'.format(r.status_code))
 
@@ -177,11 +180,22 @@ def get_and_update(local_data):
 def main():
     # Get current status
     current_data = get_current_statistics()
+    logger.debug('Data from API (Local id {}): {}'.format(get_client_id(), current_data))
+    logger.debug('\n\tDone?: {}\n\t Allowed?: {}\n\tServer Free?{}'.format(
+        not current_data['done'], 
+        get_client_id() not in current_data['centers_done'],
+        not current_data['busy']
+    ))
     if current_data is None:
         logger.error('Looks like there are not pending tasks.')
         return True
-
-    if not current_data['done'] and get_client_id() not in current_data['centers_done'] and not current_data['busy']:
+    
+    if (not current_data['done'] and get_client_id() in current_data['centers_done']) or current_data['busy']:
+        logger.info('Waiting for the others...')
+        time.sleep(10)
+    
+    elif not current_data['done'] and get_client_id() not in current_data['centers_done'] and not current_data['busy']:
+        logger.info('It is out turn!!! - Calculating and updating statistics...')
         if get_client_id() not in current_data['centers']:
             logger.error('Center %s is not allowed to update. Please, contact support.' % get_client_id())
             return True
@@ -191,6 +205,7 @@ def main():
         
         logger.info('==== Starting Online statistics calculation ====')
         local_data = pd.read_csv(csv_file, index_col=0).values
+
         logger.info('Data info:\n\t- Data file: {}\n\t- Data shape: {}'.format(csv_file, local_data.shape))
 
         # 2. Update statistics
@@ -203,12 +218,22 @@ def main():
         
         # Set the server free
         set_status(False, current_data['_id'])
-    
-    elif (not current_data['done'] and get_client_id() in current_data['centers_done']) or current_data['busy']:
-        logger.info('Waiting for the others...')
-        time.sleep(10)
     else:
-        download_final_stats()
+        logger.info('Everyone is done - Downloading final statistics...')
+        stats = download_final_stats()
+
+        logger.info('Centering data...')
+        local_data = pd.read_csv(csv_file, index_col=0)
+
+        # Assign and calculate final stats
+        mean = stats['mean']
+        std = np.sqrt(stats['var'] / (stats['k'] - 1))
+
+        # Center data
+        local_data_corrected = ((local_data - mean) / std).fillna(axis='columns', value=0)
+        local_data_corrected.to_csv(corrected_csv)
+
+        logger.info('Corrected data saved as: ' + corrected_csv)
         return True
 
 
@@ -223,6 +248,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     csv_file = args.data
+    corrected_csv = os.path.join(
+        os.path.dirname(csv_file), 
+        os.path.basename(csv_file).replace('.csv', '_centered.csv'))
 
     # LOGGING PARAMETERS
     logger = logging.getLogger(__name__)
@@ -242,6 +270,8 @@ if __name__ == '__main__':
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+    time.sleep(np.random.randint(5,20))
     
     # Run data centering
     done = False
@@ -253,7 +283,9 @@ if __name__ == '__main__':
             done = main()
             time.sleep(5)
         except requests.exceptions.ConnectionError as e:
-            logger.exception(str(e))
+            logger.exception('Connection error: ' + str(e))
+        except Exception as e:
+            logger.exception('Another exception ocurred:' + str(e))
         
         th._stop()
     print('DONE!')

@@ -9,6 +9,13 @@ plt.style.use('ggplot')
 
 # bash bin/admm_client.sh /disk/Data/data_simulation/center_1/output 5b3383924bab0b42506ff78a
 
+def clean_previous(folder):
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            if file.endswith('.csv'):
+                filename = os.path.join(root, file)
+                print('Removing ' + filename)
+                os.remove(filename)
 
 if __name__ == '__main__':
     # Deal with the arguments
@@ -41,6 +48,10 @@ if __name__ == '__main__':
     
     # Fix seed for reproducibility
     np.random.seed(42)
+
+    # Delete previous data
+    print('[  INFO  ] Cleaning folder...')
+    clean_previous(centers_folder)
 
     # Generate Common data
     print('[  INFO  ] Generating common data...')

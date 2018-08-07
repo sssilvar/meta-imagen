@@ -7,6 +7,7 @@ test*
 
 # Ignore file outputs
 *.np*
+*.pyc
 __pycache__/
 
 # Ignore LaTeX trash outputs
