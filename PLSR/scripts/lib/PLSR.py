@@ -1,5 +1,4 @@
 import numpy as np
-from .welford import Welford
 
 
 class PLSR:
