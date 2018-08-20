@@ -16,10 +16,11 @@ from PLSR import PLSR
 
 if __name__ == '__main__':
     # Initial params
-    n = 300
-    n_x = 10000
+    n = 30
+    n_x = 100
     n_y = 35000
     np.random.seed(42)
+    np.set_printoptions(precision=3, suppress=True)
     os.system('clear')
 
     # Create X and W matrices
@@ -42,8 +43,8 @@ if __name__ == '__main__':
     plsr.EvaluateComponents()
     weights = plsr.GetWeights()
     comps = plsr.ReturnComponents()
-    print('Covariance X (XX\'):\n %s' % X.dot(X.T))
-    print('Covariance X (plsr):\n %s' % plsr._covX)
+    print('Covariance X (XX\'):\n %s' % str(X.dot(X.T).shape))
+    print('Covariance X (plsr):\n %s' % str(plsr._covX.shape))
 
     print('Covariance X (numpy):\n %s' % np.cov(X, rowvar=False))
     print('Covariance X (pandas):\n %s' % dfx.cov().values)
