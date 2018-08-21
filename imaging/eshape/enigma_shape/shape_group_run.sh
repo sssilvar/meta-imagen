@@ -32,9 +32,9 @@ FS_binary=${FS}/bin/
 ###################################################
 ## do not change setROIs, this will allow you to create them all in one go!
 
-# setROIS="10 11 12 13 17 18 26 49 50 51 52 53 54 58"
+setROIS="10 11 12 13 17 18 26 49 50 51 52 53 54 58"
 
-setROIS="26 58" 
+# setROIS="26 58" 
 #for testing only
 
 
