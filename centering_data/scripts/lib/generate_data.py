@@ -17,6 +17,12 @@ def clean_previous(folder):
                 print('Removing ' + filename)
                 os.remove(filename)
 
+def mkdir(folder_path):
+    try:
+        os.mkdir(folder_path)
+    except Exception as e:
+        print(e)
+
 if __name__ == '__main__':
     # Deal with the arguments
     parser = argparse.ArgumentParser(description='Generate data for linear regression.')
@@ -70,9 +76,15 @@ if __name__ == '__main__':
     plt.scatter(feats_data[0], common_data.dot(W)[0])
     plt.show()
 
-    # create DataFrames
+    # Create folders for 'all in one' and save real W
+    aio_folder = os.path.join(centers_folder, 'all_in_one')
+    mkdir(aio_folder)
+    mkdir(os.path.join(aio_folder, 'output'))
+    np.savez_compressed(os.path.join(aio_folder, 'output', 'W.npz'), W)
+
+    # Create and save DataFrames
     df_feats = pd.DataFrame(data=feats_data, columns=feats_cols)
-    df_feats.to_csv(os.path.join(centers_folder, 'all_in_one', 'output', 'groupfile_features.csv'))
+    df_feats.to_csv(os.path.join(aio_folder, 'output', 'groupfile_features.csv'))
 
     df_common = pd.DataFrame(data=common_data, columns=common_cols)
     df_common.to_csv(os.path.join(centers_folder, 'all_in_one', 'output', 'common_data.csv'))
@@ -80,10 +92,15 @@ if __name__ == '__main__':
     
     for i, (f_data, c_data) in enumerate(zip(np.split(feats_data, n_bunches), np.split(common_data, n_bunches))):
         print('Bunch %d shape features: %s | shape common data: %s' % (i, f_data.shape, c_data.shape))
+        
+        # Create center_i folder
+        center_folder = os.path.join(centers_folder, 'center_%d' % (i + 1))
+        mkdir(center_folder)
+        mkdir(os.path.join(center_folder, 'output'))        
 
         # Save ith center data
         df_feats = pd.DataFrame(data=f_data, columns=feats_cols)
-        df_feats.to_csv(os.path.join(centers_folder, 'center_%d' % (i + 1), 'output', 'groupfile_features.csv'))
+        df_feats.to_csv(os.path.join(center_folder, 'output', 'groupfile_features.csv'))
 
         df_common = pd.DataFrame(data=c_data, columns=common_cols)
-        df_common.to_csv(os.path.join(centers_folder, 'center_%d' % (i + 1), 'output', 'common_data.csv'))
+        df_common.to_csv(os.path.join(center_folder, 'output', 'common_data.csv'))
