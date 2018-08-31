@@ -47,7 +47,7 @@ do
     echo -e "\n\n\nCenter "${i}" | ID: "${ID}
     echo -e "\n\t\t- Input folder: "${FS_DATASET} \
             "\n\t\t- output Folder: "${OUTPUT_FOLDER} \
-            "\n\t\t- groupfile.csv folder: " ${GROUPFILE_FOLDER}
+            "\n\t\t- groupfile.csv folder: " ${GROUPFILE_FOLDER} \
             "\n\t\t- API server folder: " ${SERVER}
     
     # Run center
