@@ -13,4 +13,4 @@ CMD="python3 "${CURRENT_DIR}"/admm.py \
 eval ${CMD}
 
 # Give permissions
-eval "chmod -R 766 "${DATA_FOLDER}
+eval "chmod -R 777 "${DATA_FOLDER}

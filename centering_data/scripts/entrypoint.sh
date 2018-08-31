@@ -14,4 +14,4 @@ CMD="python3 "${CURRENT_DIR}"/center_data.py \
 eval ${CMD}
 
 # Give permissions
-eval "chmod -R 766 "${DATA_FOLDER}
+eval "chmod -R 777 "${DATA_FOLDER}
