@@ -8,9 +8,9 @@ ID=${3-"5b894d130f81e6000f237d22"}
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get main folders
-FS_DATASET=${CENTER_FOLDER}"/input"
-OUTPUT_FOLDER=${CENTER_FOLDER}"/output"
-GROUPFILE_FOLDER=${CENTER_FOLDER}"/group"
+FS_DATASET=${WORKDIR}"/input"
+OUTPUT_FOLDER=${WORKDIR}"/output"
+GROUPFILE_FOLDER=${WORKDIR}"/group"
 
 # Print some info
 echo -e "\n\n\n MAIN CENTER | ID: "${ID}
