@@ -8,7 +8,7 @@
 # ==== FOLDERS ====
 WORKDIR=${1-'/disk/Data/data_simulation'}
 N_OF_CENTERS=${2-7}
-SERVER="http://ec2-35-167-100-77.us-west-2.compute.amazonaws.com:3300/"
+SERVER=${3-"http://ec2-35-167-100-77.us-west-2.compute.amazonaws.com:3300/"}
 
 # FS_DATASET=${MAIN_FOLDER}"/input/FreeSurferSD"
 # OUTPUT_FOLDER=${MAIN_FOLDER}"/output"
@@ -48,6 +48,7 @@ do
     echo -e "\n\t\t- Input folder: "${FS_DATASET} \
             "\n\t\t- output Folder: "${OUTPUT_FOLDER} \
             "\n\t\t- groupfile.csv folder: " ${GROUPFILE_FOLDER}
+            "\n\t\t- API server folder: " ${SERVER}
     
     # Run center
     SCRIPT=${CURRENT_DIR}"/run_pipeline.sh"
