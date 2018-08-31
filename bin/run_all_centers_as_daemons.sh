@@ -19,13 +19,14 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Declare an array containing all the IDs
 declare -a IDS=(
-   "5b3383924bab0b42506ff78a"  # Center 1
-   "5b3383924bab0b42506ff78b"  # Center 2
-   "5b3383924bab0b42506ff78c"  # Center 3
-   "5b3383924bab0b42506ff78d"  # Center 4
-   "5b3383924bab0b42506ff78e"  # Center 5
-   "5b3383924bab0b42506ff78f"  # Center 6
-   "5b3383924bab0b42506ff78g"  # Center 7
+    "5b89038ef52ba9000fddf375"
+    "5b89038ef52ba9000fddf374"
+    "5b89038ef52ba9000fddf373"
+    "5b8900fbf52ba9000fddf366"
+    "5b89038cf52ba9000fddf370"
+    "5b89038ff52ba9000fddf376"
+    "5b89038df52ba9000fddf371"
+    "5b89038df52ba9000fddf372"
    )
 
 # Clean Everything

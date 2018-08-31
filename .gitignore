@@ -2,9 +2,6 @@ freesurfer/
 .idea/
 .vscode/
 
-# Ignore tests
-test/
-
 # Ignore file outputs
 *.np*
 *.pyc
