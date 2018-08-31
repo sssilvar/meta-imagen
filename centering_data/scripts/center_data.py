@@ -195,7 +195,7 @@ def main():
         time.sleep(10)
     
     elif not current_data['done'] and get_client_id() not in current_data['centers_done'] and not current_data['busy']:
-        logger.info('It is out turn!!! - Calculating and updating statistics...')
+        logger.info('It is our turn!!! - Calculating and updating statistics...')
         if get_client_id() not in current_data['centers']:
             logger.error('Center %s is not allowed to update. Please, contact support.' % get_client_id())
             return True
