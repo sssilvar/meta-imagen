@@ -4,7 +4,7 @@ import requests
 os.system('clear')
 
 if __name__ == '__main__':
-    api_url = 'http://ec2-34-217-66-229.us-west-2.compute.amazonaws.com:3300'
+    api_url = 'http://ec2-52-33-192-188.us-west-2.compute.amazonaws.com:3300'
     n_centers = 8
 
     # Create centers
@@ -22,7 +22,6 @@ if __name__ == '__main__':
     print('[  INFO  ] Registering centers and getting ids')
     for center in centers:
         r = requests.post(api_url + '/centers/new', json=center)
-        print(r.json())
         if r.status_code is 200:
             res = r.json()
             if res['success']:
