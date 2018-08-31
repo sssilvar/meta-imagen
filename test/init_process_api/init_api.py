@@ -1,10 +1,11 @@
 import os
+import sys
 import requests
 
 os.system('clear')
 
 if __name__ == '__main__':
-    api_url = 'http://ec2-52-33-192-188.us-west-2.compute.amazonaws.com:3300'
+    api_url = sys.argv[1]
     n_centers = 8
 
     # Create centers
