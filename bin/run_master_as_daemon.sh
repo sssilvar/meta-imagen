@@ -21,7 +21,7 @@ echo -e "\n\t\t- Input folder: "${FS_DATASET} \
 
 # Run center
 SCRIPT=${CURRENT_DIR}"/run_pipeline.sh"
-CMD="bash "${SCRIPT}" "${CENTER_FOLDER}" "${ID}" \""${SERVER}"\""
+CMD="bash "${SCRIPT}" "${WORKDIR}" "${ID}" \""${SERVER}"\""
 
 DAEMON="tmux new-session -d -s "${ID}" '"${CMD}"'"
 echo ${DAEMON}
