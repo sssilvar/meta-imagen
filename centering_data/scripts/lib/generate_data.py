@@ -58,7 +58,6 @@ if __name__ == '__main__':
     # Delete previous data
     print('[  INFO  ] Cleaning folder...')
     clean_previous(centers_folder)
-    aio_folder = os.path.join(centers_folder, 'all_in_one')
 
     # Generate Common data
     print('[  INFO  ] Generating common data...')
@@ -73,14 +72,17 @@ if __name__ == '__main__':
     feats_data = common_data.dot(W) + args.nf * np.random.normal(0, 50, [n, n_features])
     feats_cols = ['feature %d' % i for i in range(n_features)]
 
+    # Create AIO folder
+    aio_folder = os.path.join(centers_folder, 'all_in_one')
+    mkdir(aio_folder)
+    mkdir(os.path.join(aio_folder, 'output'))
+
     # Plot the results
     plt.scatter(feats_data[0], common_data.dot(W)[0])
     plt.savefig(os.path.join(aio_folder, 'output', 'data.pdf'), bbox_inches=None)
     # plt.show()
 
     # Create folders for 'all in one' and save real W
-    mkdir(aio_folder)
-    mkdir(os.path.join(aio_folder, 'output'))
     np.savez_compressed(os.path.join(aio_folder, 'output', 'W.npz'), W)
 
     # Create and save DataFrames
