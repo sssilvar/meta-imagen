@@ -74,7 +74,8 @@ if __name__ == '__main__':
 
     # Plot the results
     plt.scatter(feats_data[0], common_data.dot(W)[0])
-    plt.show()
+    plt.savefig(os.path.join(aio_folder, 'output', 'data.pdf'), bbox_inches=None)
+    # plt.show()
 
     # Create folders for 'all in one' and save real W
     aio_folder = os.path.join(centers_folder, 'all_in_one')

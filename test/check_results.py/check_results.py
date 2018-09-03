@@ -28,9 +28,7 @@ if __name__ == '__main__':
         ls = np.load(join(center_folder, 'welford', 'welford_final.npz'))
         l_mean = ls['mean']
         l_var = ls['var']
-        print(l_mean[1])
-        print(g_mean[1])
-        # print(((g_mean - l_mean) ** 2).mean())
-        # print(((g_var - l_var) ** 2).mean())
+        print(((g_mean - l_mean) ** 2).mean())
+        print(((g_var - l_var) ** 2).mean())
 
     
