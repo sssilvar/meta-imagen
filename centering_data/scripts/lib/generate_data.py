@@ -58,6 +58,7 @@ if __name__ == '__main__':
     # Delete previous data
     print('[  INFO  ] Cleaning folder...')
     clean_previous(centers_folder)
+    aio_folder = os.path.join(centers_folder, 'all_in_one')
 
     # Generate Common data
     print('[  INFO  ] Generating common data...')
@@ -78,7 +79,6 @@ if __name__ == '__main__':
     # plt.show()
 
     # Create folders for 'all in one' and save real W
-    aio_folder = os.path.join(centers_folder, 'all_in_one')
     mkdir(aio_folder)
     mkdir(os.path.join(aio_folder, 'output'))
     np.savez_compressed(os.path.join(aio_folder, 'output', 'W.npz'), W)
