@@ -5,7 +5,10 @@ import requests
 os.system('clear')
 
 if __name__ == '__main__':
-    api_url = sys.argv[1]
+    try:
+        api_url = sys.argv[1]
+    except IndexError:
+        api_url = 'http://ec2-52-33-192-188.us-west-2.compute.amazonaws.com:3300'
     n_centers = 8
 
     # Create centers
@@ -30,8 +33,9 @@ if __name__ == '__main__':
     
     r = requests.get(api_url + '/centers')
     if r.status_code is 200:
-        center_ids = r.json().keys()
-        print('\n[  INFO  ] Centers registered:')
+        center_ids = list(r.json().keys())
+        center_ids.remove('5b894d130f81e6000f237d22')
+        print('\n[  INFO  ] Centers registered:', center_ids)
         for cid in center_ids:
             print(cid + '\n')
     
