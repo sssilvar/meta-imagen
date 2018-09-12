@@ -34,6 +34,7 @@ if __name__ == '__main__':
     err_mean = []
     err_var = []
     err_w_tilde = []
+    weights = None # TODO: Finish this
     for i in range(1, n_centers + 1):
         center_folder = join(main_folder, 'center_%d' % i, 'output')
         # Load local statistics: ls

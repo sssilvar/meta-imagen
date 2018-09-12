@@ -9,7 +9,7 @@ if __name__ == '__main__':
         api_url = sys.argv[1]
     except IndexError:
         api_url = 'http://ec2-52-33-192-188.us-west-2.compute.amazonaws.com:3300'
-    n_centers = 8
+    n_centers = 2
 
     # Create centers
     centers = []
@@ -35,6 +35,7 @@ if __name__ == '__main__':
     if r.status_code is 200:
         center_ids = list(r.json().keys())
         center_ids.remove('5b894d130f81e6000f237d22')
+        center_ids = center_ids[:n_centers]
         print('\n[  INFO  ] Centers registered:', center_ids)
         for cid in center_ids:
             print(cid + '\n')
