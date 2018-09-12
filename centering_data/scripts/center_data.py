@@ -204,11 +204,12 @@ def main():
         set_status(True, current_data['_id'])
         
         logger.info('==== Starting Online statistics calculation ====')
-        local_data = pd.read_csv(csv_file, index_col=0).values
+        local_data = pd.read_csv(csv_file, index_col=0)
 
         # Clean Dataframe
         local_data = local_data.fillna(local_data.mean())
         local_data.to_csv(csv_file)
+        local_data = local_data.values  # Convert DataFrame into a ndArray
 
         logger.info('Data info:\n\t- Data file: {}\n\t- Data shape: {}'.format(csv_file, local_data.shape))
 
