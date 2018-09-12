@@ -46,8 +46,8 @@ if __name__ == '__main__':
             label_names[i] = adni_prog.loc[sid, 'dx_group']
 
     # Load components
-    X = np.stack(U, axis=-1)
-    Y = np.stack(WB, axis=-1)
+    X = np.stack(U, axis=1)
+    Y = np.stack(WB, axis=1)
     print(X.shape)
     print(Y.shape)
 
