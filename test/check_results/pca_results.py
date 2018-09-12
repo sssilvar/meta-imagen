@@ -40,7 +40,7 @@ if __name__ == '__main__':
     labels = np.empty(len(df_feats))
     label_names = list(np.empty_like(labels))
 
-    adni_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/data_df.csv', index_col='folder')
+    adni_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge_conversions_v2.csv', index_col='PTID')
 
     for i, sid in enumerate(df_feats.index):
         if 'HC' in sid:
@@ -50,8 +50,12 @@ if __name__ == '__main__':
             labels[i] = 4
             label_names[i] = 'AD'
         else:
-            labels[i] = adni_prog.loc[sid, 'target'] + 1
-            label_names[i] = adni_prog.loc[sid, 'dx_group']
+            if any([sid in s for s in adni_prog.index]):
+                labels[i] = 2
+                label_names[i] = 'MCIc'
+            else:
+                labels[i] = 1
+                label_names[i] = 'MCInc'
 
     # Load components
     X = np.vstack(U)
