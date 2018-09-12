@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
-    result['label'] = labels
+    result['label'] = label_names
 
     sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
