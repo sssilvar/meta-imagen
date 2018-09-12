@@ -9,6 +9,8 @@ from PLSR import PLSR
 import seaborn as sns
 import matplotlib.pyplot as plt
 # plt.style.use('ggplot')
+sns.set(color_codes=True)
+
 
 
 if __name__ == '__main__':
