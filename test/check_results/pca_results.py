@@ -11,11 +11,16 @@ if __name__ == '__main__':
     n_centers = 2
 
     features = []
+    plsr = []
     for i in range(1, n_centers + 1):
         csv = join(main_folder, 'center_%d' % i, 'output', 'groupfile_features.csv')
         print('[  INFO  ] Loading %s' % csv)
         df = pd.read_csv(csv, index_col=0)
         features.append(df)
+            
+        # Load PLSR results
+        npz_plsr = join(main_folder, 'center_%d' % i, 'output', 'plsr','plsr.npz')
+        plsr.append(np.load(npz_plsr))
     
     df_feats = pd.concat(features, axis=0)
 
@@ -37,7 +42,7 @@ if __name__ == '__main__':
             labels[i] = adni_prog.loc[sid, 'target'] + 1
             label_names[i] = adni_prog.loc[sid, 'dx_group']
 
-    print(label_names)
-    print(len(label_names), df_feats.shape)
-
+    # Load components
+    print(plsr)
+    print(plsr[0])
 
