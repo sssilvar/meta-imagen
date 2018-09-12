@@ -206,6 +206,10 @@ def main():
         logger.info('==== Starting Online statistics calculation ====')
         local_data = pd.read_csv(csv_file, index_col=0).values
 
+        # Clean Dataframe
+        local_data = local_data.fillna(local_data.mean())
+        local_data.to_csv(csv_file)
+
         logger.info('Data info:\n\t- Data file: {}\n\t- Data shape: {}'.format(csv_file, local_data.shape))
 
         # 2. Update statistics
