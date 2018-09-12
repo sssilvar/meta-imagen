@@ -8,7 +8,7 @@ from PLSR import PLSR
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-plt.style.use('ggplot')
+# plt.style.use('ggplot')
 
 
 if __name__ == '__main__':
