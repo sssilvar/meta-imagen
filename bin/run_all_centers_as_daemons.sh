@@ -57,5 +57,5 @@ do
     DAEMON="tmux new-session -d -s "${ID}" '"${CMD}"'"
     echo ${DAEMON}
     eval ${DAEMON}
-    eval "sleep 30"
+    eval "sleep 10"
 done
