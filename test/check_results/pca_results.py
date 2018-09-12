@@ -76,7 +76,7 @@ if __name__ == '__main__':
     sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
-            markers=markers, legend=False
+            markers=markers, legend=False,
             palette='Set2')
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     sns.lmplot('PC2', 'PC3', data=result, fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
-            markers=markers, legend=False
+            markers=markers, legend=False,
             palette='Set2')
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
