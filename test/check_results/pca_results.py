@@ -62,19 +62,19 @@ if __name__ == '__main__':
 
     # Project data and see magic
     E = df_feats.values
-    pca_x = E.dot(U) 
+    pca_x = E.dot(V)
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
 
     sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
-            scatter_kws={'s': 50},  # Marker size
+            scatter_kws={'s': 90},  # Marker size
             hue='label')  # Color
     plt.title('PCA Result')
 
     sns.lmplot('PC2', 'PC3', data=result, fit_reg=False,
-            scatter_kws={'s': 50},  # Marker size
+            scatter_kws={'s': 90},  # Marker size
             hue='label')  # Color
     plt.title('PCA Result')
 
