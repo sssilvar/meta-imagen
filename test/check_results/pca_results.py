@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     # Project data and see magic
     E = df_feats.values
-    pca_x = E.dot(V) 
+    pca_x = E.dot(U) 
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
