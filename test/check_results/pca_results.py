@@ -64,18 +64,23 @@ if __name__ == '__main__':
     E = df_feats.values
     pca_x = E.dot(V)
 
+    # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
+    markers = ['o', 'o', 'x', 'x']
+
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
 
     sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
-            scatter_kws={'s': 90},  # Marker size
-            hue='label')  # Color
+            scatter_kws={'s': 60},  # Marker size
+            hue='label',  # Color
+            markers=markers)
     plt.title('PCA Result')
 
     sns.lmplot('PC2', 'PC3', data=result, fit_reg=False,
-            scatter_kws={'s': 90},  # Marker size
-            hue='label')  # Color
+            scatter_kws={'s': 60},  # Marker size
+            hue='label',  # Color
+            markers=markers)
     plt.title('PCA Result')
 
     plt.show()
