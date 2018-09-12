@@ -68,6 +68,7 @@ if __name__ == '__main__':
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
     markers = ['o', 'o', 'x', 'x']
+    palette=dict(HC="#004B99", MCInc="#469C0C", MCIc="#CC8200", AD="#AA1500"))
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
@@ -77,7 +78,7 @@ if __name__ == '__main__':
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
-            palette='Set2')
+            palette=palette)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
@@ -87,7 +88,7 @@ if __name__ == '__main__':
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
-            palette='Set2')
+            palette=palette)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
