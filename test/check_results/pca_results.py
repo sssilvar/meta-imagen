@@ -66,6 +66,8 @@ if __name__ == '__main__':
     E = df_feats.values
     pca_x = E.dot(V)
 
+    plt.scatter(U[:,0], V[:, 0])
+
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
     markers = ['o', 'o', 'x', 'x']
     palette=dict(HC="#004B99", MCInc="#469C0C", MCIc="#CC8200", AD="#AA1500")
