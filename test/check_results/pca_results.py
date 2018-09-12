@@ -4,6 +4,12 @@ from os.path import join
 import numpy as np
 import pandas as pd
 
+from PLSR import PLSR
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+
 
 if __name__ == '__main__':
     # Set up basic stuff
@@ -48,6 +54,29 @@ if __name__ == '__main__':
     # Load components
     X = np.vstack(U)
     Y = np.vstack(WB)
-    print(X.shape)
-    print(Y.shape)
+
+    plsr = PLSR(X, Y)
+    plsr.Initialize()
+    plsr.EvaluateComponents()
+    U, V = plsr.GetWeights()
+
+    # Project data and see magic
+    E = df_feats.values
+    pca_x = E.dot(V) 
+
+    # Plot
+    result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
+    result['label'] = labels
+
+    sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
+            scatter_kws={'s': 50},  # Marker size
+            hue='label')  # Color
+    plt.title('PCA Result')
+
+    sns.lmplot('PC2', 'PC3', data=result, fit_reg=False,
+            scatter_kws={'s': 50},  # Marker size
+            hue='label')  # Color
+    plt.title('PCA Result')
+
+    plt.show()
 
