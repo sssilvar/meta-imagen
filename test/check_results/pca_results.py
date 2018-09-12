@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # ==== Assign labels ===
     # Initialize array
     labels = np.empty(len(df_feats))
-    label_names = np.empty_like(labels, dtype=str)
+    label_names = np.empty_like(labels, dtype=[str])
 
     adni_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/data_df.csv', index_col='folder')
 
