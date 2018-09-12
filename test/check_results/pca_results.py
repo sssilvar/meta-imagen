@@ -46,5 +46,6 @@ if __name__ == '__main__':
             label_names[i] = adni_prog.loc[sid, 'dx_group']
 
     # Load components
-    print(U)
+    print([u.shape for u in U])
+    print([u.shape for u in WB])
 
