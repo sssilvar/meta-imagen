@@ -84,7 +84,8 @@ if __name__ == '__main__':
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
-            palette=palette)
+            palette=palette,
+            shade=True)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
