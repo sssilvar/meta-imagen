@@ -80,7 +80,7 @@ if __name__ == '__main__':
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
 
-    sns.kdeplot('PC1', 'PC2', data=result, fit_reg=False,
+    sns.kdeplot(result['PC1'], result['PC2'], fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
