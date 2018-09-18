@@ -303,7 +303,10 @@ def main():
         logger.info('ADMM is done. Correcting data...')
         # Load features
         Y = pd.read_csv(args.f, index_col=0)
-        X = pd.read_csv(args.c, index_col=0).values
+        X = pd.read_csv(args.c, index_col=0)
+
+        Y = Y..fillna(X.mean())
+        X = X.fillna(X.mean()).values
 
         # Load last iteration of W_tilde
         W_tilde = download_last_w_tilde()
