@@ -41,6 +41,15 @@ if __name__ == '__main__':
     label_names = list(np.empty_like(labels))
 
     adni_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge_conversions_v2.csv', index_col='PTID')
+    controls_uk = ['3679417', '4750610', '3907430', '3141907', '5112837', '3475195',
+       '4174334', '1496541', '1031176', '3728405', '4478520', '2852289',
+       '4159870', '5367099', '4605002', '3203749', '4155810', '1241480',
+       '1693795', '4606673', '4816754', '5139990', '5133747', '4108683',
+       '3039029', '5817232', '4239395', '2035774', '3985382', '2436654',
+       '5340504', '1549892', '2009566', '2546076', '4056050', '4930310',
+       '1443931', '2099590', '3721435', '1139817', '3506429', '3095067',
+       '3303808', '1159944', '4732188', '2430788', '2519560', '2155568',
+       '4476610', '1006400', '3790812', '3985669', '1489425']
 
     for i, sid in enumerate(df_feats.index):
         if 'HC' in sid:
@@ -50,7 +59,10 @@ if __name__ == '__main__':
             labels[i] = 4
             label_names[i] = 'AD-MIRIAD'
         elif '_20252' in sid:
-            label_names[i] = 'HC-UKB'
+            if sid in controls_uk:
+                label_names[i] = 'HC-UKB'
+            else:
+                label_names[i] = 'Other-UKB'
         else:
             if any([sid in s for s in adni_prog.index]):
                 labels[i] = 2
@@ -75,13 +87,14 @@ if __name__ == '__main__':
     plt.scatter(U[:,0], V[:, 0])
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
-    markers = ['o', 'o', 'x', 'x', 'o']
+    markers = ['o', 'o', 'o', 'x', 'x', 'o']
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#007DFF',
+        'Other-UKB': '#633F00'
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
-        'AD-MIRIAD': '#AA1500'
+        'AD-MIRIAD': '#AA1500',
     }
 
     # Plot
