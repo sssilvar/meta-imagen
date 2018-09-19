@@ -125,16 +125,19 @@ if __name__ == '__main__':
     legends = []
     # colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
     colors = ['Blues', 'Greens', 'Greys', 'Oranges', 'Purples', 'Reds']
+    x_c = [-18, 95, 130, 200, 200, 200]
+    y_c = [95, 79, 55, -100, -120, -140]
     for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC2'],
-                        n_levels=3,
+                        n_levels=2,
                         cmap=colors[i], 
                         shade=False, 
                         shade_lowest=False,
-                        legend=True, 
                         alpha=0.8)
-        ax.set_label(key)
+        col = sns.color_palette(colors[i])[-2]
+        ax.text(x_c[i], y_c[i], key, size=16, color=col)
+        # ax.set_label(key)
 
         # legends.append(key)
     # plt.legend(legends)
