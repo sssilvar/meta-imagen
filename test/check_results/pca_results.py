@@ -16,7 +16,7 @@ sns.set(color_codes=True)
 if __name__ == '__main__':
     # Set up basic stuff
     main_folder = '/disk/Data/data_simulation'
-    n_centers = 2
+    n_centers = 3
 
     features = []
     U = []
@@ -49,6 +49,8 @@ if __name__ == '__main__':
         elif 'AD' in sid:
             labels[i] = 4
             label_names[i] = 'AD'
+        elif '_20252' in sid:
+            label_names[i] = 'HC'
         else:
             if any([sid in s for s in adni_prog.index]):
                 labels[i] = 2

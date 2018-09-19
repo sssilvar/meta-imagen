@@ -112,7 +112,7 @@ def print_and_log(message):
     elif 'WARNING' in message:
         logger.warning(message)
     elif 'ERROR' in message:
-        logger.warning(message)
+        logger.error(message)
     else:
         logger.debug(message)
 
