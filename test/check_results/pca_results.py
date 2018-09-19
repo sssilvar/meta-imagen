@@ -226,8 +226,7 @@ if __name__ == '__main__':
             hue='label',  # Color
             # markers=markers, 
             legend=False,
-            palette=palette,
-            zorder=2)
+            palette=palette)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
