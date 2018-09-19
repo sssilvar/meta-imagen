@@ -78,7 +78,7 @@ if __name__ == '__main__':
     markers = ['o', 'o', 'x', 'x', 'o']
     palette = {
         'HC-MIRIAD': '#004B99',
-        'HC-UKB': '#0057B2',
+        'HC-UKB': '#007DFF',
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
         'AD-MIRIAD': '#AA1500'
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
-            scatter_kws={'s': 40},  # Marker size
+            scatter_kws={'s': 50},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
             palette=palette)
