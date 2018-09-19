@@ -129,7 +129,7 @@ if __name__ == '__main__':
         ax = sns.kdeplot(data['PC1'], data['PC2'],
                         n_levels=3,
                         cmap=colors[i], 
-                        shade=True, 
+                        shade=False, 
                         shade_lowest=False, 
                         alpha=0.8)
         ax.set_label(key)
