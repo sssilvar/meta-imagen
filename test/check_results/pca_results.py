@@ -138,11 +138,15 @@ if __name__ == '__main__':
         ax.text(x_c[i], y_c[i], key, size=16, color=col)
     
     plt.figure()
-    ax = sns.kdeplot(result['PC1'], result['PC2'],
-                    n_levels=10,
-                    cmap='GnBu_d', 
-                    shade=False, 
-                    shade_lowest=False)
+    for i, (key, val) in enumerate(palette.items()):
+        data = result[result['label'] == key]
+        ax = sns.kdeplot(data['PC1'], data['PC3'],
+                        n_levels=2,
+                        cmap=colors[i], 
+                        shade=False, 
+                        shade_lowest=False)
+        col = sns.color_palette(colors[i])[-2]
+        ax.text(x_c[i], y_c[i], key, size=16, color=col)
         # ax.text(x_c[i], y_c[i], key, size=16, color=col)
     plt.show()
 
