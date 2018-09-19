@@ -121,12 +121,12 @@ if __name__ == '__main__':
     plt.legend(loc='lower left')
 
     # Plot contours
-    # fig, ax = plt.figure()
+    fig, ax = plt.figure()
     colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
-    for key, val in palette.items():
+    for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC2'],
-                        cmap="Reds", shade=True, shade_lowest=False)
+                        cmap=colors[i], shade=True, shade_lowest=False, alpha=0.4)
 
     plt.show()
 
