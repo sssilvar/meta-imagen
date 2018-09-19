@@ -133,8 +133,6 @@ if __name__ == '__main__':
                         shade_lowest=False, 
                         alpha=0.8)
         ax.set_label(key)
-        leg = ax.get_legend()
-        leg.legendHandles[0].set_color('red')
 
         # legends.append(key)
     # plt.legend(legends)
