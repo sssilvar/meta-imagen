@@ -134,14 +134,14 @@ if __name__ == '__main__':
     workdir = os.path.dirname(args.x)
     out_dir = os.path.join(workdir, 'plsr')
     log_file = os.path.join(out_dir, 'plsr.log')
-    
-    # Setup logger
-    logger = setup_logger(log_file)
 
     try:
         os.mkdir(out_dir)
     except IOError:
         print_and_log('[  WARNING  ] PLSR folder already exists')
+
+    # Setup logger
+    logger = setup_logger(log_file)
 
     print_and_log("====== PLSR ANALYSIS ======")
     print_and_log("\t X-Data located at: %s" % args.x)
