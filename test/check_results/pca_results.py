@@ -138,6 +138,8 @@ if __name__ == '__main__':
         ax.text(x_c[i], y_c[i], key, size=16, color=col)
     
     plt.figure()
+    x_c = [34, 120, 40, 22, -90, -110]
+    y_c = [40, 28, -30, -35, -50, -9]
     for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC3'],
