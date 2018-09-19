@@ -124,18 +124,21 @@ if __name__ == '__main__':
     plt.figure()
     legends = []
     # colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
-    colors = ['Blues', 'Greens', 'Greys', 'Oranges', 'Purples', 'Reds']
+    colors = ['Blues', 'GnBu', 'Greys', 'Purples', 'Greens', 'Reds']
     x_c = [-18, 95, 100, 18, -80, -150]
     y_c = [95, 79, 36, 0, 75, 48]
     for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC2'],
                         n_levels=2,
+                        alpha=0.8,
                         cmap=colors[i], 
                         shade=False, 
                         shade_lowest=False)
         col = sns.color_palette(colors[i])[-2]
         ax.text(x_c[i], y_c[i], key, size=16, color=col)
+    plt.xlim(-215, 215)
+    plt.ylim(-150, 150)
     
     plt.figure()
     x_c = [34, 120, 40, -22, -90, -110]
@@ -144,11 +147,14 @@ if __name__ == '__main__':
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC3'],
                         n_levels=2,
+                        alpha=0.8,
                         cmap=colors[i], 
                         shade=False, 
                         shade_lowest=False)
         col = sns.color_palette(colors[i])[-2]
         ax.text(x_c[i], y_c[i], key, size=16, color=col)
         # ax.text(x_c[i], y_c[i], key, size=16, color=col)
+    plt.xlim(-215, 215)
+    plt.ylim(-100, 75)
     plt.show()
 
