@@ -111,7 +111,7 @@ if __name__ == '__main__':
     plt.legend(loc='lower left')
 
 
-    sns.lmplot('PC2', 'PC3', data=result, fit_reg=False,
+    sns.lmplot('PC1', 'PC3', data=result, fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
