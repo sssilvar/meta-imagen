@@ -152,5 +152,6 @@ if __name__ == '__main__':
     except Exception as e:
         # Print exception
         print_and_log('[  ERROR  ] {}'.format(e))
+        raise SystemExit
 
     print_and_log("[  OK  ] DONE!")
