@@ -221,9 +221,13 @@ if __name__ == '__main__':
     for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
         print(pos)
         draw_ellipse(pos, covar, alpha=w * w_factor, color=colors[i], zorder=0)
+    plt.xlim(-400, 320)
+    plt.ylim(-380, 190)
 
     plt.figure()
     plot_gmm(gmm, X)
+    plt.xlim(-400, 320)
+    plt.ylim(-380, 190)
 
     plt.show()
 
