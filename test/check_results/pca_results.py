@@ -138,7 +138,7 @@ if __name__ == '__main__':
         ax.text(x_c[i], y_c[i], key, size=16, color=col)
     
     plt.figure()
-    ax = sns.kdeplot(data['PC1'], data['PC2'],
+    ax = sns.kdeplot(result['PC1'], result['PC2'],
                     n_levels=10,
                     cmap='GnBu_d', 
                     shade=False, 
