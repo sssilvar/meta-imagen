@@ -29,7 +29,7 @@ from lib.PLSR import PLSR
 from lib import api
 
 
-def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
+def plsr_analysis(csv_file_x, csv_file_y, threshold=0.6):
     """
     This function performs the PLSR analysis, and calculates the feature-wise average and standard deviation.
     :param csv_file_x: Path to the csv_file that contains the data for X
