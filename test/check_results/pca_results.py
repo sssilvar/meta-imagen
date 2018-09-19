@@ -215,7 +215,7 @@ if __name__ == '__main__':
     gmm.fit(X)
     
 
-    colors = [palette.values()]
+    colors = list(palette.values())
     w_factor = 0.3 / gmm.weights_.max()
     for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
         print(pos)
