@@ -211,5 +211,8 @@ if __name__ == '__main__':
     gmm = GMM(n_components=4, random_state=42)
     plot_gmm(gmm, X)
 
+    plt.figure()
+    result.scatter(x='PC1', y='PC2'c=Y)
+
     plt.show()
 
