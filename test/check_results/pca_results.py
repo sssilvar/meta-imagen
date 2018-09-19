@@ -214,7 +214,7 @@ if __name__ == '__main__':
     gmm = GMM(n_components=4, random_state=42)
     gmm.fit(X)
     
-    w_factor = 0.3 / gmm.weights_.max()
+    w_factor = 0.2 / gmm.weights_.max()
     for pos, covar, w in zip(gmm.means_, gmm.covars_, gmm.weights_):
         draw_ellipse(pos, covar, alpha=w * w_factor, zorder=0)
 
