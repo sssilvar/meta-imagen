@@ -131,12 +131,10 @@ if __name__ == '__main__':
                         n_levels=3,
                         cmap=colors[i], 
                         shade=False, 
-                        shade_lowest=False, 
+                        shade_lowest=False,
+                        legend=True, 
                         alpha=0.8)
-        ax = plt.gca()
         ax.set_label(key)
-        leg = ax.get_legend()
-        leg.legendHandles[0].set_color('red')
 
         # legends.append(key)
     # plt.legend(legends)
