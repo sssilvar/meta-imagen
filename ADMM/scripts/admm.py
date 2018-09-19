@@ -305,7 +305,7 @@ def main():
         Y = pd.read_csv(args.f, index_col=0)
         X = pd.read_csv(args.c, index_col=0)
 
-        Y = Y..fillna(X.mean())
+        Y = Y.fillna(X.mean())
         X = X.fillna(X.mean()).values
 
         # Load last iteration of W_tilde
