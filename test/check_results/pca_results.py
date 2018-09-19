@@ -46,9 +46,10 @@ def plot_gmm(gmm, X, label=True, ax=None):
         pass
     ax.axis('equal')
     
+    colors = ['#004B99', '#CC8200', '#469C0C', '#AA1500']
     w_factor = 0.3 / gmm.weights_.max()
-    for pos, covar, w in zip(gmm.means_, gmm.covars_, gmm.weights_):
-        draw_ellipse(pos, covar, alpha=w * w_factor)
+    for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
+        draw_ellipse(pos, covar, color=colors[i], alpha=w * w_factor)
 
 
 
@@ -130,7 +131,7 @@ if __name__ == '__main__':
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#007DFF',
-        'Other-UKB': '#633F00',
+        'Other-UKB': '#3E3699'  # '#633F00',
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
         'AD-MIRIAD': '#AA1500'
@@ -215,7 +216,7 @@ if __name__ == '__main__':
     gmm.fit(X)
     
 
-    colors = list(palette.values())
+    colors = ['#004B99', '#CC8200', '#469C0C', '#AA1500']
     w_factor = 0.3 / gmm.weights_.max()
     for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
         print(pos)
