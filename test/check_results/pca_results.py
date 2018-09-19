@@ -219,7 +219,7 @@ if __name__ == '__main__':
     w_factor = 0.3 / gmm.weights_.max()
     for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
         print(pos)
-        draw_ellipse(pos, covar, alpha=w * w_factor, facecolor=color[i] zorder=0)
+        draw_ellipse(pos, covar, alpha=w * w_factor, facecolor=color[i], zorder=0)
 
     plt.figure()
     plot_gmm(gmm, X)
