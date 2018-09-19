@@ -140,7 +140,7 @@ if __name__ == '__main__':
     plt.figure()
     for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
-        ax = sns.kdeplot(data['PC2'], data['PC3'],
+        ax = sns.kdeplot(data['PC1'], data['PC3'],
                         n_levels=2,
                         cmap=colors[i], 
                         shade=False, 
