@@ -45,19 +45,19 @@ if __name__ == '__main__':
     for i, sid in enumerate(df_feats.index):
         if 'HC' in sid:
             labels[i] = 0
-            label_names[i] = 'HC - MIRIAD'
+            label_names[i] = 'HC-MIRIAD'
         elif 'AD' in sid:
             labels[i] = 4
-            label_names[i] = 'AD - MIRIAD'
+            label_names[i] = 'AD-MIRIAD'
         elif '_20252' in sid:
-            label_names[i] = 'HC - UKB'
+            label_names[i] = 'HC-UKB'
         else:
             if any([sid in s for s in adni_prog.index]):
                 labels[i] = 2
-                label_names[i] = 'MCIc - ADNI'
+                label_names[i] = 'MCIc-ADNI'
             else:
                 labels[i] = 1
-                label_names[i] = 'MCInc - ADNI'
+                label_names[i] = 'MCInc-ADNI'
 
     # Load components
     X = np.vstack(U)
@@ -76,7 +76,13 @@ if __name__ == '__main__':
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
     markers = ['o', 'o', 'x', 'x']
-    palette=dict(HC="#004B99", MCInc="#469C0C", MCIc="#CC8200", AD="#AA1500")
+    palette = {
+        'HC-MIRIAD': '#004B99',
+        'HC-UKB': '#0057B2',
+        'MCIc-ADNI': '#CC8200',
+        'MCInc-ADNI': '#469C0C',
+        'AD-MIRIAD': '#AA1500'
+    }
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
