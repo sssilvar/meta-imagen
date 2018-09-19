@@ -84,7 +84,7 @@ if __name__ == '__main__':
     E = df_feats.values
     pca_x = E.dot(V)
 
-    plt.scatter(U[:,0], V[:, 0])
+    # plt.scatter(U[:,0], V[:, 0])  # Relationship between U and V
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
     markers = ['o', 'o', 'o', 'x', 'x', 'o']
@@ -119,6 +119,14 @@ if __name__ == '__main__':
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
+
+    # Plot contours
+    # fig, ax = plt.figure()
+    colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
+    for key, val in palette.items():
+        data = result[result['label'] == key]
+        ax = sns.kdeplot(data['PC1'], data['PC2'],
+                        cmap="Reds", shade=True, shade_lowest=False)
 
     plt.show()
 
