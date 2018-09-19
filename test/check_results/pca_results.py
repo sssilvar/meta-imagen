@@ -102,7 +102,7 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     # Filter classes
-    query = 'label == "HC-MIRIAD" or ' + \ 
+    query = 'label == "HC-MIRIAD" or ' + \
             'label == "HC-UKB" or ' + \
             'label == "Other-UKB" or ' + \
             'label == "AD-MIRIAD"'
