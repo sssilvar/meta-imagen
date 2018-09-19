@@ -147,17 +147,17 @@ if __name__ == '__main__':
             'label == "AD-MIRIAD"'
     res_fil = result.query(query)
 
-    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
-            scatter_kws={'s': 50},  # Marker size
-            hue='label',  # Color
-            # markers=markers, 
-            legend=False,
-            palette=palette,
-            zorder=2)
-    plt.title('PCA Result')
-    # Move the legend to an empty part of the plot
-    plt.legend(loc='lower left')
-    plt.axis('equal')
+    # sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
+    #         scatter_kws={'s': 50},  # Marker size
+    #         hue='label',  # Color
+    #         # markers=markers, 
+    #         legend=False,
+    #         palette=palette,
+    #         zorder=2)
+    # plt.title('PCA Result')
+    # # Move the legend to an empty part of the plot
+    # plt.legend(loc='lower left')
+    # plt.axis('equal')
 
 
     # sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
@@ -215,9 +215,23 @@ if __name__ == '__main__':
     gmm = GMM(n_components=4, random_state=42)
     gmm.fit(X)
     
+    plt.figure()
+
     w_factor = 0.3 / gmm.weights_.max()
     for pos, covar, w in zip(gmm.means_, gmm.covars_, gmm.weights_):
         draw_ellipse(pos, covar, alpha=w * w_factor)
+    
+    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
+            scatter_kws={'s': 50},  # Marker size
+            hue='label',  # Color
+            # markers=markers, 
+            legend=False,
+            palette=palette,
+            zorder=2)
+    plt.title('PCA Result')
+    # Move the legend to an empty part of the plot
+    plt.legend(loc='lower left')
+    plt.axis('equal')
 
     plt.figure()
     plot_gmm(gmm, X)
