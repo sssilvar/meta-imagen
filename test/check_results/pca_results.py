@@ -206,7 +206,7 @@ if __name__ == '__main__':
 
     # ==== GMM ====
     Y = result['label'].astype('category').cat.codes
-    X = result.loc[:, ['PC1', 'PC2']].values
+    X = result.drop('label', axis=1).values
     
     gmm = GMM(n_components=4, random_state=42)
     plot_gmm(gmm, X)
