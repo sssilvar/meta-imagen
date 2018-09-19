@@ -42,7 +42,8 @@ def plot_gmm(gmm, X, label=True, ax=None):
     if label:
         ax.scatter(X[:, 0], X[:, 1], c=labels, s=40, cmap='Set1', zorder=2)
     else:
-        ax.scatter(X[:, 0], X[:, 1], s=40, zorder=2)
+        # ax.scatter(X[:, 0], X[:, 1], s=40, zorder=2)
+        pass
     ax.axis('equal')
     
     w_factor = 0.2 / gmm.weights_.max()
@@ -203,6 +204,17 @@ if __name__ == '__main__':
     #     # ax.text(x_c[i], y_c[i], key, size=16, color=col)
     # plt.xlim(-215, 215)
     # plt.ylim(-100, 75)
+
+    plt.figure()
+    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
+            scatter_kws={'s': 50},  # Marker size
+            hue='label',  # Color
+            # markers=markers, 
+            legend=False,
+            palette=palette)
+    plt.title('GMM - Clustering')
+    # Move the legend to an empty part of the plot
+    plt.legend(loc='lower left')
 
     # ==== GMM ====
     Y = result['label'].astype('category').cat.codes
