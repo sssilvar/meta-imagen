@@ -125,10 +125,18 @@ if __name__ == '__main__':
     legends = []
     colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
     for i, (key, val) in enumerate(palette.items()):
-        legends.append(key)
         data = result[result['label'] == key]
         ax = sns.kdeplot(data['PC1'], data['PC2'],
-                        cmap=colors[i], shade=True, shade_lowest=False, alpha=0.8)
-    plt.legend(legends)
+                        n_levels=3,
+                        cmap=colors[i], 
+                        shade=True, 
+                        shade_lowest=False, 
+                        alpha=0.8)
+        ax.set_label(key)
+        leg = ax.get_legend()
+        leg.legendHandles[0].set_color('red')
+
+        # legends.append(key)
+    # plt.legend(legends)
     plt.show()
 
