@@ -305,14 +305,14 @@ def main():
         Y = pd.read_csv(args.f, index_col=0)
         X = pd.read_csv(args.c, index_col=0)
 
-        Y = Y.fillna(X.mean())
+        Y = Y.fillna(X.mean()).values
         X = X.fillna(X.mean()).values
 
         # Load last iteration of W_tilde
         W_tilde = download_last_w_tilde()
 
         # Correct data
-        Y_new = Y.values - X.dot(W_tilde)
+        Y_new = Y - X.dot(W_tilde)
 
         new_filename = os.path.join(get_data_folder(), os.path.basename(args.f).replace('centered.csv', 'admm.csv'))
         pd.DataFrame(Y_new, columns=Y.columns, index=Y.index).to_csv(new_filename)
@@ -322,8 +322,13 @@ def main():
     if current_iter == api_iter and api['success'] and not api['busy']:
         logger.info('Starting ADMM... (iteration %d)' % current_iter)
         # 1.1 Load X (Common data) and Y (Structural data)
-        X = pd.read_csv(args.c, index_col=0).values
-        Y = pd.read_csv(args.f, index_col=0).values
+        X = pd.read_csv(args.c, index_col=0)
+        Y = pd.read_csv(args.f, index_col=0)
+
+        # Deal with missing data
+        Y = Y.fillna(X.mean()).values
+        X = X.fillna(X.mean()).values
+
         logger.info('Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
 
         dx, dy = X.shape[1], Y.shape[1]
