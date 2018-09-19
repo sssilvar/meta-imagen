@@ -102,11 +102,11 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     # Filter classes
-    result_sel = result['label'] == 'HC-MIRIAD' | \
-                 result['label'] == 'HC-UKB' | \
-                 result['label'] == 'HC-UKB' | \
-                 result['label'] == 'AD-MIRIAD' 
-    res_fil = result[result_sel]
+    query = 'label == "HC-MIRIAD" or ' \ 
+            'label == "HC-UKB" or ' \
+            'label == "Other-UKB" or ' \
+            'label == "AD-MIRIAD"'
+    res_fil = result.query(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
