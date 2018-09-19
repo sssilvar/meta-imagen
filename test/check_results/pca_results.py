@@ -59,7 +59,7 @@ if __name__ == '__main__':
             labels[i] = 4
             label_names[i] = 'AD-MIRIAD'
         elif '_20252' in sid:
-            if sid in controls_uk:
+            if sid[:-6] in controls_uk:
                 label_names[i] = 'HC-UKB'
             else:
                 label_names[i] = 'Other-UKB'
