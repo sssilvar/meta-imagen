@@ -45,19 +45,19 @@ if __name__ == '__main__':
     for i, sid in enumerate(df_feats.index):
         if 'HC' in sid:
             labels[i] = 0
-            label_names[i] = 'HC'
+            label_names[i] = 'HC - MIRIAD'
         elif 'AD' in sid:
             labels[i] = 4
-            label_names[i] = 'AD'
+            label_names[i] = 'AD - MIRIAD'
         elif '_20252' in sid:
-            label_names[i] = 'HC'
+            label_names[i] = 'HC - UKB'
         else:
             if any([sid in s for s in adni_prog.index]):
                 labels[i] = 2
-                label_names[i] = 'MCIc'
+                label_names[i] = 'MCIc - ADNI'
             else:
                 labels[i] = 1
-                label_names[i] = 'MCInc'
+                label_names[i] = 'MCInc - ADNI'
 
     # Load components
     X = np.vstack(U)
