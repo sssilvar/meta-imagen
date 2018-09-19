@@ -75,7 +75,7 @@ if __name__ == '__main__':
     plt.scatter(U[:,0], V[:, 0])
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
-    markers = ['o', 'o', 'x', 'x']
+    markers = ['o', 'o', 'x', 'x', 'o']
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#0057B2',
