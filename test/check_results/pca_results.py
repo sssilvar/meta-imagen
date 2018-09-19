@@ -159,35 +159,35 @@ if __name__ == '__main__':
     plt.axis('equal')
 
 
-    sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
-            scatter_kws={'s': 40},  # Marker size
-            hue='label',  # Color
-            # markers=markers, 
-            legend=False,
-            palette=palette)
-    plt.title('PCA Result')
-    # Move the legend to an empty part of the plot
-    plt.legend(loc='lower left')
+    # sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
+    #         scatter_kws={'s': 40},  # Marker size
+    #         hue='label',  # Color
+    #         # markers=markers, 
+    #         legend=False,
+    #         palette=palette)
+    # plt.title('PCA Result')
+    # # Move the legend to an empty part of the plot
+    # plt.legend(loc='lower left')
 
-    # Plot contours
-    plt.figure()
-    legends = []
-    # colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
-    colors = ['Blues', 'GnBu', 'Greys', 'Purples', 'Greens', 'Reds']
-    x_c = [-18, 95, 100, 18, -80, -150]
-    y_c = [95, 79, 36, 0, 75, 48]
-    for i, (key, val) in enumerate(palette.items()):
-        data = result[result['label'] == key]
-        ax = sns.kdeplot(data['PC1'], data['PC2'],
-                        n_levels=2,
-                        alpha=0.8,
-                        cmap=colors[i], 
-                        shade=False, 
-                        shade_lowest=False)
-        col = sns.color_palette(colors[i])[-2]
-        ax.text(x_c[i], y_c[i], key, size=16, color=col)
-    plt.xlim(-215, 215)
-    plt.ylim(-150, 150)
+    # # Plot contours
+    # plt.figure()
+    # legends = []
+    # # colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
+    # colors = ['Blues', 'GnBu', 'Greys', 'Purples', 'Greens', 'Reds']
+    # x_c = [-18, 95, 100, 18, -80, -150]
+    # y_c = [95, 79, 36, 0, 75, 48]
+    # for i, (key, val) in enumerate(palette.items()):
+    #     data = result[result['label'] == key]
+    #     ax = sns.kdeplot(data['PC1'], data['PC2'],
+    #                     n_levels=2,
+    #                     alpha=0.8,
+    #                     cmap=colors[i], 
+    #                     shade=False, 
+    #                     shade_lowest=False)
+    #     col = sns.color_palette(colors[i])[-2]
+    #     ax.text(x_c[i], y_c[i], key, size=16, color=col)
+    # plt.xlim(-215, 215)
+    # plt.ylim(-150, 150)
     
     # plt.figure()
     # x_c = [34, 120, 40, -22, -90, -110]
