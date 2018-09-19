@@ -101,7 +101,14 @@ if __name__ == '__main__':
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
 
-    sns.lmplot('PC1', 'PC2', data=result, fit_reg=False,
+    # Filter classes
+    result_sel = result['label'] == 'HC-MIRIAD' | \
+                 result['label'] == 'HC-UKB' | \
+                 result['label'] == 'HC-UKB' | \
+                 result['label'] == 'AD-MIRIAD' 
+    res_fil = result[result_sel]
+
+    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
@@ -111,7 +118,7 @@ if __name__ == '__main__':
     plt.legend(loc='lower left')
 
 
-    sns.lmplot('PC1', 'PC3', data=result, fit_reg=False,
+    sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
             markers=markers, legend=False,
