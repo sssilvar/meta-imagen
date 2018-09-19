@@ -87,7 +87,7 @@ if __name__ == '__main__':
     # plt.scatter(U[:,0], V[:, 0])  # Relationship between U and V
 
     # Set markers: HC and AD belong to MIRIAD. MCIc, MCInc, belong to ADNI
-    markers = ['o', 'o', 'o', 'x', 'x', 'o']
+    # markers = ['o', 'o', 'o', 'x', 'x', 'o']
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#007DFF',
@@ -111,7 +111,8 @@ if __name__ == '__main__':
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
             hue='label',  # Color
-            markers=markers, legend=False,
+            # markers=markers, 
+            legend=False,
             palette=palette)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
@@ -121,7 +122,8 @@ if __name__ == '__main__':
     sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
             scatter_kws={'s': 40},  # Marker size
             hue='label',  # Color
-            markers=markers, legend=False,
+            # markers=markers, 
+            legend=False,
             palette=palette)
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
