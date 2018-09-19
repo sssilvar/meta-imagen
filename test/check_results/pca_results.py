@@ -187,22 +187,22 @@ if __name__ == '__main__':
     plt.xlim(-215, 215)
     plt.ylim(-150, 150)
     
-    plt.figure()
-    x_c = [34, 120, 40, -22, -90, -110]
-    y_c = [40, 28, -30, -35, -50, -9]
-    for i, (key, val) in enumerate(palette.items()):
-        data = result[result['label'] == key]
-        ax = sns.kdeplot(data['PC1'], data['PC3'],
-                        n_levels=2,
-                        alpha=0.8,
-                        cmap=colors[i], 
-                        shade=False, 
-                        shade_lowest=False)
-        col = sns.color_palette(colors[i])[-2]
-        ax.text(x_c[i], y_c[i], key, size=16, color=col)
-        # ax.text(x_c[i], y_c[i], key, size=16, color=col)
-    plt.xlim(-215, 215)
-    plt.ylim(-100, 75)
+    # plt.figure()
+    # x_c = [34, 120, 40, -22, -90, -110]
+    # y_c = [40, 28, -30, -35, -50, -9]
+    # for i, (key, val) in enumerate(palette.items()):
+    #     data = result[result['label'] == key]
+    #     ax = sns.kdeplot(data['PC1'], data['PC3'],
+    #                     n_levels=2,
+    #                     alpha=0.8,
+    #                     cmap=colors[i], 
+    #                     shade=False, 
+    #                     shade_lowest=False)
+    #     col = sns.color_palette(colors[i])[-2]
+    #     ax.text(x_c[i], y_c[i], key, size=16, color=col)
+    #     # ax.text(x_c[i], y_c[i], key, size=16, color=col)
+    # plt.xlim(-215, 215)
+    # plt.ylim(-100, 75)
 
     # ==== GMM ====
     Y = result['label'].astype('category').cat.codes
