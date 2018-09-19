@@ -214,10 +214,12 @@ if __name__ == '__main__':
     gmm = GMM(n_components=4, random_state=42)
     gmm.fit(X)
     
+
+    colors = [palette.values()]
     w_factor = 0.3 / gmm.weights_.max()
-    for pos, covar, w in zip(gmm.means_, gmm.covars_, gmm.weights_):
+    for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
         print(pos)
-        draw_ellipse(pos, covar, alpha=w * w_factor, zorder=0)
+        draw_ellipse(pos, covar, alpha=w * w_factor, facecolor=color[i] zorder=0)
 
     plt.figure()
     plot_gmm(gmm, X)
