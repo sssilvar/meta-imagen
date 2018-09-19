@@ -40,7 +40,7 @@ def plot_gmm(gmm, X, label=True, ax=None):
     ax = ax or plt.gca()
     labels = gmm.fit(X).predict(X)
     if label:
-        ax.scatter(X[:, 0], X[:, 1], c=labels, s=40, cmap='viridis', zorder=2)
+        ax.scatter(X[:, 0], X[:, 1], c=labels, s=40, cmap='Set1', zorder=2)
     else:
         ax.scatter(X[:, 0], X[:, 1], s=40, zorder=2)
     ax.axis('equal')
@@ -211,7 +211,7 @@ if __name__ == '__main__':
     gmm = GMM(n_components=4, random_state=42)
     plot_gmm(gmm, X)
 
-    result.plot.scatter(x='PC1', y='PC2', c=Y, colormap='viridis')
+    result.plot.scatter(x='PC1', y='PC2', c=Y, colormap='Set1')
 
     plt.show()
 
