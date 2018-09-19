@@ -91,10 +91,10 @@ if __name__ == '__main__':
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#007DFF',
-        'Other-UKB': '#633F00'
+        'Other-UKB': '#633F00',
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
-        'AD-MIRIAD': '#AA1500',
+        'AD-MIRIAD': '#AA1500'
     }
 
     # Plot
