@@ -138,7 +138,7 @@ if __name__ == '__main__':
     try:
         os.mkdir(out_dir)
     except IOError:
-        print_and_log('[  WARNING  ] PLSR folder already exists')
+        print('[  WARNING  ] PLSR folder already exists')
 
     # Setup logger
     logger = setup_logger(log_file)
