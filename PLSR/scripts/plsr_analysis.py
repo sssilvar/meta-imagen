@@ -112,6 +112,8 @@ def print_and_log(message):
         logger.info(message)
     elif 'WARNING' in message:
         logger.warning(message)
+    elif 'ERROR' in message:
+        logger.warning(message)
     else:
         logger.debug(message)
 
@@ -147,8 +149,8 @@ if __name__ == '__main__':
 
     try:
         plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
-    except:
+    except Exception as e:
         # Print exception
-        pass
+        print_and_log('[  ERROR  ] {}'.format(e))
 
     print_and_log("[  OK  ] DONE!")
