@@ -133,7 +133,7 @@ if __name__ == '__main__':
     # Set main dir (log and results are gonna be saved here)
     workdir = os.path.dirname(args.x)
     out_dir = os.path.join(workdir, 'plsr')
-    log_file = os.path.join(out_dir, 'plsr', 'plsr.log')
+    log_file = os.path.join(out_dir, 'plsr.log')
     
     # Setup logger
     logger = setup_logger(log_file)
