@@ -205,7 +205,7 @@ if __name__ == '__main__':
     plt.ylim(-100, 75)
 
     # ==== GMM ====
-    Y = result['labels'].astype('category').cat.codes
+    Y = result['label'].astype('category').cat.codes
     X = result.drop.loc[:, ['PC1', 'PC2']].values
     
     gmm = GMM(n_components=4, random_state=42)
