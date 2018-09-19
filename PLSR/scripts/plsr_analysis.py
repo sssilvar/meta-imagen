@@ -15,6 +15,7 @@ It is necessary to execute this code per each file as follows:
 import os
 import sys
 import argparse
+import logging
 
 import requests
 import numpy as np
@@ -38,8 +39,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
 
     # Get the work directory from the file path
     workdir = os.path.dirname(csv_file_x)
-    out_dir = os.path.join(workdir, 'plsr')
-    print("[  OK  ] Working directory: ", workdir)
+    print_and_log("[  OK  ] Working directory: %s" % workdir)
 
     # Load the data
     df_x = pd.read_csv(csv_file_x, index_col=0)
@@ -49,12 +49,12 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
 
     X = df_x.values
     Y = df_y.values
-    print('[  INFO  ] Matrices info:')
-    print('\t\t- Shape of X: ', X.shape, ' | NaN found: ', np.count_nonzero(np.isnan(X)))
-    print('\t\t- Shape of Y: ', Y.shape, ' | NaN found: ', np.count_nonzero(np.isnan(Y)))
+    print_and_log('[  INFO  ] Matrices info:')
+    print_and_log('\t\t- Shape of X: %s' % str(X.shape), ' | NaN found: %d' % np.count_nonzero(np.isnan(X)))
+    print_and_log('\t\t- Shape of Y: %s' % str(Y.shape), ' | NaN found: %d' % np.count_nonzero(np.isnan(Y)))
 
     # Start PLS Analysis
-    print("[  OK  ] Starting PLSR")
+    print_and_log('[  INFO  ] Starting PLSR')
     plsr = PLSR(X, Y)
     plsr.Initialize()
 
@@ -66,13 +66,9 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     # Calculate average and standard deviation feature-wise (From the center)
     avgX, stdX, avgY, stdY = plsr.GetStatistics()
 
-    print("\n[  INFO  ] Saving data in: ", out_dir)
-    # Save the results
-    try:
-        os.mkdir(out_dir)
-    except IOError:
-        pass
+    print_and_log('[  INFO  ] Saving data in: %s' % out_dir)
     
+    # Save the results
     cid = api.get_client_id()
     out_file = os.path.join(out_dir, 'plsr_%s.npz' % cid)
 
@@ -84,7 +80,7 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     )
 
     # Upload file
-    print('[  INFO  ] Uploading data to: ' + api.get_server_url())
+    print_and_log('[  DEBUG  ] Uploading data to: ' + api.get_server_url())
     url = api.get_server_url() + 'upload'
     metadata = {
         'type': 'PLSR',
@@ -95,6 +91,29 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     
     # Rename to keep the same name in every case
     os.rename(out_file, out_file.replace('_' + cid, ''))
+
+
+def setup_logger(log_file):
+    # ======= SetUp and start logger =======
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    
+    handler = logging.FileHandler(log_file)
+    handler.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+
+def print_and_log(message):
+    print(message)
+    if 'INFO' in message:
+        logger.info(message)
+    elif 'WARNING' in message:
+        logger.warning(message)
+    else:
+        logger.debug(message)
 
 
 if __name__ == '__main__':
@@ -110,11 +129,26 @@ if __name__ == '__main__':
                         default=csv_file)
     args = parser.parse_args()
 
-    print("====== PLSR ANALYSIS ======")
-    print("\t X-Data located at: ", args.x)
-    print("\t Y-Data located at: ", args.y)
-    print("\n")
+    # Set main dir (log and results are gonna be saved here)
+    out_dir = os.path.join(workdir, 'plsr')
+    log_file = os.path.join(out_dir, 'plsr', 'plsr.log')
+    
+    # Setup logger
+    logger = setup_logger(log_file)
 
-    plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
+    try:
+        os.mkdir(out_dir)
+    except IOError:
+        print_and_log('[  WARNING  ] PLSR folder already exists')
 
-    print("[  OK  ] DONE!")
+    print_and_log("====== PLSR ANALYSIS ======")
+    print_and_log("\t X-Data located at: %s" % args.x)
+    print_and_log("\t Y-Data located at: %s\n" % args.y)
+
+    try:
+        plsr_analysis(csv_file_x=args.x, csv_file_y=args.y)
+    except:
+        # Print exception
+        pass
+
+    print_and_log("[  OK  ] DONE!")
