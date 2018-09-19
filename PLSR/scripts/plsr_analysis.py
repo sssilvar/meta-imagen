@@ -38,7 +38,6 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     """
 
     # Get the work directory from the file path
-    workdir = os.path.dirname(csv_file_x)
     print_and_log("[  OK  ] Working directory: %s" % workdir)
 
     # Load the data
@@ -132,6 +131,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Set main dir (log and results are gonna be saved here)
+    workdir = os.path.dirname(args.x)
     out_dir = os.path.join(workdir, 'plsr')
     log_file = os.path.join(out_dir, 'plsr', 'plsr.log')
     
