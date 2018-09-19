@@ -121,7 +121,7 @@ if __name__ == '__main__':
     plt.legend(loc='lower left')
 
     # Plot contours
-    fig, ax = plt.figure()
+    plt.figure()
     colors = ['Reds', 'Blues', 'Purples', 'Greens', 'Oranges', 'Greys']
     for i, (key, val) in enumerate(palette.items()):
         data = result[result['label'] == key]
