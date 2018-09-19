@@ -49,8 +49,8 @@ def plsr_analysis(csv_file_x, csv_file_y, threshold=0.01):
     X = df_x.values
     Y = df_y.values
     print_and_log('[  INFO  ] Matrices info:')
-    print_and_log('\t\t- Shape of X: %s' % str(X.shape), ' | NaN found: %d' % np.count_nonzero(np.isnan(X)))
-    print_and_log('\t\t- Shape of Y: %s' % str(Y.shape), ' | NaN found: %d' % np.count_nonzero(np.isnan(Y)))
+    print_and_log('\t\t- Shape of X: %s' % str(X.shape) + ' | NaN found: %d' % np.count_nonzero(np.isnan(X)))
+    print_and_log('\t\t- Shape of Y: %s' % str(Y.shape) + ' | NaN found: %d' % np.count_nonzero(np.isnan(Y)))
 
     # Start PLS Analysis
     print_and_log('[  INFO  ] Starting PLSR')
