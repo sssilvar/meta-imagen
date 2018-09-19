@@ -156,6 +156,7 @@ if __name__ == '__main__':
     plt.title('PCA Result')
     # Move the legend to an empty part of the plot
     plt.legend(loc='lower left')
+    plt.axis('equal')
 
 
     sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
@@ -205,16 +206,6 @@ if __name__ == '__main__':
     # plt.xlim(-215, 215)
     # plt.ylim(-100, 75)
 
-    plt.figure()
-    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
-            scatter_kws={'s': 50},  # Marker size
-            hue='label',  # Color
-            # markers=markers, 
-            legend=False,
-            palette=palette)
-    plt.title('GMM - Clustering')
-    # Move the legend to an empty part of the plot
-    plt.legend(loc='lower left')
 
     # ==== GMM ====
     Y = result['label'].astype('category').cat.codes
@@ -222,8 +213,6 @@ if __name__ == '__main__':
     
     gmm = GMM(n_components=4, random_state=42)
     plot_gmm(gmm, X)
-
-    result.plot.scatter(x='PC1', y='PC2', c=Y, colormap='Set1')
 
     plt.show()
 
