@@ -212,6 +212,7 @@ if __name__ == '__main__':
     X = result.loc[:, ['PC1', 'PC2']].values
     
     gmm = GMM(n_components=4, random_state=42)
+    gmm.fit(X)
     
     w_factor = 0.3 / gmm.weights_.max()
     for pos, covar, w in zip(gmm.means_, gmm.covars_, gmm.weights_):
