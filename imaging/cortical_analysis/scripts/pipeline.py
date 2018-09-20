@@ -1,19 +1,49 @@
 from __future__ import print_function
 
-import os, sys
+import os
+import sys
+import argparse
 
 import numpy as np
-from os.path import join
+from os.path import join, isfile
 import pandas as pd
 
 root = os.path.dirname(os.path.realpath(__file__))
 
+
+def parse_args():
+    subjects_dir_def = '/input'
+    out_folder_def = '/output'
+    groupfile_def = '/group/groupfile.csv'
+
+    parser = argparse.ArgumentParser(description='Cortical feature extraction')
+    parser.add_argument('-sd', metavar='--subjects-dir',
+                        help='$SUBJECTS_DIR path.',
+                        default=subjects_dir_def)
+    parser.add_argument('-gf', metavar='--groupfile',
+                        help='Path to CSV containing subjects (groupfile.csv)',
+                        default=groupfile_def)
+    parser.add_argument('-out', metavar='--output',
+                        help='Output folder where features are gonna be saved (RECOMMENDED: Same than ENIGMA\'s)',
+                        default=out_folder_def)
+    return parser.parse_args()
+
+
+
 if __name__ == '__main__':
+    # Parse arguments
+    args = parse_args()
+
     # Set parameters
-    center_main_folder = ''
-    dataset_folder = center_main_folder + '/input'
-    out_folder = center_main_folder + '/output'
-    csv_data = center_main_folder + '/group/groupfile.csv'
+    dataset_folder = args.sd
+    out_folder = args.out
+    csv_data = args.gf
+
+    # Print some info
+    print('========== CORTICAL FEATURE EXTRACTION ==========')
+    print('\t- FreeSurfer subjects folder: %s' % dataset_folder)
+    print('\t- Groupfile CSV: %s' % csv_data)
+    print('\t- Output folder: %s' % out_folder)
 
     # Set bin folder and add execution permission
     bin_dir = join(root, 'bin')
@@ -178,7 +208,8 @@ if __name__ == '__main__':
                 print('\n\n[  INFO  ] Processing Right hemisphere:')
 
             # Execute pipeline
-            for i, cmd in enumerate(commands):
+            # TODO: Remove index (:15) from 'commands'. 
+            for i, cmd in enumerate(commands[:15]):
                 print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                 os.system(cmd)
 
@@ -189,67 +220,71 @@ if __name__ == '__main__':
         thick_data.append(np.append(lh_tk, rh_tk))
 
         # # log Jacobians (orig)
-        lh_log_jac = np.fromfile(join(out_f, 'lh_LogJac_2e-4.raw'))
-        rh_log_jac = np.fromfile(join(out_f, 'rh_LogJac_2e-4.raw'))
-        log_jac_data.append(np.append(lh_log_jac, rh_log_jac))
+        # lh_log_jac = np.fromfile(join(out_f, 'lh_LogJac_2e-4.raw'))
+        # rh_log_jac = np.fromfile(join(out_f, 'rh_LogJac_2e-4.raw'))
+        # log_jac_data.append(np.append(lh_log_jac, rh_log_jac))
 
-        # log Jacobians (normalized)
-        lh_log_eq_jac = np.fromfile(join(out_f, 'lh_LogJac_eq_2e-4.raw'))
-        rh_log_eq_jac = np.fromfile(join(out_f, 'rh_LogJac_eq_2e-4.raw'))
-        log_jac_eq_data.append(np.append(lh_log_eq_jac, rh_log_eq_jac))
+        # # log Jacobians (normalized)
+        # lh_log_eq_jac = np.fromfile(join(out_f, 'lh_LogJac_eq_2e-4.raw'))
+        # rh_log_eq_jac = np.fromfile(join(out_f, 'rh_LogJac_eq_2e-4.raw'))
+        # log_jac_eq_data.append(np.append(lh_log_eq_jac, rh_log_eq_jac))
 
         index.append(subject)
 
         print('[  INFO  ] Number of vertex: LH - ', np.shape(lh_tk), ' \ RH - ', np.shape(rh_tk))
 
     # ===== SAVE CORTICAL RESULTS =====
-    column_names = []
+    tk_cols = []
+    lj_cols = []
+    lj_eq_cols = []
 
     # Thickness data
     for i in range(len(thick_data[0])):
         # For lh
         if i < len(lh_tk):
-            column_names.append('lh_tk_' + str(i))
+            tk_cols.append('lt_' + str(i))
         else:
-            column_names.append('rh_tk_' + str(i - len(lh_tk)))
+            tk_cols.append('rt_' + str(i - len(lh_tk)))
 
-    for i in range(len(log_jac_data[0])):
-        # For lh
-        if i < len(lh_log_jac):
-            column_names.append('lh_LJ_' + str(i))
-        else:
-            column_names.append('rh_LJ_' + str(i))
+    # for i in range(len(log_jac_data[0])):
+    #     # For lh
+    #     if i < len(lh_log_jac):
+    #         lj_cols.append('lL_' + str(i))
+    #     else:
+    #         lj_cols.append('rL_' + str(i))
 
-    for i in range(len(log_jac_eq_data[0])):
-        # For lh
-        if i < len(lh_log_eq_jac):
-            column_names.append('lh_LJ_eq_' + str(i))
-        else:
-            column_names.append('rh_LJ_eq_' + str(i))
+    # for i in range(len(log_jac_eq_data[0])):
+    #     # For lh
+    #     if i < len(lh_log_eq_jac):
+    #         lj_eq_cols.append('lLe_' + str(i))
+    #     else:
+    #         lj_eq_cols.append('rLe_' + str(i))
 
     # Create DataFrame
     print('\n\n[  INFO  ] Data dimensionality')
     print('\t\t- Thickness: ', np.shape(thick_data), ' | Mean: ', np.mean(thick_data))
-    print('\t\t- Log. Jacobians: ', np.shape(log_jac_data), ' | Mean: ', np.mean(log_jac_data))
-    print('\t\t- Log jacobians Normalized: ', np.shape(log_jac_eq_data), ' | Mean: ', np.max(log_jac_eq_data))
+    # print('\t\t- Log. Jacobians: ', np.shape(log_jac_data), ' | Mean: ', np.mean(log_jac_data))
+    # print('\t\t- Log jacobians Normalized: ', np.shape(log_jac_eq_data), ' | Mean: ', np.max(log_jac_eq_data))
 
-    whole_data = np.hstack((thick_data, log_jac_data, log_jac_eq_data))
-    cortical_df = pd.DataFrame(index=index, columns=column_names, data=whole_data)
+    # TODO: Include LogJacobians
+    cortical_df = pd.DataFrame(index=index, columns=tk_cols, data=thick_data)  # Creates a DataFrame from cortical thickness info
+    cortical_df.to_csv(join(out_folder, 'groupfile_cortical_thickness.csv'))
+
+    # whole_data = np.hstack((thick_data, log_jac_data, log_jac_eq_data))
+    # cortical_df = pd.DataFrame(index=index, columns=column_names, data=whole_data)
     # cortical_df = pd.DataFrame(index=index, columns=column_names[:len(log_jac_eq_data[0])], data=log_jac_eq_data)
 
     # Load ENIGMA SHAPE data
-    df_eshape = pd.read_csv(join(out_folder, 'groupfile_thick.csv'), index_col=0)
-    df_eshape = df_eshape.join(pd.read_csv(join(out_folder, 'groupfile_LogJacs.csv'), index_col=0))
+    sub_tk_csv = join(out_folder, 'groupfile_thick.csv')
+    sub_lj_csv = join(out_folder, 'groupfile_LogJacs.csv')
 
-    # Join features in a single matrix
-    df_all = cortical_df.join(df_eshape)
+    # Join with ENIGMA Shape data
+    if isfile(sub_tk_csv) and isfile(sub_lj_csv):
+        df_eshape = pd.read_csv(join(out_folder, 'groupfile_thick.csv'), index_col=0)
+        df_eshape = df_eshape.join(pd.read_csv(join(out_folder, 'groupfile_LogJacs.csv'), index_col=0))
 
-    # for col in df_all.columns:
-    #     number_of_nan = df_all[col].isnull().sum()
-
-    #     if number_of_nan > 0:
-    #         print('[  WARNING  ] Not a Number (NaN) found: ', number_of_nan)
-
-    # Save Data
-    # df_all.to_hdf(join(out_folder, 'groupfile_features.h5'), key='features', format='table', mode='w')
-    df_all.to_csv(join(out_folder, 'groupfile_features.csv'))
+        # Join features in a single matrix and save groupfile.csv
+        df_all = cortical_df.join(df_eshape)
+        df_all.to_csv(join(out_folder, 'groupfile_features.csv'))
+    else:
+        print('[  ERROR  ] Subcortical data was not found')
