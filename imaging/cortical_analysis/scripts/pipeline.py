@@ -210,7 +210,7 @@ if __name__ == '__main__':
             # Execute pipeline
             # TODO: Remove index (:15) from 'commands'. 
             for i, cmd in enumerate(commands[:15]):
-                if isdir(out_f):
+                if not isdir(out_f):
                     print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                     os.system(cmd)
 
