@@ -5,7 +5,7 @@ import sys
 import argparse
 
 import numpy as np
-from os.path import join, isfile, isdir
+from os.path import join, isfile
 import pandas as pd
 
 root = os.path.dirname(os.path.realpath(__file__))
@@ -210,7 +210,7 @@ if __name__ == '__main__':
             # Execute pipeline
             # TODO: Remove index (:15) from 'commands'. 
             for i, cmd in enumerate(commands[:15]):
-                if not isdir(out_f):
+                if len(os.listdir(out_f)) < 2:
                     print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                     os.system(cmd)
                 else:
