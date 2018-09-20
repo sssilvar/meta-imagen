@@ -6,7 +6,7 @@ os.system('clear')
 
 if __name__ == '__main__':
     api_url = sys.argv[1]
-    n_centers = 3
+    n_centers = 4
 
     # Create centers
     centers = []
