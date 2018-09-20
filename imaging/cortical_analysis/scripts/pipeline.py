@@ -201,20 +201,22 @@ if __name__ == '__main__':
                 join(out_f, h + '_LogJac_eq_2e-4.raw')
             ]
 
-        for hemi, commands in pipeline_cmd.items():
-            if hemi is 'lh':
-                print('\n\n[  INFO  ] Processing Left hemisphere:')
-            elif hemi is 'rh':
-                print('\n\n[  INFO  ] Processing Right hemisphere:')
+        # List directory
+        ls = os.listdir(out_f)
+        if ('lh_thick_2e-4_sampled.raw' not in ls) and ('rh_thick_2e-4_sampled.raw' not in ls):
+            for hemi, commands in pipeline_cmd.items():
+                if hemi is 'lh':
+                    print('\n\n[  INFO  ] Processing Left hemisphere:')
+                elif hemi is 'rh':
+                    print('\n\n[  INFO  ] Processing Right hemisphere:')
 
-            # Execute pipeline
-            # TODO: Remove index (:15) from 'commands'. 
-            for i, cmd in enumerate(commands[:15]):
-                if len(os.listdir(out_f)) < 2:
+                # Execute pipeline
+                # TODO: Remove index (:15) from 'commands'. 
+                for i, cmd in enumerate(commands[:15]):
                     print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                     os.system(cmd)
-                else:
-                    print('[  WARNING  ] Skipping %s' % subject)
+        else:
+            print('[  WARNING  ] Skipping %s' % subject)
 
         # Clean output, leave only .raw
         os.system('rm $(ls %s/* | grep -v "thick_2e-4_sampled.raw")' % out_f)
