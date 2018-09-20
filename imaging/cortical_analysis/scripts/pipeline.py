@@ -213,10 +213,13 @@ if __name__ == '__main__':
                 print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                 os.system(cmd)
 
+        # Clean output, leave only .raw
+        os.system('rm $(ls %s/* | grep -v "thick_2e-4_sampled.raw")' % out_f)
+        
         # Concatenate hemisphere results
         # Thickness
-        lh_tk = np.fromfile(join(out_f, 'lh' + '_thick_2e-4_sampled.raw'))
-        rh_tk = np.fromfile(join(out_f, 'rh' + '_thick_2e-4_sampled.raw'))
+        lh_tk = np.fromfile(join(out_f, 'lh_thick_2e-4_sampled.raw'))
+        rh_tk = np.fromfile(join(out_f, 'rh_thick_2e-4_sampled.raw'))
         thick_data.append(np.append(lh_tk, rh_tk))
 
         # # log Jacobians (orig)
