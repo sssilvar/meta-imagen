@@ -213,6 +213,8 @@ if __name__ == '__main__':
                 if not isdir(out_f):
                     print('[  CMD  ] %d\n %s \n' % (i + 1, cmd))
                     os.system(cmd)
+                else:
+                    print('[  WARNING  ] Skipping %s' % subject)
 
         # Clean output, leave only .raw
         os.system('rm $(ls %s/* | grep -v "thick_2e-4_sampled.raw")' % out_f)
