@@ -207,7 +207,7 @@ if __name__ == '__main__':
             plt.scatter(result.loc[:, c], df_comm.loc[:, el])
             plt.xlabel(c)
             plt.ylabel(el)
-            plt.title('%s vs % %s' % (c, el))
+            plt.title('%s vs %s' % (c, el))
             plt.axis('equal')
 
 
