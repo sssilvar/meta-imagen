@@ -154,6 +154,7 @@ if __name__ == '__main__':
     plsr.Initialize()
     plsr.EvaluateComponents()
     U, V = plsr.GetWeights()
+    np.save(join(main_folder, 'PCA.npy'), V)
 
     # Project data and see magic
     E = df_feats.values
