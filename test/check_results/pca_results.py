@@ -178,7 +178,8 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     # Filter classes (Query generator) and query result saved in: res_fil
-    query = ''.join(['label == "%s" or ' % x if (i <len(palette) - 1) else 'label == "%s"' % x for i, x in enumerate(palette.keys())])
+    classes_to_plot = ['HC', 'AD', 'Others']
+    query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
