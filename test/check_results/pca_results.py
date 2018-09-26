@@ -56,7 +56,7 @@ def plot_gmm(gmm, X, label=True, ax=None):
 if __name__ == '__main__':
     # Set up basic stuff
     main_folder = '/disk/Data/data_simulation'
-    n_centers = 3
+    n_centers = 4
 
     features = []
     U = []
@@ -66,7 +66,10 @@ if __name__ == '__main__':
         print('[  INFO  ] Loading %s' % csv)
         df = pd.read_csv(csv, index_col=0)
         features.append(df)
-            
+
+        if i == 4:
+            pd_labels = df.index.astype(str)
+
         # Load PLSR results
         npz_plsr = join(main_folder, 'center_%d' % i, 'output', 'plsr','plsr.npz')
         plsr = np.load(npz_plsr)
@@ -74,6 +77,7 @@ if __name__ == '__main__':
         WB.append(plsr['comp'][1])
     
     df_feats = pd.concat(features, axis=0)
+    df_feats.index = df_feats.index.astype(str)
 
     # ==== Assign labels ===
     # Initialize array
@@ -98,6 +102,8 @@ if __name__ == '__main__':
         elif 'AD' in sid:
             labels[i] = 4
             label_names[i] = 'AD-MIRIAD'
+        elif sid in pd_labels:
+            label_names[i] = 'PD-PPMI'
         elif '_20252' in sid:
             if sid[:-6] in controls_uk:
                 label_names[i] = 'HC-UKB'
@@ -134,7 +140,8 @@ if __name__ == '__main__':
         'Other-UKB': '#3E3699',  # '#633F00',
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
-        'AD-MIRIAD': '#AA1500'
+        'AD-MIRIAD': '#AA1500',
+        'PD-PPMI': '#FF0D73'
     }
 
     # Plot
@@ -145,7 +152,8 @@ if __name__ == '__main__':
     query = 'label == "HC-MIRIAD" or ' + \
             'label == "HC-UKB" or ' + \
             'label == "Other-UKB" or ' + \
-            'label == "AD-MIRIAD"'
+            'label == "AD-MIRIAD" or ' + \
+            'label == "PD-PPMI"'
     res_fil = result.query(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
