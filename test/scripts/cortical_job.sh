@@ -8,9 +8,12 @@
 # The job is submitted to the default queue
 #OAR -q default
 # 
-# Path to the binary to run
 
-python3 imaging/cortical_analysis/scripts/pipeline.py \
+# Get current dir
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+python3 ${CURRENT_DIR}/../../imaging/cortical_analysis/scripts/pipeline.py \
 -sd /home/ssilvari/Documents/data/ADNI_SURF/ADNI/ \
 -gf /home/ssilvari/Documents/data/ADNI_SURF/ADNI/groupfile.csv \
 -out /home/ssilvari/Documents/cortical/adni_cortical/
