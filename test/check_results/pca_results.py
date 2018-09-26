@@ -67,6 +67,7 @@ if __name__ == '__main__':
         df = pd.read_csv(csv, index_col=0)
         features.append(df)
 
+        # Center 4 contains PPMI data
         if i == 4:
             pd_labels = df.index.astype(str)
 
@@ -84,7 +85,14 @@ if __name__ == '__main__':
     labels = np.empty(len(df_feats))
     label_names = list(np.empty_like(labels))
 
+    # Load progressions from MCI to Dementia (MCIc)
     adni_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge_conversions_v2.csv', index_col='PTID')
+    adni_no_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge_MCInc_v2.csv', index_col='PTID')
+
+    # Load remaining diagnosis from adnimerge. Filter: Baseline
+    adnimerge = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge.csv', index_col='PTID')
+    adnimerge = adnimerge[adnimerge['VISCODE'] == 'bl']
+
     controls_uk = ['3679417', '4750610', '3907430', '3141907', '5112837', '3475195',
        '4174334', '1496541', '1031176', '3728405', '4478520', '2852289',
        '4159870', '5367099', '4605002', '3203749', '4155810', '1241480',
@@ -95,27 +103,46 @@ if __name__ == '__main__':
        '3303808', '1159944', '4732188', '2430788', '2519560', '2155568',
        '4476610', '1006400', '3790812', '3985669', '1489425']
 
+    # Dictionary of labels:l
+    l = {'HC': 0, 'MCInc': 1, 'MCIc': 2, 'AD': 3, 'PD':4, 'Other': 5}
+    
     for i, sid in enumerate(df_feats.index):
         if 'HC' in sid:
-            labels[i] = 0
+            labels[i] = l['HC']
             label_names[i] = 'HC-MIRIAD'
+
         elif 'AD' in sid:
-            labels[i] = 4
+            labels[i] = l['AD']
             label_names[i] = 'AD-MIRIAD'
+
         elif sid in pd_labels:
+            labels[i] = l['PD']
             label_names[i] = 'PD-PPMI'
+
         elif '_20252' in sid:
             if sid[:-6] in controls_uk:
+                labels[i] = l['HC']
                 label_names[i] = 'HC-UKB'
             else:
+                labels[i] = l['Other']
                 label_names[i] = 'Other-UKB'
-        else:
-            if any([sid in s for s in adni_prog.index]):
-                labels[i] = 2
-                label_names[i] = 'MCIc-ADNI'
-            else:
-                labels[i] = 1
-                label_names[i] = 'MCInc-ADNI'
+
+        elif any([sid in s for s in adni_prog.index]):
+            labels[i] = l['MCIc']
+            label_names[i] = 'MCIc-ADNI'
+
+        elif any([sid in s for s in adni_no_prog.index]):
+            labels[i] = l['MCInc']
+            label_names[i] = 'MCInc-ADNI'
+
+        elif any([sid in s for s in adnimerge.index]):
+            dx = adnimerge.loc[sid, 'DX']
+            if dx is 'NC'
+                labels[i] = l['HC']
+                label_names[i] = 'HC-ADNI'
+            elif dx is 'AD':
+                labels[i] = l['AD']
+                label_names[i] = 'AD-ADNI'
 
     # Load components
     X = np.vstack(U)
@@ -137,23 +164,21 @@ if __name__ == '__main__':
     palette = {
         'HC-MIRIAD': '#004B99',
         'HC-UKB': '#007DFF',
+        'HC-ADNI': '#448FA3',
         'Other-UKB': '#3E3699',  # '#633F00',
         'MCIc-ADNI': '#CC8200',
         'MCInc-ADNI': '#469C0C',
         'AD-MIRIAD': '#AA1500',
-        'PD-PPMI': '#FF0D73'
+        'AD-ADNI': '#D7263D',
+        'PD-PPMI': '#522B47'
     }
 
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
 
-    # Filter classes
-    query = 'label == "HC-MIRIAD" or ' + \
-            'label == "HC-UKB" or ' + \
-            'label == "Other-UKB" or ' + \
-            'label == "AD-MIRIAD" or ' + \
-            'label == "PD-PPMI"'
+    # Filter classes (Query generator) and query result saved in: res_fil
+    query = ''.join(['label == %s or ' % x if (i <len(palette) - 1) else 'label == %s' % x for i, x in enumerate(palette.keys())])
     res_fil = result.query(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
@@ -168,15 +193,15 @@ if __name__ == '__main__':
     plt.axis('equal')
 
 
-    # sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
-    #         scatter_kws={'s': 40},  # Marker size
-    #         hue='label',  # Color
-    #         # markers=markers, 
-    #         legend=False,
-    #         palette=palette)
-    # plt.title('PCA Result')
-    # # Move the legend to an empty part of the plot
-    # plt.legend(loc='lower left')
+    sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
+            scatter_kws={'s': 40},  # Marker size
+            hue='label',  # Color
+            # markers=markers, 
+            legend=False,
+            palette=palette)
+    plt.title('PCA Result')
+    # Move the legend to an empty part of the plot
+    plt.legend(loc='lower left')
 
     # # Plot contours
     # plt.figure()
@@ -217,25 +242,25 @@ if __name__ == '__main__':
 
 
     # ==== GMM ====
-    Y = result['label'].astype('category').cat.codes
-    X = result.loc[:, ['PC1', 'PC2']].values
+    # Y = result['label'].astype('category').cat.codes
+    # X = result.loc[:, ['PC1', 'PC2']].values
     
-    gmm = GMM(n_components=4, random_state=42)
-    gmm.fit(X)
+    # gmm = GMM(n_components=4, random_state=42)
+    # gmm.fit(X)
     
 
-    colors = ['#004B99', '#CC8200', '#469C0C', '#AA1500']
-    w_factor = 0.3 / gmm.weights_.max()
-    for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
-        print(pos)
-        draw_ellipse(pos, covar, alpha=w * w_factor, color=colors[i], zorder=0)
-    plt.xlim(-400, 320)
-    plt.ylim(-380, 190)
+    # colors = ['#004B99', '#CC8200', '#469C0C', '#AA1500']
+    # w_factor = 0.3 / gmm.weights_.max()
+    # for i, (pos, covar, w) in enumerate(zip(gmm.means_, gmm.covars_, gmm.weights_)):
+    #     print(pos)
+    #     draw_ellipse(pos, covar, alpha=w * w_factor, color=colors[i], zorder=0)
+    # plt.xlim(-400, 320)
+    # plt.ylim(-380, 190)
 
-    plt.figure()
-    plot_gmm(gmm, X)
-    plt.xlim(-400, 320)
-    plt.ylim(-380, 190)
+    # plt.figure()
+    # plot_gmm(gmm, X)
+    # plt.xlim(-400, 320)
+    # plt.ylim(-380, 190)
 
     plt.show()
 
