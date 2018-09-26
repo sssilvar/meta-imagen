@@ -89,7 +89,7 @@ if __name__ == '__main__':
     df_feats = pd.concat(features, axis=0)
     df_feats.index = df_feats.index.astype(str)
 
-    df_comm = pd.concat(features, axis=0)
+    df_comm = pd.concat(common, axis=0)
     df_comm.index = df_comm.index.astype(str)
 
     # ==== Assign labels ===
