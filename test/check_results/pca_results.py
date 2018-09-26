@@ -180,7 +180,7 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     # Filter classes (Query generator) and query result saved in: res_fil
-    classes_to_plot = ['HC', 'AD', 'Others']
+    classes_to_plot = ['HC', 'AD', 'PD', 'Others']
     query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
     print(query)
