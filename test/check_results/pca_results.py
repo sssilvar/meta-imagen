@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     for ca in ['PC1', 'PC2']:
         for cb in ['PC2', 'PC3', 'PC4']:
-            sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
+            sns.lmplot(ca, cb, data=res_fil, fit_reg=False,
                     scatter_kws={'s': 50},  # Marker size
                     hue='label',  # Color
                     # markers=markers, 
