@@ -211,27 +211,18 @@ if __name__ == '__main__':
             plt.axis('equal')
 
 
-    sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
-            scatter_kws={'s': 50},  # Marker size
-            hue='label',  # Color
-            # markers=markers, 
-            legend=False,
-            palette=palette)
-    plt.title('PCA Result')
-    # Move the legend to an empty part of the plot
-    plt.legend(loc='lower left')
-    plt.axis('equal')
-
-
-    sns.lmplot('PC1', 'PC3', data=res_fil, fit_reg=False,
-            scatter_kws={'s': 40},  # Marker size
-            hue='label',  # Color
-            # markers=markers, 
-            legend=False,
-            palette=palette)
-    plt.title('PCA Result')
-    # Move the legend to an empty part of the plot
-    plt.legend(loc='lower left')
+    for ca in ['PC1', 'PC2']:
+        for cb in ['PC2', 'PC3', 'PC4']:
+            sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
+                    scatter_kws={'s': 50},  # Marker size
+                    hue='label',  # Color
+                    # markers=markers, 
+                    legend=False,
+                    palette=palette)
+            # plt.title('PCA Result')
+            # Move the legend to an empty part of the plot
+            plt.legend(loc='lower left')
+            plt.axis('equal')
 
     # # Plot contours
     # plt.figure()
