@@ -137,8 +137,8 @@ if __name__ == '__main__':
 
         elif any([sid in s for s in adnimerge.index]):
             dx = adnimerge.loc[sid, 'DX']
-            print(dx)
-            if dx is 'NC':
+            if dx is 'CN':
+                print(dx)
                 labels[i] = l['HC']
                 label_names[i] = 'HC-ADNI'
             elif dx is 'Dementia':
@@ -182,6 +182,7 @@ if __name__ == '__main__':
     classes_to_plot = ['HC', 'AD', 'Others']
     query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
+    print(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
