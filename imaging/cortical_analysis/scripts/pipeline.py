@@ -70,7 +70,7 @@ if __name__ == '__main__':
     log_jac_eq_data = []
     index = []
 
-    for subject in df['subj'][:3]:
+    for subject in df['subj']:
         sdir = os.path.join(dataset_folder, subject)
         out_f = os.path.join(out_folder, subject)
         print('\n[  INFO  ] Processing subject: ', subject)
