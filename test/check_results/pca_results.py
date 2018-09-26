@@ -59,13 +59,21 @@ if __name__ == '__main__':
     n_centers = 4
 
     features = []
+    common = []
     U = []
     WB = []
     for i in range(1, n_centers + 1):
+        # Load Feature data
         csv = join(main_folder, 'center_%d' % i, 'output', 'groupfile_features_admm.csv')
         print('[  INFO  ] Loading %s' % csv)
         df = pd.read_csv(csv, index_col=0)
         features.append(df)
+
+        # Load Common data
+        csv = join(main_folder, 'center_%d' % i, 'output', 'common_data.csv')
+        print('[  INFO  ] Loading %s' % csv)
+        cdf = pd.read_csv(csv, index_col=0)
+        common.append(cdf)
 
         # Center 4 contains PPMI data
         if i == 4:
@@ -77,8 +85,12 @@ if __name__ == '__main__':
         U.append(plsr['comp'][0])
         WB.append(plsr['comp'][1])
     
+    # Concat features and common dataframes
     df_feats = pd.concat(features, axis=0)
     df_feats.index = df_feats.index.astype(str)
+
+    df_comm = pd.concat(features, axis=0)
+    df_comm.index = df_comm.index.astype(str)
 
     # ==== Assign labels ===
     # Initialize array
@@ -152,7 +164,7 @@ if __name__ == '__main__':
 
     plsr = PLSR(X, Y)
     plsr.Initialize()
-    plsr.EvaluateComponents()
+    plsr.EvaluateComponents(thr=0.7)
     U, V = plsr.GetWeights()
     np.save(join(main_folder, 'PCA.npy'), V)
 
@@ -185,6 +197,16 @@ if __name__ == '__main__':
     query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
     print(query)
+
+    for c in ['PC1', 'PC2']:
+        plt.figure()
+        for i, el in enumerate(['Age', 'Sex']):
+            sp = i + 1  # Subplot
+            plt.subplot(2, 2, sp)
+            plt.scatter(result[c], df_comm[el])
+            plt.xlabel(c)
+            plt.ylabel(el)
+
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
             scatter_kws={'s': 50},  # Marker size
