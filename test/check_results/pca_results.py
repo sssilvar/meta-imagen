@@ -222,7 +222,7 @@ if __name__ == '__main__':
             # plt.title('PCA Result')
             # Move the legend to an empty part of the plot
             plt.legend(loc='lower left')
-            plt.axis('equal')
+            # plt.axis('equal')
 
     # # Plot contours
     # plt.figure()
