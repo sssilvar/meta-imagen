@@ -203,10 +203,12 @@ if __name__ == '__main__':
         plt.figure()
         for i, el in enumerate(['Age', 'Sex']):
             sp = i + 1  # Subplot
-            plt.subplot(2, 2, sp)
+            plt.subplot(1, 2, sp)
             plt.scatter(result.loc[:, c], df_comm.loc[:, el])
             plt.xlabel(c)
             plt.ylabel(el)
+            plt.title('%s vs % %s' % (c, el))
+            plt.axis('equal')
 
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
