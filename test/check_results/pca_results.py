@@ -203,7 +203,7 @@ if __name__ == '__main__':
         for i, el in enumerate(['Age', 'Sex']):
             sp = i + 1  # Subplot
             plt.subplot(2, 2, sp)
-            plt.scatter(result[c], df_comm[el])
+            plt.scatter(result.loc[:, c], df_comm.loc[:, el])
             plt.xlabel(c)
             plt.ylabel(el)
 
