@@ -12,8 +12,16 @@
 # Get current dir
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Create a temp file
+TEMP="/dev/shm/tmp"
+mkdir ${TEMP}
 
+# Run pipeline for ADNI
+OUTPUT_FOLDER="/home/ssilvari/Documents/cortical/adni_cortical"
 python3 ${CURRENT_DIR}/../../imaging/cortical_analysis/scripts/pipeline.py \
 -sd /home/ssilvari/Documents/data/ADNI_SURF/ADNI/ \
 -gf /home/ssilvari/Documents/data/ADNI_SURF/ADNI/groupfile.csv \
--out /home/ssilvari/Documents/cortical/adni_cortical/
+-out ${TEMP}
+
+# Move folder to disk
+mv -v ${TEMP} ${OUTPUT_FOLDER}
