@@ -136,12 +136,13 @@ if __name__ == '__main__':
             label_names[i] = 'MCInc-ADNI'
 
         elif any([sid in s for s in adnimerge.index]):
-            dx = adnimerge.loc[sid, 'DX'].values
-            if dx is 'CN':
+            dx = adnimerge.loc[sid, 'DX']
+            print(type(dx))
+            if dx == 'CN':
                 print(dx)
                 labels[i] = l['HC']
                 label_names[i] = 'HC-ADNI'
-            elif dx is 'Dementia':
+            elif dx == 'Dementia':
                 labels[i] = l['AD']
                 label_names[i] = 'AD-ADNI'
 
