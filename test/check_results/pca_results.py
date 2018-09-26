@@ -90,7 +90,7 @@ if __name__ == '__main__':
     adni_no_prog = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge_MCInc_v2.csv', index_col='PTID')
 
     # Load remaining diagnosis from adnimerge. Filter: Baseline
-    adnimerge = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge.csv', index_col='PTID')
+    adnimerge = pd.read_csv('https://raw.githubusercontent.com/sssilvar/CSD-AD/master/param/common/adnimerge.csv', index_col='PTID', low_memory=False)
     adnimerge = adnimerge[adnimerge['VISCODE'] == 'bl']
 
     controls_uk = ['3679417', '4750610', '3907430', '3141907', '5112837', '3475195',
@@ -178,7 +178,7 @@ if __name__ == '__main__':
     result['label'] = label_names
 
     # Filter classes (Query generator) and query result saved in: res_fil
-    query = ''.join(['label == %s or ' % x if (i <len(palette) - 1) else 'label == %s' % x for i, x in enumerate(palette.keys())])
+    query = ''.join(['label == "%s" or ' % x if (i <len(palette) - 1) else 'label == "%s"' % x for i, x in enumerate(palette.keys())])
     res_fil = result.query(query)
 
     sns.lmplot('PC1', 'PC2', data=res_fil, fit_reg=False,
