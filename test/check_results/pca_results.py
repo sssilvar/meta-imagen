@@ -136,7 +136,7 @@ if __name__ == '__main__':
             label_names[i] = 'MCInc-ADNI'
 
         elif any([sid in s for s in adnimerge.index]):
-            dx = adnimerge.loc[sid, 'DX']
+            dx = adnimerge.loc[sid, 'DX'].values
             if dx is 'CN':
                 print(dx)
                 labels[i] = l['HC']
