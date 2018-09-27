@@ -444,6 +444,7 @@ if __name__ == '__main__':
                 time.sleep(np.random.randint(10, 50))
     except Exception as e:
         print_logger('ERROR: %s - %s' % ( str(type(e)), str(e) ))
+        raise SystemExit
     
     print(__thanks__)
     print('DONE!')
