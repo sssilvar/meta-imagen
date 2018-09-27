@@ -191,6 +191,8 @@ if __name__ == '__main__':
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
+    result['Sex'] = df_comm['Sex']
+    result['Age'] = df_comm['Age']
 
     # Filter classes (Query generator) and query result saved in: res_fil
     classes_to_plot = ['HC', 'AD', 'PD', 'Others']
@@ -200,15 +202,19 @@ if __name__ == '__main__':
     print(df_comm.head())
 
     for c in ['PC1', 'PC2']:
-        plt.figure()
+        fig, ax = plt.subplots(2, 1)
         for i, el in enumerate(['Age', 'Sex']):
-            sp = i + 1  # Subplot
-            plt.subplot(1, 2, sp)
-            plt.scatter(result.loc[:, c], df_comm.loc[:, el])
-            plt.xlabel(c)
-            plt.ylabel(el)
-            plt.title('%s vs %s' % (c, el))
-            plt.axis('equal')
+            if el == 'Sex':
+                sns.boxplot(x=el, y=c, data=result, orient='v', ax=ax[i])
+            else:
+                sns.scatterplot(x=el, y=c, data=results, hue='label', ax=ax[i])
+
+            # plt.subplot(2, 1, sp)
+            # plt.scatter(result.loc[:, c], df_comm.loc[:, el])
+            # plt.xlabel(c)
+            # plt.ylabel(el)
+            # plt.title('%s vs %s' % (c, el))
+            # plt.axis('equal')
 
 
     for ca in ['PC1', 'PC2']:
