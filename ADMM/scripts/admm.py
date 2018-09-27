@@ -443,7 +443,7 @@ if __name__ == '__main__':
                 logger.info('Waiting for API to update...')
                 time.sleep(np.random.randint(10, 50))
     except Exception as e:
-        print_logger('ERROR: %s - %s' % ( str(type(e)), str(e) ))
+        logger.info('ERROR: %s - %s' % ( str(type(e)), str(e) ))
         raise SystemExit
     
     print(__thanks__)
