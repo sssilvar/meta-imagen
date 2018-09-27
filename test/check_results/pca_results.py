@@ -188,7 +188,7 @@ if __name__ == '__main__':
     }
 
     # Plot
-    result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
+    result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])], index=df_feats.index)
     result['label'] = label_names
     df_comm['Sex'] = df_comm['Sex'].astype('category')
     result = pd.concat([result, df_comm], axis=1, ignore_index=False)
