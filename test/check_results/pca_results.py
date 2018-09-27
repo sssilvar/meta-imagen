@@ -74,7 +74,6 @@ if __name__ == '__main__':
         print('[  INFO  ] Loading %s' % csv)
         cdf = pd.read_csv(csv, index_col=0)
         common.append(cdf)
-        print(cdf['Sex'].head(2))
 
         # Center 4 contains PPMI data
         if i == 4:
@@ -92,6 +91,7 @@ if __name__ == '__main__':
 
     df_comm = pd.concat(common, axis=0)
     df_comm.index = df_comm.index.astype(str)
+    print(df_comm.head(3))
 
     # ==== Assign labels ===
     # Initialize array
