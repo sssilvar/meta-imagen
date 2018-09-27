@@ -56,6 +56,12 @@ def plot_gmm(gmm, X, label=True, ax=None):
 if __name__ == '__main__':
     # Set up basic stuff
     main_folder = '/disk/Data/data_simulation'
+    
+    # Define and create results folder: results_folder
+    results_folder = join(main_folder, 'results')
+    os.system('mkdir %s ' % results_folder)
+
+    # Define number of centers: n_centers
     n_centers = 4
 
     features = []
@@ -207,27 +213,25 @@ if __name__ == '__main__':
                 sns.boxplot(x='Sex', y=c, data=result, orient='v', ax=ax[i])
             else:
                 sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
-
-            # plt.subplot(2, 1, sp)
-            # plt.scatter(result.loc[:, c], df_comm.loc[:, el])
-            # plt.xlabel(c)
-            # plt.ylabel(el)
-            # plt.title('%s vs %s' % (c, el))
-            # plt.axis('equal')
+        # Save plots
+        plt.savefig(join(results_folder, 'admm_full_correction_%s.png' % c), bbox_inches=None)
 
 
     for ca in ['PC1', 'PC2']:
         for cb in ['PC2', 'PC3', 'PC4']:
-            sns.lmplot(ca, cb, data=res_fil, fit_reg=False,
-                    scatter_kws={'s': 50},  # Marker size
-                    hue='label',  # Color
-                    # markers=markers, 
-                    legend=False,
-                    palette=palette)
-            # plt.title('PCA Result')
-            # Move the legend to an empty part of the plot
-            plt.legend(loc='lower left')
-            # plt.axis('equal')
+            if ca != cb:
+                sns.lmplot(ca, cb, data=res_fil, fit_reg=False,
+                        scatter_kws={'s': 50},  # Marker size
+                        hue='label',  # Color
+                        # markers=markers, 
+                        legend=False,
+                        palette=palette)
+                plt.title('Low-dimensional plot')
+                # Move the legend to an empty part of the plot
+                plt.legend(loc='lower left')
+                # plt.axis('equal')
+                plt.savefig(join(results_folder, '%s_vs_%s.png' % (ca, cb)), bbox_inches=None, dpi=300)
+
 
     # # Plot contours
     # plt.figure()
