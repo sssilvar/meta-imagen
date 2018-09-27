@@ -205,9 +205,9 @@ if __name__ == '__main__':
         fig, ax = plt.subplots(2, 1)
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
-                sns.boxplot(x=el, y=c, data=result, orient='v', ax=ax[i])
+                sns.boxplot(x='Sex', y=c, data=result, orient='v', ax=ax[i])
             else:
-                sns.scatterplot(x=el, y=c, data=result, hue='label', ax=ax[i])
+                sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
 
             # plt.subplot(2, 1, sp)
             # plt.scatter(result.loc[:, c], df_comm.loc[:, el])
