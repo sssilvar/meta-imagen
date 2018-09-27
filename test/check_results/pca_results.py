@@ -199,7 +199,7 @@ if __name__ == '__main__':
     query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
     print(query)
-    print(df_comm.head())
+    print(result.head())
 
     for c in ['PC1', 'PC2']:
         fig, ax = plt.subplots(2, 1)
