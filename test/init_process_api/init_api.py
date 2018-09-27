@@ -1,6 +1,7 @@
 import os
 import sys
 import requests
+from urlparse import urljoin
 
 os.system('clear')
 
@@ -22,13 +23,14 @@ if __name__ == '__main__':
     # 1. Register centers
     print('[  INFO  ] Registering centers and getting ids')
     for center in centers:
-        r = requests.post(api_url + '/centers/new', json=center)
+        url = urljoin(api_url, 'centers/new')
+        r = requests.post(url, json=center)
         if r.status_code is 200:
             res = r.json()
             if res['success']:
                 print(res)
     
-    r = requests.get(api_url + '/centers')
+    r = requests.get(urljoin(api_url, 'centers'))
     if r.status_code is 200:
         center_ids = list(r.json().keys())
         center_ids.remove('5ba1040e4a24c500103da1ba')
@@ -38,7 +40,7 @@ if __name__ == '__main__':
             print(cid + '\n')
     
     # 2. Create a 'centering data (welford)' task
-    r = requests.post(api_url + '/welford/new', json={'centers': center_ids})
+    r = requests.post(urljoin(api_url, 'welford/new'), json={'centers': center_ids})
     if r.status_code is 200:
         res = r.json()
         if res['success']:
@@ -51,7 +53,7 @@ if __name__ == '__main__':
         'number_of_iterations': 10
     }
 
-    r = requests.post(api_url + '/admm/', json=admm_data)
+    r = requests.post(urljoin(api_url, 'admm'), json=admm_data)
     if r.status_code is 200:
         res = r.json()
         if res['success']:
