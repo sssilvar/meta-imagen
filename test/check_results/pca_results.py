@@ -191,7 +191,7 @@ if __name__ == '__main__':
     # Plot
     result = pd.DataFrame(pca_x, columns=['PC%d'% (i+1) for i in range(pca_x.shape[1])])
     result['label'] = label_names
-    result['Sex'] = df_comm['Sex']
+    result['Sex'] = df_comm['Sex'].astype('category')
     result['Age'] = df_comm['Age']
 
     # Filter classes (Query generator) and query result saved in: res_fil
