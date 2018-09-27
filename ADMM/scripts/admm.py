@@ -288,7 +288,7 @@ def load_data(x_csv, y_csv, fillna=True):
         X = X.fillna(X.mean())
 
     # TODO: REMOVE THIS
-    Y['Age'] = Y['Age'].multiply(Y['Age'])  # Just correcting age^2
+    X['Age'] = X['Age'].multiply(X['Age'])  # Just correcting age^2
     
     return X, Y
 
