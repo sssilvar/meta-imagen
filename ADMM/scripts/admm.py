@@ -278,9 +278,24 @@ def download_last_w_tilde():
                     return np.load(filename)['W_tilde']
 
 
+def load_data(x_csv, y_csv, fillna=True):
+    "Load CSV files as Dataframes (X and Y)"
+    X = pd.read_csv(x_csv, index_col=0)
+    Y = pd.read_csv(y_csv, index_col=0)
+
+    if fillna:
+        Y = Y.fillna(X.mean())
+        X = X.fillna(X.mean())
+
+    # TODO: REMOVE THIS
+    Y['Age'] = Y.['Age'] ** 2  # Just correcting age^2
+    
+    return X, Y
+
 
 def print_logger(log_file):
     os.system('tail ' + log_file)
+
 
 def main():
     """
@@ -302,11 +317,10 @@ def main():
     if api['done']:
         logger.info('ADMM is done. Correcting data...')
         # Load features
-        Y = pd.read_csv(args.f, index_col=0)
-        X = pd.read_csv(args.c, index_col=0)
-
-        Y = Y.fillna(X.mean())
-        X = X.fillna(X.mean()).values
+        # Y: Feature data: args.f
+        # X: common data: args.c
+        X, Y = load_data(x_csv=args.c, y_csv=args.f, fillna=True)
+        X = X.values
 
         # Load last iteration of W_tilde
         W_tilde = download_last_w_tilde()
@@ -322,12 +336,11 @@ def main():
     if current_iter == api_iter and api['success'] and not api['busy']:
         logger.info('Starting ADMM... (iteration %d)' % current_iter)
         # 1.1 Load X (Common data) and Y (Structural data)
-        X = pd.read_csv(args.c, index_col=0)
-        Y = pd.read_csv(args.f, index_col=0)
+        X, Y = load_data(x_csv=args.c, y_csv=args.f, fillna=True)
 
         # Deal with missing data    
-        Y = Y.fillna(X.mean()).values
-        X = X.fillna(X.mean()).values
+        Y = Y.values
+        X = X.values
 
         logger.info('Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
 
