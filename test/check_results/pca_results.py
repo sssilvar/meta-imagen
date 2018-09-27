@@ -74,7 +74,7 @@ if __name__ == '__main__':
         print('[  INFO  ] Loading %s' % csv)
         cdf = pd.read_csv(csv, index_col=0)
         common.append(cdf)
-        print(cdf.head(2))
+        print(cdf['Sex'].head(2))
 
         # Center 4 contains PPMI data
         if i == 4:
