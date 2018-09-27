@@ -70,7 +70,7 @@ if __name__ == '__main__':
     WB = []
     for i in range(1, n_centers + 1):
         # Load Feature data
-        csv = join(main_folder, 'center_%d' % i, 'output', 'groupfile_features_admm.csv')
+        csv = join(main_folder, 'center_%d' % i, 'output', 'groupfile_features.csv')
         print('[  INFO  ] Loading %s' % csv)
         df = pd.read_csv(csv, index_col=0)
         features.append(df)
