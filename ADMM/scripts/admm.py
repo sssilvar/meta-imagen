@@ -288,7 +288,7 @@ def load_data(x_csv, y_csv, fillna=True):
         X = X.fillna(X.mean())
 
     # TODO: REMOVE THIS
-    Y['Age'] = Y.['Age'] ** 2  # Just correcting age^2
+    Y['Age'] = Y['Age'].multiply(Y['Age'])  # Just correcting age^2
     
     return X, Y
 
@@ -435,12 +435,15 @@ if __name__ == '__main__':
     
     # ======= START ADMM (CLIENT) =======
     done = False
-    while not done:
-        done = main()
-        if not done:
-            print_logger(log_file)
-            logger.info('Waiting for API to update...')
-            time.sleep(np.random.randint(10, 50))
+    try:
+        while not done:
+            done = main()
+            if not done:
+                print_logger(log_file)
+                logger.info('Waiting for API to update...')
+                time.sleep(np.random.randint(10, 50))
+    except Exception as e:
+        print_logger('ERROR: %s - %s' % ( str(type(e)), str(e) ))
     
     print(__thanks__)
     print('DONE!')
