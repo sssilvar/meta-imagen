@@ -19,11 +19,11 @@ GROUPFILE_FOLDER=${CENTER_FOLDER}"/group"
 # echo ${CMD}
 # eval ${CMD}
 
-# # 2. Distributed ADMM
-# SCRIPT=${CURRENT_DIR}"/../ADMM/build.sh"
-# CMD="bash "${SCRIPT}" "${OUTPUT_FOLDER}" "${ID}" "${SERVER}
-# echo ${CMD}
-# eval ${CMD}
+# 2. Distributed ADMM
+SCRIPT=${CURRENT_DIR}"/../ADMM/build.sh"
+CMD="bash "${SCRIPT}" "${OUTPUT_FOLDER}" "${ID}" "${SERVER}
+echo ${CMD}
+eval ${CMD}
 
 # 3. PLSR
 SCRIPT=${CURRENT_DIR}"/../PLSR/build.sh"
