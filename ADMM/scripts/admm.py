@@ -288,7 +288,7 @@ def load_data(x_csv, y_csv, fillna=True):
         X = X.fillna(X.mean())
 
     # TODO: REMOVE THIS
-    X['Age2'] = X['Age'].multiply(X['Age'])  # Just correcting age^2
+    # X['Age2'] = X['Age'].multiply(X['Age'])  # Just correcting age^2
     
     return X, Y
 
@@ -342,7 +342,7 @@ def main():
         Y = Y.values
         X = X.values
 
-        logger.info('Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(X.shape), str(Y.shape)))
+        logger.info('Data dimensionality:\n\t- Features: %s\n\t- Common Data: %s' % (str(Y.shape), str(X.shape)))
 
         dx, dy = X.shape[1], Y.shape[1]
         rho = current['rho']
