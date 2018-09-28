@@ -206,7 +206,7 @@ if __name__ == '__main__':
     print(query)
     print(result.head())
 
-    for c in ['PC1', 'PC2']:
+    for c in ['PC1', 'PC2', 'PC3', 'PC4']:
         fig, ax = plt.subplots(2, 1)
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
