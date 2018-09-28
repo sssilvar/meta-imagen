@@ -227,7 +227,7 @@ if __name__ == '__main__':
                         # markers=markers, 
                         legend=False,
                         palette=palette)
-                plt.title('Low-dimensional plot')
+                # plt.title('Low-dimensional plot')
                 # Move the legend to an empty part of the plot
                 plt.legend(loc='lower left')
                 # plt.axis('equal')
