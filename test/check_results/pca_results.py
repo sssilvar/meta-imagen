@@ -212,9 +212,9 @@ if __name__ == '__main__':
             if el == 'Sex':
                 sns.boxplot(x='Sex', y=c, data=result, orient='v', ax=ax[i])
             else:
-                sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
+                sns.scatterplot(x='Age', y=c, data=result, ax=ax[i])
         # Save plots
-        plt.savefig(join(results_folder, 'admm_full_correction_%s.png' % c), bbox_inches=None)
+        plt.savefig(join(results_folder, 'admm_full_correction_%s.pdf' % c), bbox_inches=None)
 
 
     for ca in ['PC1', 'PC2']:
