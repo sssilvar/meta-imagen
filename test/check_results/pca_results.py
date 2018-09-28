@@ -207,7 +207,8 @@ if __name__ == '__main__':
     print(result.head())
 
     for c in ['PC1', 'PC2', 'PC3', 'PC4']:
-        fig, ax = plt.subplots(2, 1)
+        fig, ax = plt.subplots(2, 1,)
+        fig.subplots_adjust(hspace=0.5)
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
                 sns.boxplot(x='Sex', y=c, data=result, orient='v', ax=ax[i])
