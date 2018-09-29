@@ -207,15 +207,20 @@ if __name__ == '__main__':
     print(result.head())
 
     for c in ['PC1', 'PC2', 'PC3', 'PC4']:
-        fig, ax = plt.subplots(2, 1,)
-        fig.subplots_adjust(hspace=0.5)
+        fig, ax = plt.subplots(2, 1)
+        # fig.subplots_adjust(hspace=0.5)
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
-                sns.boxplot(x='Sex', y=c, data=result, orient='v', ax=ax[i])
+                sns.boxplot(x=c, y='Sex', data=result, orient='h', ax=ax[i])
+                if c is not 'PC1':
+                    ax[i].get_yaxis().set_visible(False)
             else:
-                sns.scatterplot(x='Age', y=c, data=result, ax=ax[i])
+                sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
+                if c is not 'PC1':
+                    ax[i].get_yaxis().set_visible(False)
         # Save plots
-        plt.savefig(join(results_folder, 'admm_full_correction_%s.pdf' % c), bbox_inches=None)
+        plt.savefig(join(results_folder, 'admm_full_correction_%s.png' % c), bbox_inches='tight')
+        plt.savefig(join(results_folder, 'admm_full_correction_%s.pdf' % c), bbox_inches='tight')
 
 
     for ca in ['PC1', 'PC2']:
@@ -231,7 +236,8 @@ if __name__ == '__main__':
                 # Move the legend to an empty part of the plot
                 plt.legend(loc='lower left')
                 # plt.axis('equal')
-                plt.savefig(join(results_folder, '%s_vs_%s.pdf' % (ca, cb)), bbox_inches=None, dpi=300)
+                plt.savefig(join(results_folder, '%s_vs_%s.png' % (ca, cb)), bbox_inches='tight', dpi=300)
+                plt.savefig(join(results_folder, '%s_vs_%s.pdf' % (ca, cb)), bbox_inches='tight', dpi=300)
 
 
     # # Plot contours
@@ -293,5 +299,5 @@ if __name__ == '__main__':
     # plt.xlim(-400, 320)
     # plt.ylim(-380, 190)
 
-    plt.show()
+    # plt.show()
 
