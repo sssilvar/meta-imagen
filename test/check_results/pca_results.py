@@ -15,7 +15,7 @@ from sklearn.mixture import GMM
 
 # plt.style.use('ggplot')
 sns.set(color_codes=True)
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 28})
 
 
 def draw_ellipse(position, covariance, ax=None, **kwargs):
@@ -218,6 +218,7 @@ if __name__ == '__main__':
                     ax[i].get_yaxis().set_visible(False)
             else:
                 sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
+                ax[i].get_xaxis().set_visible(False)
                 if c is not 'PC1':
                     ax[i].get_yaxis().set_visible(False)
         # Save plots
