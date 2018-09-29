@@ -15,6 +15,7 @@ from sklearn.mixture import GMM
 
 # plt.style.use('ggplot')
 sns.set(color_codes=True)
+plt.rcParams.update({'font.size': 22})
 
 
 def draw_ellipse(position, covariance, ax=None, **kwargs):
