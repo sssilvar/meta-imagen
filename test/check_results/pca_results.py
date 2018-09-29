@@ -219,6 +219,7 @@ if __name__ == '__main__':
             # St grid on and only y labels for the first
             if c is not 'PC1':
                     ax[i].set_yticklabels([])
+                    ax[i].set_ylabel([])
                     ax[i].yaxis.set_major_formatter(plt.NullFormatter())
             ax[i].grid(True, axis='both')
         # Save plots
