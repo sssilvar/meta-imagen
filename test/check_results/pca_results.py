@@ -214,12 +214,13 @@ if __name__ == '__main__':
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
                 sns.boxplot(x=c, y='Sex', data=result, orient='h', ax=ax[i])
-                if c is not 'PC1':
-                    ax[i].get_yaxis().set_visible(False)
+                ax[i].get_xaxis().set_visible(False)
+
             else:
                 sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
-                ax[i].get_xaxis().set_visible(False)
-                if c is not 'PC1':
+            # St grid on and only y labels for the first
+            ax[i].grid(True, axis='both')
+            if c is not 'PC1':
                     ax[i].get_yaxis().set_visible(False)
         # Save plots
         plt.savefig(join(results_folder, 'admm_full_correction_%s.png' % c), bbox_inches='tight')
