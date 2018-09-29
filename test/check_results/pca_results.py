@@ -209,17 +209,17 @@ if __name__ == '__main__':
     print(result.head())
 
     for c in ['PC1', 'PC2', 'PC3', 'PC4']:
-        fig, ax = plt.subplots(2, 1)
+        fig, ax = plt.subplots(2, 1, sharex=True)
         # fig.subplots_adjust(hspace=0.5)
         for i, el in enumerate(['Age', 'Sex']):
             if el == 'Sex':
                 sns.boxplot(x=c, y='Sex', data=result, orient='h', ax=ax[i])
             else:
                 sns.scatterplot(x=c, y='Age', data=result, ax=ax[i])
-                ax[i].set_xticklabels([])
             # St grid on and only y labels for the first
             if c is not 'PC1':
                     ax[i].set_yticklabels([])
+                    ax[i].yaxis.set_major_formatter(plt.NullFormatter())
             ax[i].grid(True, axis='both')
         # Save plots
         plt.savefig(join(results_folder, 'admm_full_correction_%s.png' % c), bbox_inches='tight')
