@@ -237,7 +237,7 @@ if __name__ == '__main__':
                 # Move the legend to an empty part of the plot
                 # plt.legend(loc='lower left')
                 if ca == 'PC1' and cb == 'PC4':
-                    plt.legend(loc='center right', bbox_to_anchor=(1.25, 0.5), ncol=1)
+                    plt.legend(loc='center right', bbox_to_anchor=(1.40, 0.5), ncol=1)
                 # plt.axis('equal')
                 plt.savefig(join(results_folder, '%s_vs_%s.png' % (ca, cb)), bbox_inches='tight', dpi=300)
                 plt.savefig(join(results_folder, '%s_vs_%s.pdf' % (ca, cb)), bbox_inches='tight', dpi=300)
