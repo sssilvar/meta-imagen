@@ -27,7 +27,8 @@ if __name__ == '__main__':
     out_f = join(dirname(comp_file), 'surfaces')
 
     # key folders an programs
-    ccbbm = join(e_shape_f, 'MedialDemonsShared/bin/ccbbm')
+    # ccbbm = join(e_shape_f, 'MedialDemonsShared/bin/ccbbm')
+    ccbbm = '/user/ssilvari/home/Downloads/CCBBM_centOS'
     atlas_f = join(e_shape_f, 'MedialDemonsShared/atlas')
 
     # Create output folder if not exist
@@ -64,20 +65,30 @@ if __name__ == '__main__':
             # Load per component
             print('[  INFO  ] ROI: %s' % name)
             for i, c in roi_data.iterrows():
-                # # Save RAW
-                txt_file = join(roi_folder, name + '.txt')
-                raw_file = join(roi_folder, name + '.raw')
-                # c.values.tofile(raw_file)
-                if roi == '11':
-                    np.savetxt(txt_file, c.values)
+                # Save RAW
+                fn_base = join(roi_folder, '%s_PC%d' % (name, (i+1)))
+                txt_file = fn_base + '.txt'
+                raw_file = fn_base + '.raw'
+                c.values.tofile(raw_file)
 
                 # Map it to mesh
                 atlas_file = join(atlas_f, 'atlas_%s.m' % roi)
-                out_file = raw_file = join(roi_folder, name + '.m')
-                min_cut = c.min()
-                max_cut = c.max()
+                out_file = fn_base + '.m'
+                obj_file = fn_base + '.obj'
 
-                cmd = ccbbm + ' -color_attribute2 %s %s %s %f %f' %  (atlas_file, raw_file, out_file, min_cut, max_cut)
+                # Select cutoof points based on components
+                sel = [f_name in col for col in df.columns]
+
+                min_cut = abs(df.loc[i, sel].min())
+                max_cut = abs(df.loc[i, sel].max())
+
+                # - RAW to atlas in mesh: cmd
+                # - Mest to .obj for visualization: cmd_2
+                # cmd = ccbbm + ' -color_attribute2 %s %s %s %f %f' %  (atlas_file, raw_file, out_file, min_cut, max_cut)  # Basic one
+                cmd = ccbbm + ' -color_hot_cold %s %s %s -%f %f -%f %f -full_range' %  (atlas_file, raw_file, out_file, max_cut, max_cut, min_cut, min_cut) 
+                # cmd = ccbbm + ' -color_hot_cold2 %s %s %s %f %f' %  (atlas_file, raw_file, out_file, min_cut, max_cut) 
+                cmd_2 = ccbbm + ' -mesh2obj %s %s' % (out_file, obj_file)
                 
-                print(cmd)
-                # os.system(cmd)
+                # print(cmd)
+                os.system(cmd)
+                os.system(cmd_2)
