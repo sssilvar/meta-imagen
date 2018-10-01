@@ -99,10 +99,18 @@ if __name__ == '__main__':
     # Describe datasets
     df_comm['label'] = label_names
     df_comm['label'] = df_comm['label'].astype('category')
+    df_comm['Sex'] = df_comm['Sex'].astype('category').cat.rename_categories(['Male', 'Female'])
 
     for c in df_comm['label'].cat.categories:
-        print(c)
-        print(df_comm.loc[df_comm['label'] == c, :].head())
+        # Get subset of subjects
+        df = df_comm.loc[df_comm['label'] == c, :]
+
+        # Print description
+        print('\n\n ===== Data description in %s =====' % c)
+        print(df.head())
+        print('Mean Age: %s' % df['Age'].mean())
+        print('Std Age: %s' % df['Age'].std())
+        print('Sex counts: %s' % df['Sex'].value_counts())
 
 
 
