@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
         # Center 4 contains PPMI data
         if i == 4:
-            pd_labels = df.index.astype(str)
+            pd_labels = cdf.index.astype(str)
 
     # Concatenate common dataframes
     df_comm = pd.concat(common, axis=0)
