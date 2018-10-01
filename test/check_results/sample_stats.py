@@ -111,6 +111,7 @@ if __name__ == '__main__':
         print('Mean Age: %s' % df['Age'].mean())
         print('Std Age: %s' % df['Age'].std())
         print('Sex counts: %s' % df['Sex'].value_counts())
+        print('Total %d' % df.count())
 
 
 
