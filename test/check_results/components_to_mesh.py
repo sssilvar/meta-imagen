@@ -69,7 +69,8 @@ if __name__ == '__main__':
                 fn_base = join(roi_folder, '%s_PC%d' % (name, (i+1)))
                 txt_file = fn_base + '.txt'
                 raw_file = fn_base + '.raw'
-                c.values.tofile(raw_file)
+                raw_data = c.values.astype(np.float32)
+                raw_data.tofile(raw_file)
 
                 # Map it to mesh
                 atlas_file = join(atlas_f, 'atlas_%s.m' % roi)
@@ -79,13 +80,15 @@ if __name__ == '__main__':
                 # Select cutoof points based on components
                 sel = [f_name in col for col in df.columns]
 
-                min_cut = abs(df.loc[i, sel].min())
-                max_cut = abs(df.loc[i, sel].max())
+                min_cut = df.loc[i, sel].min()
+                max_cut = df.loc[i, sel].max()
+                print(min_cut, min_cut/10)
+                print(max_cut, max_cut/10)
 
                 # - RAW to atlas in mesh: cmd
                 # - Mest to .obj for visualization: cmd_2
                 # cmd = ccbbm + ' -color_attribute2 %s %s %s %f %f' %  (atlas_file, raw_file, out_file, min_cut, max_cut)  # Basic one
-                cmd = ccbbm + ' -color_hot_cold %s %s %s -%f %f -%f %f -full_range' %  (atlas_file, raw_file, out_file, max_cut, max_cut, min_cut, min_cut) 
+                cmd = ccbbm + ' -color_hot_cold %s %s %s %f %f %f %f -full_range' %  (atlas_file, raw_file, out_file, min_cut, max_cut, min_cut/3, max_cut/3) 
                 # cmd = ccbbm + ' -color_hot_cold2 %s %s %s %f %f' %  (atlas_file, raw_file, out_file, min_cut, max_cut) 
                 cmd_2 = ccbbm + ' -mesh2obj %s %s' % (out_file, obj_file)
                 
