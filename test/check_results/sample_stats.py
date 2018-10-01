@@ -23,6 +23,11 @@ if __name__ == '__main__':
         cdf = pd.read_csv(csv, index_col=0)
         common.append(cdf)
 
+        # If center 1 (MIRIAD) reindex
+        if i == 1:
+            csv = join(main_folder, 'center_%d' % i, 'output', 'groupfile_features.csv')
+            cdf.index = pd.read_csv(csv, index_col=0, usecols=[0]).index
+
         # Center 4 contains PPMI data
         if i == 4:
             pd_labels = cdf.index.astype(str)
