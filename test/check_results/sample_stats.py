@@ -101,7 +101,8 @@ if __name__ == '__main__':
     df_comm['label'] = df_comm['label'].astype('category')
 
     for c in df_comm['label'].cat.categories:
-        print(df_comm.loc[:, df_comm['label'] == c].head())
+        print(c)
+        print(df_comm.loc[df_comm['label'] == c, :].head())
 
 
 
