@@ -4,9 +4,6 @@ from os.path import join
 import pandas as pd
 
 
-def get_labels():
-
-
 if __name__ == '__main__':
     # Set up basic stuff
     # Define number of centers: n_centers
