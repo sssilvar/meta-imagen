@@ -288,7 +288,7 @@ def load_data(x_csv, y_csv, fillna=True):
         X = X.fillna(X.mean())
 
     # TODO: REMOVE THIS
-    X.loc[:, X['Sex'] == 0] = -1
+    X['Sex'] = [-1 if s==0 else 1 for s in X['Sex'].values]
     X['Age2'] = X['Age'].multiply(X['Age'])  # Just correcting age^2
     
     return X, Y
