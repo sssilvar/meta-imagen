@@ -145,7 +145,8 @@ if __name__ == '__main__':
                 label_names[i] = 'HC-UKB'
             else:
                 labels[i] = l['Other']
-                label_names[i] = 'Other-UKB'
+                # label_names[i] = 'Other-UKB'
+                label_names[i] = 'HC-UKB'
 
         elif any([sid in s for s in adni_prog.index]):
             labels[i] = l['MCIc']
@@ -201,8 +202,8 @@ if __name__ == '__main__':
     result = pd.concat([result, df_comm], axis=1, ignore_index=False)
 
     # Filter classes (Query generator) and query result saved in: res_fil
-    # classes_to_plot = ['HC', 'AD', 'PD', 'Others']
-    classes_to_plot = ['MCIc', 'MCInc']
+    classes_to_plot = ['HC', 'AD', 'PD', 'Others']
+    # classes_to_plot = ['MCIc', 'MCInc']
     query = ''.join(['label == "%s" or ' % x for x in palette.keys() if any([a[:3] in x[:3] for a in classes_to_plot])])[:-4]
     res_fil = result.query(query)
     print(query)
