@@ -230,7 +230,7 @@ if __name__ == '__main__':
         for cb in ['PC2', 'PC3', 'PC4']:
             if ca != cb:
                 sns.lmplot(ca, cb, data=res_fil, fit_reg=False,
-                        scatter_kws={'s': 50},  # Marker size
+                        scatter_kws={'s': 40},  # Marker size
                         hue='label',  # Color
                         # markers=markers, 
                         legend=False,
